@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Editor swap/backup files
+*.bak
+*.swp
+*.swo
+*~
+
+# Secrets — never commit
+.env
+.env.local
+*.pem
+*.key
+credentials.json
+
+# Node (in case anyone adds JS tooling later)
+node_modules/
+
+# Python (in case anyone adds Python tooling later)
+__pycache__/
+*.pyc
+.venv/
