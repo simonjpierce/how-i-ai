@@ -137,7 +137,14 @@ if [[ "${1:-}" == "--commit" ]]; then
   done
 
   cd "$REPO_ROOT"
-  git add skills/ guides/ templates/ 2>/dev/null || true
+  # Stage each target dir separately — git add with multiple pathspecs aborts
+  # on the first one that doesn't exist (e.g. guides/ before any guides are
+  # added) and silently stages nothing even with || true.
+  for dir in skills guides templates; do
+    if [[ -d "$dir" ]]; then
+      git add "$dir"
+    fi
+  done
 
   if git diff --cached --quiet; then
     echo "No changes to commit."
