@@ -25,6 +25,13 @@ CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"
 STAGE_DIR="$(mktemp -d "/tmp/mmf-claude-code-stage.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
 
+# Pull latest from the repo first so any merged PRs aren't overwritten by
+# our push. If a PR has merged that introduced changes NOT yet present in
+# ~/.claude/skills/, run sync-to-vault.sh --apply before this script so
+# those changes flow back to the canonical source before we push.
+cd "$REPO_ROOT"
+git pull origin main --quiet
+
 # Source → target mappings. Format: "source_absolute_path::target_path_in_repo"
 # All skills canonically live in ~/.claude/skills/. The vault (05_AI WORKFLOW/
 # CLAUDE/Skills/) has symlinks back there for Obsidian visibility — we sync from

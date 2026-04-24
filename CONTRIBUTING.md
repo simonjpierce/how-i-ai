@@ -2,24 +2,21 @@
 
 This repo improves when the people using it contribute back. If a skill is missing, a guide is out of date, or you've built something the rest of us would find useful — open a PR.
 
-## Two kinds of PR
-
-The content under `skills/`, `guides/`, and `templates/` is **mirrored** from Simon's vault and `~/.claude/skills/` by `sync/sync-from-vault.sh`. That script fully replaces those directories on each run — so any change merged into them directly would be overwritten by the next sync.
-
-- **Proposal PRs** — changes to files under `skills/`, `guides/`, or `templates/`. These are reviewed like any PR, but if accepted, they are **closed (not merged)**: Simon applies the approved change to the canonical vault/`~/.claude/` source, and the next `sync-from-vault.sh --commit` run brings it into the repo. You'll see your contribution appear on `main` shortly after acceptance, via a sync commit rather than a merge commit.
-- **Direct-merge PRs** — changes to anything else (README, CONTRIBUTING, the sync script itself, top-level `LICENSE`, `.gitignore`). These merge normally.
-
-Tell the two apart by where the file lives. If unsure, flag it in the PR description.
-
 ## TL;DR
 
 1. Branch off `main` (no forks needed — we all have repo access).
 2. Make your change.
 3. **Actually use it on a real task.** For a skill, run it by dropping the file into your own `~/.claude/skills/` and invoking it. For a guide, follow your own instructions from scratch.
-4. Open a PR. Link the task output or describe what you tested. Note in the description whether this is a Proposal PR or a Direct-merge PR.
+4. Open a PR. Link the task output or describe what you tested.
 5. Tag Simon for review (he's the primary reviewer for v1).
 
-Small direct-merge fixes land fast. Larger proposal PRs or workflow changes are worth a quick chat in Slack or on a call first so we don't end up with work that overlaps or doesn't land.
+Small fixes land fast. Larger changes are worth a quick chat in Slack or on a call first so we don't end up with work that overlaps or doesn't land.
+
+## How this repo stays in sync with Simon's local setup
+
+For contributors, this mostly doesn't matter — direct merges to `main` work as you'd expect, including on `skills/`, `guides/`, and `templates/`. The detail worth knowing: Simon's local `~/.claude/skills/` is the working copy his Claude Code actually loads from, and it lives on his Mac rather than in this repo. After your PR merges, he runs `sync/sync-to-vault.sh --apply` (or `/update` does it automatically) to pull your change into his local copy. Git history credits you as PR author; the sync is bookkeeping.
+
+If you want your own local `~/.claude/skills/` to stay current with merged PRs from other contributors, run `sync/sync-to-vault.sh --apply` from the repo root yourself; otherwise your local copies are whatever snapshot you cloned.
 
 ## What belongs here
 
@@ -117,9 +114,9 @@ Keep the PR scoped. A PR that adds a skill AND refactors two others AND updates 
 ## Review
 
 - Simon is primary reviewer for v1.
-- Small, obvious direct-merge fixes (typos, broken links, one-line README improvements): merge after one approval.
-- New skills or guides (proposal PRs): Simon reviews. If accepted, he applies the change to his vault/`~/.claude/` and closes the PR as "landed via sync" — the content appears on `main` on the next `sync-from-vault.sh --commit` run.
-- After you've had 3+ PRs accepted (direct-merge or landed-via-sync), you have merge rights on your own small direct-merge fixes.
+- Small, obvious fixes (typos, broken links, one-line improvements): merge after one approval.
+- New skills, guides, or larger changes: Simon reviews before merging.
+- After you've had 3+ PRs accepted, you have merge rights on your own small fixes.
 
 We're not doing formal CI or linting. Skills are markdown; the validation is a human reading them and, ideally, trying them.
 

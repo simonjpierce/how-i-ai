@@ -1,17 +1,29 @@
 # mmf-claude-code — notes for Claude
 
-This repo is a mirror. The vault (`05_AI WORKFLOW/CLAUDE/Skills/`) and `~/.claude/skills/` are source of truth; the contents of `skills/`, `guides/`, and `templates/` are produced by `sync/sync-from-vault.sh`.
+This repo is a **two-way mirror** of Simon's local `~/.claude/skills/`. Skills canonically live on Simon's Mac at `~/.claude/skills/`; the vault's `05_AI WORKFLOW/CLAUDE/Skills/` has symlinks back there for Obsidian visibility. The repo's `skills/`, `guides/`, and `templates/` directories synchronise with that canonical location via two scripts.
+
+## The sync scripts
+
+- **`sync/sync-from-vault.sh`** — pushes Simon's local changes out to the repo. Pulls `origin/main` first (so recently merged PRs aren't overwritten), sanitises paths, scans for credentials, then commits. Dry-run by default; `--commit` to apply and push.
+- **`sync/sync-to-vault.sh`** — pulls merged PRs from the repo back into Simon's local `~/.claude/skills/`. Dry-run by default; `--apply` to copy. Pulls `origin/main` first.
 
 ## When /update runs against this repo
 
-Don't `git add` / `git commit` files in `skills/`, `guides/`, or `templates/` directly. The sync script fully replaces those directories on each run — direct commits get overwritten by the next sync.
+Follow this exact sequence. **Do not** run plain `git add` / `git commit` on files in `skills/`, `guides/`, or `templates/` — always go through the sync scripts so the canonical source (`~/.claude/skills/`) stays authoritative.
 
-Instead: run `./sync/sync-from-vault.sh --commit` from the repo root. Simon has confirmed (2026-04-25) that `/update` is expected to push mirror changes through this mechanism — not via direct commits.
+1. **Pull merged PRs into Simon's local copy.** Run `./sync/sync-to-vault.sh` (dry-run) from the repo root. If anything has merged into the repo that isn't yet in `~/.claude/skills/`, the script lists the differences. Surface the count to Simon in a single line ("N skills differ between repo and `~/.claude/skills/` — apply?"). If he agrees, re-run with `--apply`. If he declines or is unsure, stop and let him investigate.
+2. **Push Simon's local changes to the repo.** Run `./sync/sync-from-vault.sh --commit` from the repo root. The script pulls `origin/main` first, then copies `~/.claude/skills/` into the repo, commits, and pushes.
 
-The script stages into `/tmp/`, sanitises vault paths to `$VAULT_PATH`/`$CLAUDE_CONFIG`, scans for common credential patterns, and aborts the commit if it finds any. If the scan trips, fix the source file in the vault or `~/.claude/` and re-run — don't bypass.
+Simon has confirmed (2026-04-25) that `/update` runs both steps in order when operating on this repo.
 
-## When a team member opens a PR against skills/guides/
+Either script's credential scanner will abort if it detects a token-like pattern in staged content. Fix the offending source file in `~/.claude/` and re-run — do not bypass.
 
-Those PRs are **proposals**, not direct merges. The sync script would overwrite a merged PR on the next run. Workflow: review the PR → if accepted, apply the change to the vault/~/.claude/ source → next `/update` syncs it back out → close the PR as "landed via sync." See CONTRIBUTING.md for more.
+## When a team member opens a PR
 
-PRs against other files (README, CONTRIBUTING, sync script itself, templates at the top level, LICENSE) merge normally.
+Direct merges are fine for any file, including `skills/`, `guides/`, and `templates/`. Review the PR, merge in GitHub's UI. Git history carries the contributor as author.
+
+The `sync-to-vault.sh` script is what brings the merged PR into Simon's local `~/.claude/skills/` so his Claude Code instance picks up the improvement. Either he runs it manually, or `/update` does it next time.
+
+## Conflict case (rare)
+
+If Simon has been editing a skill locally at the same time a contributor has a PR open on the same file, git will flag a merge conflict the next time either sync direction tries to cross. Resolve via standard git workflow (git merge, or edit both sources to converge), then re-run whichever sync was attempting to apply.
