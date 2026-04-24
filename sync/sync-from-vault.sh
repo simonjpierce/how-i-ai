@@ -26,13 +26,14 @@ STAGE_DIR="$(mktemp -d "/tmp/mmf-claude-code-stage.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
 
 # Source → target mappings. Format: "source_absolute_path::target_path_in_repo"
-# Skills live in two places on Simon's machine: the vault (older, Obsidian-native)
-# and ~/.claude/skills/ (newer, shared via kepano's obsidian-skills pattern).
+# All skills canonically live in ~/.claude/skills/. The vault (05_AI WORKFLOW/
+# CLAUDE/Skills/) has symlinks back there for Obsidian visibility — we sync from
+# the canonical location to avoid cp -R only copying the symlinks themselves.
 
 SKILLS=(
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Skills/transcribe::skills/transcribe"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Skills/red-team::skills/red-team"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Skills/pdf-to-markdown::skills/pdf-to-markdown"
+  "$CLAUDE_CONFIG/skills/transcribe::skills/transcribe"
+  "$CLAUDE_CONFIG/skills/red-team::skills/red-team"
+  "$CLAUDE_CONFIG/skills/pdf-to-markdown::skills/pdf-to-markdown"
   "$CLAUDE_CONFIG/skills/update::skills/update"
   "$CLAUDE_CONFIG/skills/document::skills/document"
   "$CLAUDE_CONFIG/skills/verify-citations::skills/verify-citations"
