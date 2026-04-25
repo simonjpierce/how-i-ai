@@ -29,6 +29,8 @@ echo "MEMORY.md: $LINES lines, $BYTES bytes (caps: 200 / 25600)"
 
 If `$LINES > 150` or `$BYTES > 20000`, warn Simon: "MEMORY.md approaching loader cap — any new rules added this session should go in Tier 2 leaves (`memory/feedback_*.md`), not Tier 1 inline." See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
 
+**Do not offer to /schedule a compression sweep.** Compression is ALREADY owned by two existing mechanisms: the nightly self-improvement loop (`self_improve.py`) and `/document` step 13 ("Distil to MEMORY.md"). /update only WARNS — it does not compress, and it does not need to invent new automation. If the warning fires repeatedly across sessions, that's a signal those existing mechanisms aren't keeping up; surface that observation to Simon rather than offering a duplicate /schedule.
+
 If within budget, proceed silently — no need to report the numbers unless asked.
 
 ### Phase 1 — Scope and discover
@@ -87,7 +89,11 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Modifying tone, voice, or audience targeting
    - Anything where reasonable people might disagree on the right update
 
-   **When in doubt, classify as Review.** The cost of asking is low; the cost of an unwanted content change is high.
+   **Audience first, then in-doubt.** Before classifying as Review, ask: who is this document for?
+   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in `05_AI WORKFLOW/CLAUDE/Processes/`) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
+   - **Simon-facing documents** (project notes, role notes, voice references, external comms, manuscripts, Current Projects "Right now" content, IDEA.md, CLAUDE.md files Simon may consult) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
+
+   The trap to avoid: classifying Decision Log / Friction Log entries as "review" because the work is substantive. Substantive ≠ Simon's-judgement-needed. If the audience is future Claude sessions, just write the entry.
 
 5. **Present the hit list**. Show Simon a compact summary:
 

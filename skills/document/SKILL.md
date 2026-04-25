@@ -121,7 +121,9 @@ If within budget, proceed silently — no need to report the numbers.
    - Update the "Last updated" date.
    - Skip if the session didn't materially change any Current Projects priorities.
 
-12. **Verify log completeness and sweep for missed items** — after writing to the Session Handoff Log, Decision Log, and Friction Log (steps 5–7), spawn a sonnet verification subagent. Skip this step for trivial sessions (quick questions, single-file edits).
+12. **Verify log completeness and sweep for missed items** — after writing to the Session Handoff Log, Decision Log, and Friction Log (steps 5–7), spawn a sonnet verification subagent.
+
+   **Skip threshold (narrower than it looks).** Skip ONLY when the session truly was trivial: a quick question with no file edits, a single-line read-and-explain, or a one-line cosmetic edit. Anything involving multi-file edits, log/changelog entries, commits, cleanup operations (file deletions, task deletions), skill/process-doc updates, or substantive Bash computation is NOT trivial — run the subagent. The subagent's gap-analysis pass (unacted-on recommendations, logical gaps, missing self-improvement loops, unsurfaced action items) is exactly what catches the issues a tired-end-of-session inline review misses. Confirmed 2026-04-26: a 2-file-edit + 6-deletion + 1-commit session was wrongly judged "borderline trivial" and skipped this step; the resulting Suggested improvements (step 16b) were shallow enough that Simon flagged it.
 
    The subagent performs two passes:
 
@@ -205,11 +207,44 @@ If within budget, proceed silently — no need to report the numbers.
 
 16. **Evaluate skill candidates**: If any process doc has been used 3+ times with stable steps, note it as a candidate for skill promotion.
 
-16b. **Generate Suggested improvements** (2–4 ideas): Now — AFTER the verification subagent (step 12), document-update sweep (step 10), log maintenance (step 14), and archival/skill-candidate evaluation (steps 15–16). Generating suggestions at this point lets them incorporate everything that came out of those steps (gaps the verification subagent flagged, patterns surfaced by archival, missing retrospective loops, etc.) instead of shallow pre-subagent guesses.
+16b. **Generate Suggested improvements** (2–4 ideas → Opus filter pass → final list shown to Simon): Now — AFTER the verification subagent (step 12), document-update sweep (step 10), log maintenance (step 14), and archival/skill-candidate evaluation (steps 15–16). Generating suggestions at this point lets them incorporate everything that came out of those steps (gaps the verification subagent flagged, patterns surfaced by archival, missing retrospective loops, etc.) instead of shallow pre-subagent guesses.
 
-   Think about the workflows, skills, and processes touched this session. What enhancements, extensions, or adjacent improvements would you suggest if Simon asked "what else could we do here?" These should be ideas that weren't discussed during the session — things Simon might not think to ask about. Consider: missing integrations, underused data sources, automation opportunities, quality improvements, workflow gaps, and anything the verification subagent surfaced as a logical-gap pattern worth generalising. Be specific and actionable, not generic.
+   **Hard dependency on step 12.** If step 12 was skipped (trivial session opt-out), do NOT generate Suggested improvements — they must be informed by the verification subagent's gap analysis. In that case, omit the Suggested improvements section entirely from the step 17 report, or state explicitly "Suggested improvements skipped — verification subagent did not run." Inline self-review without the subagent produces shallow, premature-feeling suggestions and misses the gap classes the subagent is designed to catch (unacted-on recommendations, logical gaps, missing self-improvement loops, unsurfaced action items). Confirmed 2026-04-26: meeting-prep-filter-fix session skipped step 12 as borderline-trivial; the suggestions generated felt premature to Simon, who flagged that improvements should always wait for the verification agents to finish.
 
-17. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead. Once everything is done: brief summary of what was logged, MEMORY.md changes, document update sweep results (step 10 — auto-updates applied and any review items pending), log maintenance performed, notes flagged for archival, and any skill candidates. Then present the **Suggested improvements** from step 16b under a clear heading — these are ideas Simon can act on, defer, or dismiss. End with: **"Handover complete — you are now clear to close or compact this session."**
+   The corollary: if you are tempted to generate Suggested improvements, you should also be running step 12. Resist the "trivial session" opt-out unless the session genuinely involved zero file edits and zero substantive computation. Skill modifications, multi-file edits, log entries, commits, and cleanup operations are NOT trivial — run the subagent.
+
+   **Two-phase generation:**
+
+   **Phase A — internal draft (2–5 ideas).** Think about the workflows, skills, and processes touched this session. What enhancements, extensions, or adjacent improvements would you suggest if Simon asked "what else could we do here?" These should be ideas that weren't discussed during the session — things Simon might not think to ask about. Consider: missing integrations, underused data sources, automation opportunities, quality improvements, workflow gaps, and anything the verification subagent surfaced as a logical-gap pattern worth generalising. Be specific and actionable, not generic. Generate the internal draft in your scratch — do NOT show this version to Simon.
+
+   **Phase B — Opus filter pass.** Spawn an Opus subagent (`subagent_type: "general-purpose"`, `model: "opus"`) with the internal draft and a brief framing of the session. The subagent's job is to be a hard gatekeeper:
+
+   > You are reviewing draft "Suggested improvements" before they are shown to Simon. The bar is high: Simon already gets a steady stream of good suggestions and wants the noisy ones cut. Your job is to filter and improve.
+   >
+   > For each draft suggestion:
+   > 1. **Cut it** if any of the following apply: too narrow / one-off value; covered by an existing skill, process doc, or memory entry; shallow rephrasing of work already done this session; speculative ("might be useful"); too low-stakes vs. the implementation cost; symptom-only when the underlying root cause is unaddressed; would generate noise (false positives, log spam).
+   > 2. **Sharpen it** if the idea is good but the framing is fuzzy — make the implementation concrete, name files/functions, state the value clearly, identify the failure mode it prevents.
+   > 3. **Recommend a verdict** per surviving suggestion: **Apply now** (cheap + high-confidence, do it in the next turn) / **Apply soon** (worth a Things 3 task or housekeeping check) / **Defer** (real value but needs more thought or signal to fire) / **Cut** (do not surface).
+   >
+   > Return ONLY the surviving suggestions, in order of strongest-first, with for each: a tight title, 2–4 sentences of substance, and a verdict line. If fewer than 2 suggestions survive, that's fine — under-suggesting is preferred to over-suggesting. If zero survive, return "No suggestions worth surfacing this session" and explain in one line why the drafts didn't clear the bar.
+
+   Pass the subagent the full internal draft text plus 3–5 sentences of session context.
+
+   **Step 17 output format.** Render the Opus-reviewed list under the **Suggested improvements** heading as a numbered list (`1.`, `2.`, `3.`) with the verdict inline so Simon can reply with just a number to apply one. Format per item:
+
+   ```
+   1. **Title.** 2–4 sentences. **Verdict:** Apply now (recommended).
+   2. **Title.** 2–4 sentences. **Verdict:** Apply soon — worth a Things 3 task.
+   3. **Title.** 2–4 sentences. **Verdict:** Defer — wait for [signal].
+   ```
+
+   Add a one-line offer at the end: "Reply with a number to apply, or `none` to skip all." This is the easy-pick mechanism — Simon should be able to act on a recommendation without having to retype anything.
+
+17. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead. Once everything is done: brief summary of what was logged, MEMORY.md changes, document update sweep results (step 10 — auto-updates applied and any review items pending), log maintenance performed, notes flagged for archival, and any skill candidates. Then present the **Suggested improvements** from step 16b under a clear heading — these are ideas Simon can act on, defer, or dismiss.
+
+   **Before the closing line, include a `**Verification:**` block** per the global CLAUDE.md proactive-verification rule. Either list each new file edited this /document run with `path:line` + short excerpt, OR — if this is a checkpoint /document where the handoff entry was updated in place and earlier edits were already verified inline — explicitly state `**Verification:** no verification needed because checkpoint /document made no new edits — all session work was verified inline at the time of each change`. Without this block the `stop-verification-check` hook will fire on the closing-line completion language. This recurs in long sessions where /document is called as a checkpoint after substantive work is already done. Confirmed 2026-04-25: hook fired three times in one session on `Handover complete` despite the work being captured.
+
+   End with: **"Handover complete — you are now clear to close or compact this session."**
 
 18. **Suggest compaction if appropriate**: If the conversation is long or context usage is high, suggest running `/compact` after the handover. The pattern is: `/document` → `/compact` → re-read vault files to restore context. Only suggest this if there's remaining work — if the session is ending, just complete the handover.
 
