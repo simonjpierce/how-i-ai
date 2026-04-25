@@ -44,6 +44,7 @@ SKILLS=(
   "$CLAUDE_CONFIG/skills/update::skills/update"
   "$CLAUDE_CONFIG/skills/document::skills/document"
   "$CLAUDE_CONFIG/skills/verify-citations::skills/verify-citations"
+  "$CLAUDE_CONFIG/skills/mmf-brand::skills/mmf-brand"
 )
 
 GUIDES=(
