@@ -1,13 +1,15 @@
-# 05 — Adopting skills from this repo
+# 04 — Adopting skills from this repo
 
-The pattern for installing a skill from this repo into your own Claude Code setup:
+The pattern for installing a skill from this repo into your own Claude Code setup. Skills live in `~/.claude/skills/` and work the same way whether you use the desktop app or the CLI.
 
 ```bash
 cd /path/to/mmf-claude-code
 cp -R skills/<skill-name> ~/.claude/skills/
 ```
 
-Then restart Claude Code — skills added mid-session aren't discovered until restart.
+Or drag `skills/<skill-name>` into `~/.claude/skills/` in Finder if you'd rather avoid the terminal.
+
+Then restart Claude Code — skills added mid-session aren't discovered until restart. In the desktop app: close and reopen. In the CLI: `/exit`, then `claude` again.
 
 That's it.
 

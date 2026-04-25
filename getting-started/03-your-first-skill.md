@@ -6,22 +6,24 @@ Skills make repetitive work fast. Instead of typing "transcribe this meeting aud
 
 ## Copy a skill into your setup
 
-From this repo:
+Skills live in `~/.claude/skills/` regardless of which interface you use — desktop app or CLI both load from the same place. Either copy via terminal:
 
 ```bash
 cd /path/to/mmf-claude-code
 cp -R skills/transcribe ~/.claude/skills/
 ```
 
+Or, if you don't want to touch a terminal, drag the `skills/transcribe` folder into `~/.claude/skills/` in Finder (use `Cmd+Shift+G` and paste the path to navigate there).
+
 The `-R` is recursive — some skills have supporting files alongside `SKILL.md`, and you want all of them.
 
-Then **restart Claude Code**. Skills added mid-session aren't discovered until restart. Exit with `/exit`, reopen with `claude`.
+Then **restart Claude Code**. Skills added mid-session aren't discovered until restart. In the desktop app: close and reopen. In the CLI: `/exit`, then `claude` again.
 
 ## Use it on something real
 
 Pick a real task, not a toy one. A meeting audio file you've been meaning to transcribe. A short team meeting recording. Something where the output will be useful either way.
 
-In Claude Code:
+At the prompt — desktop Code tab or CLI, doesn't matter — type:
 
 ```
 /transcribe /path/to/your/audio.m4a

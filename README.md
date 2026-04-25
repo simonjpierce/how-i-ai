@@ -41,7 +41,7 @@ mmf-claude-code/
 
 This setup assumes:
 
-- **[Claude Code](https://docs.claude.com/claude-code)** — the CLI. Skills are markdown files loaded from `~/.claude/skills/`.
+- **[Claude Code](https://docs.claude.com/claude-code)** — the underlying tool, available as a desktop app or CLI. Skills are markdown files loaded from `~/.claude/skills/` and work identically in either.
 - **[Obsidian](https://obsidian.md)** — where notes live. Most guides reference Obsidian workflows, but the skills themselves don't require it.
 - **[Codex CLI](https://github.com/openai/codex)** (optional) — ChatGPT's equivalent, useful for a second-opinion peer review from inside Claude Code. `/red-team` uses it when available.
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** (optional) — free for 1,000 requests/day. Used as a third reviewer by `/red-team`.
