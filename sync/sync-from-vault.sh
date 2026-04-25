@@ -47,8 +47,8 @@ SKILLS=(
 )
 
 GUIDES=(
-  # Add mappings as process docs are adapted into guides. Example:
-  # "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Lab Notebook Workflow.md::guides/lab-notebook-workflow.md"
+  # Add mappings as process docs are adapted into guides.
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
 )
 
 # --- Helpers ---
