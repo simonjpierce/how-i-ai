@@ -36,7 +36,19 @@ If you're a Claude web user who hasn't tried Claude Code yet, the lowest-frictio
 
 The load-bearing idea in Simon's setup is that **Obsidian is the external memory for the AI, not just for Simon**.
 
-Everything lives in a folder of markdown files. Meeting transcripts, research notes, manuscript drafts, grant applications, project plans, daily notes. Roughly 3,000 files across six domain folders (MMF, Photography, Life OS, Personal, AI Workflow, Archive). When Simon works on a task, Claude reads the same notes Simon reads. There's no separate "AI context folder"; there's one set of documents, and both human and AI consult it.
+Everything lives in a folder of markdown files. Meeting transcripts, research notes, manuscript drafts, grant applications, project plans, daily notes. Roughly 3,000 files across six numbered domain folders:
+
+```
+00_INBOX            — Landing pad for daily notes, transcripts, clippings
+01_LIFE OS          — Cross-cutting: roles, goals, priorities, reviews
+02_MARINE MEGAFAUNA — MMF research, grants, operations
+03_PLANET OCEAN     — Photography, websites, travel content
+04_PERSONAL         — Finances, health, non-work
+05_AI WORKFLOW      — AI tooling, automation, process docs
+06_ARCHIVE          — Completed or inactive
+```
+
+Numbered prefixes control sort order and keep domains visually separated. Standard Obsidian advice is to skip folders and rely on links and tags — that works if your notes are mostly one type of thing. Vaults that span research, photography, finances, team management, and personal life tend to need clearer domain boundaries. Whatever structure you choose, when Simon works on a task, Claude reads the same notes Simon reads. There's no separate "AI context folder"; there's one set of documents, and both human and AI consult it.
 
 This is why markdown matters. If Obsidian shut down tomorrow, the vault is still just a folder of text files — any AI model can still read them. Lock-in is low; portability is high.
 
@@ -49,6 +61,17 @@ Before we get into the layers and the skills and the structure: this *looks* lik
 Most of the setup is created by Claude *as you work*. You don't sit down on day one to write a perfect CLAUDE.md and ten skills. You start using Claude Code normally, on real work. When you mention a preference in conversation — "actually, can you always spell things in NZ English?" — ask Claude to add that to the CLAUDE.md file. When you correct Claude on something — "stop batching up multiple questions, ask them one at a time" — ask it to save that to memory so you don't have to correct it again. When you've walked through a workflow a couple of times and don't want to re-explain it the third time, ask Claude to turn it into a skill — it'll write the file for you.
 
 You work normally; the system grows underneath you. The descriptions below are what Simon's setup has become after a year of that incremental growth — not a list of things you need to build before you can start.
+
+## What a session actually looks like
+
+Less abstract: a typical morning might include several of these in sequence.
+
+- *"Format this meeting transcript."* Claude reads the raw Whisper output, applies speaker labels and topic headings, extracts TODOs and IDEAs, and flags information that updates an existing project note.
+- *"What's the current state of the Madagascar MPA paper?"* Claude searches the vault, reads the relevant project notes, and reports back: who's writing what, the submission deadline, outstanding items.
+- *"Draft a response to this email about the ship strike project."* Claude reads the project context and notes from the last meeting, then writes a draft Simon edits and sends.
+- *"Help me debug why the weekly review bundler is producing empty files."* Claude reads the script, checks the log output, identifies the issue, and either fixes it or walks Simon through the fix.
+
+These aren't separate sessions — they happen in one. Context accumulates as the morning goes on, so by the third task Claude already knows what's been worked on that day. At the end of the session (or when the conversation gets long), the `/document` skill writes a structured summary back to the vault: what was done, decisions made, current state, open threads. Tomorrow's session reads that file first.
 
 ## Five layers of context
 
@@ -112,6 +135,16 @@ Four pillars, in order of what matters most:
 **Continuous system improvement.** The manual version of this is the habit of updating process docs at the moment of friction rather than "later". The automated version — the nightly self-improvement loop that scans friction logs and implements fixes autonomously — is further down the road and out of scope for v1.
 
 One principle runs underneath all four: **don't delegate understanding.** The AI handles maintenance, first drafts, research synthesis, format conversion. You decide what matters, what's true, what gets published. The review is machine-generated; the priorities are yours.
+
+## Where it works, and where it doesn't
+
+The tasks Claude handles best are formatting and conversion — meeting transcripts, PDFs to markdown, raw data into structured notes. Anything where the information already exists and just needs reorganising. It's also strong on vault maintenance: finding stale notes, cross-referencing across files, proposing updates after meetings. The kind of work that's important but never urgent enough to do by hand.
+
+First drafts are the highest-value use. Because Claude has access to the vault — past writing, project notes, voice references — it's synthesising from your own material rather than generating from nothing. Research synthesis works the same way: a useful triage layer over a large body of sources, not a replacement for reading the papers.
+
+Code is in scope, even if you're not a developer. Simon isn't a software engineer, but maintains a fair amount of Python and shell scripting for the automations described above. Claude writes most of it and fixes it when it breaks. You don't need to be able to write the code from memory — only to understand what it does and notice when it's wrong.
+
+What Claude *can't* do is have the idea in the first place. Ideas come from daily notes, conversations, walks, time underwater. The machine explores them; it doesn't generate them. AI-written prose also has tells — important pieces should be edited and run through a voice check before publishing. The AI does the legwork; you make the calls.
 
 ## If you're a Claude user but not a Claude Code user yet
 
