@@ -85,6 +85,31 @@ The system works because Claude doesn't start each session from zero. It has fiv
 
 All five serve double duty: useful to you as documentation, useful to Claude as context. **Same files, two readers.**
 
+## How CLAUDE.md files actually work
+
+The single bullet under "Five layers of context" lumps CLAUDE.md into one item, but in practice how the cascade works is the most important customisation lever in the whole setup, so it's worth more space than that.
+
+**You can have many CLAUDE.md files, not just one.** Claude reads the *nearest* one automatically, walking up the folder tree from wherever it's working. A vault-root CLAUDE.md applies to every session. A folder-level one only applies when Claude is working inside that folder. They stack: when working in a subfolder, Claude reads root + folder + (deeper) automatically, in that order. You don't pick which to load — the structure picks it for you.
+
+Concretely: when Simon asks Claude to draft a grant report for an MMF project, Claude reads the **root CLAUDE.md** (NZ/UK English, no emoji, identity, writing voice), then **`02_MARINE MEGAFAUNA/CLAUDE.md`** (species naming conventions, current staff, funder-specific formatting, project list), then the **role note for "Executive Director — MMF"** (current strategic priorities). When he switches to editing a photography article, Claude instead picks up `03_PLANET OCEAN/CLAUDE.md`, with photography tone, gear references, and partner conventions. Same Claude session, automatically different context.
+
+This is *why* the vault uses domain-based folders rather than the more common alternatives (PARA, lifecycle stages, or "skip folders entirely"). Mixing domains in a single folder breaks the cascade — there's no clean place for domain-specific context to live. Domain folders give you the layered behaviour for free.
+
+**What goes at each level:**
+
+- **Root CLAUDE.md** — cross-cutting preferences that apply to *all* your work: spelling and grammar conventions, identity (who you are, what you do), general tone, vault-wide naming. ~100–300 lines is comfortable.
+- **Folder-level CLAUDE.md** — domain-specific context: key people in that area, terminology, conventions, current priorities. Keep under ~80 lines — this file reloads on every file read inside the folder. If it grows past that, link out to canonical notes instead of inlining content.
+- **Role notes (advanced, optional)** — deepest layer, linked from folder CLAUDE.md. Holds context that changes often (active projects, near-term goals). A good setup can run on just root + folder files; role notes are a polish-pass.
+
+**What does *not* belong in CLAUDE.md:**
+
+- Content that changes more than monthly → point to a canonical note instead.
+- Anything more than ~150 words that could live as a normal note.
+- Information already visible in the vault structure (Claude can just read the files).
+- Lists of tasks, decisions, or active state — those belong in daily notes or project files.
+
+The CLAUDE.md layer is where you tell Claude *how* you work. The rest of the vault is *what* you're working on. Keep that line clean and the cascade stays useful.
+
 ## Skills — the reusable building blocks
 
 A **skill** is essentially a repeatable prompt — a markdown file at `~/.claude/skills/<name>/SKILL.md` that encodes a workflow Claude can invoke by name (you type `/<name>` at the prompt), and that you can improve over time as you notice what works and what doesn't. The easy way to end up with one: when you've done something with Claude a couple of times, ask it to "make this a skill" and it'll write the file for you. Don't worry about writing skills from scratch on day one.
