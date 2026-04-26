@@ -8,7 +8,7 @@ If you're not in an onboarding context (you're working on the repo itself, or ru
 
 ## What this repo is
 
-A two-way mirror of Simon Pierce's local Claude Code setup, packaged for the MMF science team and close collaborators. Three canonical locations on Simon's Mac:
+A two-way mirror of Simon Pierce's local Claude Code setup, packaged for the MMF science team and close collaborators. Three canonical locations on Simon's Mac (these paths are Simon's vault layout; contributors don't need to mirror it — the sync scripts only reach into them when run from his machine):
 
 - **Skills** — `~/.claude/skills/`. The vault's `05_AI WORKFLOW/CLAUDE/Skills/` has symlinks back there for Obsidian visibility.
 - **Templates** — `~/.claude/templates/` (added 2026-04-26). Houses `starter-claude-config/` and `starter-vault/`, the file skeletons `/onboard` installs into newcomers' machines.

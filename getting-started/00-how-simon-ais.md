@@ -194,8 +194,8 @@ Use whichever voice-to-text tool produces the cleanest output for you at the tim
 ## Where to go next
 
 - **01 → 04** in this folder — the tactical onboarding sequence (install Claude Code, pick the right interface, run your first skill, adopt more skills).
-- **`skills/`** — the SKILL.md for each of the six v1 skills, in detail.
-- **`guides/`** — deeper workflow explainers (coming).
+- **`skills/`** — the SKILL.md for each shipped skill, in detail.
+- **`guides/`** — deeper setup notes (currently `ghostty-setup.md`; more to come).
 - **CONTRIBUTING.md** — the workflow for submitting your own improvements.
 
 When in doubt: start by writing notes in Obsidian. The rest grows from that.

@@ -22,14 +22,36 @@ Don't try to fake the install — the user needs to be in Claude Code.
 
 ## Step 1 — clone the repo and run the bootstrap
 
-The repo ships a single bootstrap script that installs the v0 starter skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`. Run via Bash:
+The repo ships a single bootstrap script that installs the v0 starter skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`.
+
+First, pre-flight check the user's environment:
 
 ```bash
-git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git /tmp/mmf-claude-code-onboard
-bash /tmp/mmf-claude-code-onboard/sync/bootstrap.sh
+command -v git >/dev/null 2>&1 || { echo "ERROR: git not installed. Install Xcode Command Line Tools first: xcode-select --install"; exit 1; }
+command -v bash >/dev/null 2>&1 || { echo "ERROR: bash not available"; exit 1; }
 ```
 
-The script is idempotent — safe to re-run if anything goes wrong. It prints what it installs and ends with a "restart Claude Code" instruction.
+If `git` is missing, halt and tell the user to install Xcode Command Line Tools, then re-paste the prompt. Don't try to install for them.
+
+Then clone to a stable location (not `/tmp/`, which gets cleaned at reboot — the kickoff note's "describe-to-Claude PR" affordance later will need this clone to still exist). Use `~/.claude/repos/`:
+
+```bash
+mkdir -p ~/.claude/repos
+if [ -d ~/.claude/repos/mmf-claude-code ]; then
+  git -C ~/.claude/repos/mmf-claude-code pull --quiet
+else
+  git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git ~/.claude/repos/mmf-claude-code
+fi
+bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh --yes
+```
+
+If the `git clone` fails with `fatal: repository not found`, the user doesn't have access — the repo is private. Tell them: *"Looks like you need GitHub access to the `marinemegafauna/mmf-claude-code` repo. The simplest path is `gh auth login` if you have the GitHub CLI installed (or run `brew install gh` first), then I'll re-run the clone. If you don't have a GitHub account at all, ask Simon to add your account."* Don't proceed without the clone.
+
+(`--yes` runs the bootstrap non-interactively — it backs up any existing local edits to `*.bak-<timestamp>` directories and replaces with repo content. If the user has been making local edits to skills they want to keep, they can run without `--yes` later for the interactive prompt-on-diff path.)
+
+If the `git clone` fails with `fatal: repository not found`, the user doesn't have access — the repo is private. Tell them: *"Looks like you need GitHub access to the `marinemegafauna/mmf-claude-code` repo. Run `gh auth login` first (or ask Simon to add your GitHub username), then I'll re-run the clone."* Don't proceed without the clone.
+
+The bootstrap script is re-run safe: identical sources skip, differing sources save a timestamped `.bak` backup and prompt before overwriting (interactive). It prints what it installs and ends with a "restart Claude Code" instruction.
 
 ## Step 2 — restart Claude Code
 

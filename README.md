@@ -2,6 +2,8 @@
 
 A complete Claude Code system for thinking knowledge work — memory across sessions, behavioural defaults, log-driven self-customisation. Built up by Simon over the past year and shared here for the MMF team and close collaborators. Set up in about 15 minutes. **No reading required.**
 
+**Currently macOS-only.** Windows and Linux support is on the v1 roadmap. If you're on Windows or Linux and want to set this up anyway, ping Simon for a manual install — `/onboard` will halt cleanly otherwise.
+
 ## How to set this up
 
 You don't need to read this repo to use it. Three steps:

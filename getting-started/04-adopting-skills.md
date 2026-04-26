@@ -53,7 +53,5 @@ The repo ships a starter set of skills. You probably don't want all of them — 
 You're through the onboarding sequence. From here:
 
 - `skills/` — individual `SKILL.md` files to browse.
-- `guides/` — deeper workflow explainers (lab notebook, CMR, manuscript review).
+- `guides/` — deeper setup notes (currently `ghostty-setup.md`; more to come).
 - `CONTRIBUTING.md` — the workflow for submitting your own changes.
-
-If you have thirty minutes and want to go deeper fast, the highest-leverage next step is `guides/lab-notebook-workflow.md` (if you're doing analysis) or `guides/manuscript-pre-submission.md` (if you're writing a paper).
