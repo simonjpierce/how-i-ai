@@ -90,10 +90,10 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Anything where reasonable people might disagree on the right update
 
    **Audience first, then in-doubt.** Before classifying as Review, ask: who is this document for?
-   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in `05_AI WORKFLOW/CLAUDE/Processes/`) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
-   - **Simon-facing documents** (project notes, role notes, voice references, external comms, manuscripts, Current Projects "Right now" content, IDEA.md, CLAUDE.md files Simon may consult) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
+   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in `05_AI WORKFLOW/CLAUDE/Processes/`, **`Current Projects.md` and IDEA.md** — both are read by `/session-start` and written by `/document` + nightly automation) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't sit down and read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
+   - **Simon-facing documents** (project notes inside domain folders, role notes, voice references, external comms, manuscripts, daily notes, anything destined for delivery to a third party) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
 
-   The trap to avoid: classifying Decision Log / Friction Log entries as "review" because the work is substantive. Substantive ≠ Simon's-judgement-needed. If the audience is future Claude sessions, just write the entry.
+   The trap to avoid: classifying Decision Log / Friction Log / Current Projects entries as "review" because the work is substantive. Substantive ≠ Simon's-judgement-needed. If the audience is future Claude sessions or `/session-start`, just write the entry. Confirmed 2026-04-26: classified a Current Projects line-89 update as Review and surfaced it for approval; Simon's correction — *"why are you asking permission to edit 'current projects' anyway? It's for you."*
 
 5. **Present the hit list**. Show Simon a compact summary:
 
