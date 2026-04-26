@@ -48,6 +48,7 @@ SKILLS=(
   "$CLAUDE_CONFIG/skills/onboard::skills/onboard"
   "$CLAUDE_CONFIG/skills/review-friction::skills/review-friction"
   "$CLAUDE_CONFIG/skills/session-start::skills/session-start"
+  "$CLAUDE_CONFIG/skills/refresh-skills::skills/refresh-skills"
 )
 
 GUIDES=(

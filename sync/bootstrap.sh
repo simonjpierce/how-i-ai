@@ -35,6 +35,7 @@ STARTER_SKILLS=(
   session-start
   update
   review-friction
+  refresh-skills
 )
 
 # install_path SRC DST LABEL

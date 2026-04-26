@@ -50,6 +50,7 @@ SKILLS=(
   "skills/onboard::$CLAUDE_CONFIG/skills/onboard"
   "skills/review-friction::$CLAUDE_CONFIG/skills/review-friction"
   "skills/session-start::$CLAUDE_CONFIG/skills/session-start"
+  "skills/refresh-skills::$CLAUDE_CONFIG/skills/refresh-skills"
 )
 
 TEMPLATES=(
