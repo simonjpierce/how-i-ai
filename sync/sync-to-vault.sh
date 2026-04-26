@@ -12,7 +12,10 @@
 #
 # Usage:
 #   ./sync/sync-to-vault.sh            # dry run — show diffs across all categories
-#   ./sync/sync-to-vault.sh --apply    # copy desanitised content into local canonical paths
+#   ./sync/sync-to-vault.sh --apply    # apply if no local conflicts; HALT and
+#                                      # list conflict files otherwise
+#   ./sync/sync-to-vault.sh --force    # apply unconditionally (your local
+#                                      # edits to conflict files will be lost)
 
 set -euo pipefail
 
@@ -193,14 +196,42 @@ if [[ ${#new[@]} -gt 0 ]]; then
   printf '    %s\n' "${new[@]}"
 fi
 
-if [[ "$MODE" != "--apply" ]]; then
+if [[ "$MODE" != "--apply" && "$MODE" != "--force" ]]; then
   echo ""
-  echo "Dry run. Re-run with --apply to copy these into their local canonical paths."
+  echo "Dry run. Re-run with --apply to pull these into your local canonical paths."
   echo ""
-  echo "WARNING: --apply is destructive. If you have uncommitted local edits to"
-  echo "any path that's also changed in the repo, --apply will overwrite them."
-  echo "Merge manually before re-running."
+  echo "Conflict policy: --apply will HALT if any 'Changed' file above differs"
+  echo "from your local copy (likely meaning you have local edits that would be"
+  echo "lost). New files apply silently. Pass --force to override the halt"
+  echo "(only do this once you've checked the diffs above and accepted the loss"
+  echo "of your local edits, or committed them somewhere safe)."
   exit 0
+fi
+
+# --apply: halt on changed mappings unless --force, since each one is a
+# potential conflict (your local copy diverges from the contributor's
+# version that's about to land).
+if [[ "$MODE" == "--apply" && ${#changed[@]} -gt 0 ]]; then
+  echo ""
+  echo "HALT: ${#changed[@]} file(s) have local edits that differ from the"
+  echo "repo version. Pulling now would replace your local edits."
+  echo ""
+  echo "Files in conflict:"
+  for mapping in "${changed[@]}"; do
+    repo_rel="${mapping%%::*}"
+    target="${mapping##*::}"
+    echo "  - $repo_rel → $target"
+  done
+  echo ""
+  echo "Resolve before re-running. Options:"
+  echo "  (a) Commit your local edits to ~/.claude/ first, then re-run --apply."
+  echo "      Your edits are preserved in git history and the conflict resolves."
+  echo "  (b) If you don't need the local edits, re-run with --force to take"
+  echo "      the repo version everywhere."
+  echo "  (c) If you want to merge by hand: open the file pairs side-by-side"
+  echo "      (the staged version sits at $STAGE_DIR while this script is"
+  echo "      running, but the temp dir is removed on exit — copy out first)."
+  exit 1
 fi
 
 echo ""
