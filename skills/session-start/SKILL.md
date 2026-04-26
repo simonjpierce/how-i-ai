@@ -26,10 +26,11 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 
 3. **Note MEMORY.md context** — MEMORY.md is auto-loaded into the conversation. Scan the loaded content for feedback entries, infrastructure details, and references relevant to the current task. Don't re-read the file unless you need a section that was truncated.
 
-4. **Read the most recent 2–3 entries** in `<logs>/Session Handoff Log.md`. Read from the top of the file (newest entries are prepended). Stop after the third `---` separator. Skip silently if the file doesn't exist or is empty.
+4. **Read the most recent 2–3 entries** in `<logs>/Session Handoff Log.md`. Read from the top of the file (newest entries are prepended). Stop after the third `---` separator. Skip any entry preceded by `<!-- EXAMPLE ENTRY -->` (the starter template ships with one — it's not a real handoff). Skip silently if the file doesn't exist, has no real entries, or only the example entry remains.
 
-5. **Surface stale friction** — read `<logs>/Friction Log.md`. Find all `## [OPEN]` and `## [STUCK]` entries; parse the date from each H2 line (`## [STATUS] YYYY-MM-DD: ...`). For any entry whose date is more than 7 days ago, capture the title and age in days.
+5. **Surface stale friction** — read `<logs>/Friction Log.md`. Find all `## [OPEN]` and `## [STUCK]` entries; from each H2 line, extract the first date matching the regex `[0-9]{4}-[0-9]{2}-[0-9]{2}` (the format Friction Log entries use; tolerates whatever delimiter comes after — colon, em-dash, etc.). For any entry whose date is more than 7 days ago, capture the title and age in days.
    - If 1+ stale entries exist, list them numbered in the orientation summary and offer: "These haven't been reviewed in N+ days. Run `/review-friction` to walk through them?"
+   - If an entry's H2 line has no parseable date, skip it with a one-line warning to the user (don't halt the skill — the friction log shouldn't be a blocker).
    - If 0 stale entries, skip silently.
    - If the file doesn't exist or has no `[OPEN]`/`[STUCK]` entries, skip silently.
 

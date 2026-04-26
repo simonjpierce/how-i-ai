@@ -21,9 +21,9 @@
     "friction": "Friction Log.md"
   },
 
+  "_domains_comment": "domains is populated from discovery Q2 if user opted into the domain pass. Empty array if they chose root-CLAUDE.md-only. /onboard substitutes one entry per domain; remove this template entry when writing the live config.",
   "domains": [
     {
-      "_comment": "Populated from discovery Q2 if user opted into the domain pass. Empty array if they chose root-CLAUDE.md-only.",
       "folder_name": "{{DOMAIN_FOLDER_NAME}}",
       "display_name": "{{DOMAIN_DISPLAY_NAME}}",
       "claude_md_path": "{{DOMAIN_FOLDER_NAME}}/CLAUDE.md"
@@ -36,9 +36,10 @@
     "self_improvement_followup_scheduled_for": "{{INSTALL_DATE_PLUS_14_DAYS}}"
   },
 
+  "_features_comment": "Booleans below are real JSON booleans, not strings. /onboard substitutes {{TRUE_OR_FALSE}} placeholders with the literal token `true` or `false` (no quotes). For zero domains, write `\"domains\": []` and skip the placeholder block entirely.",
   "features": {
     "auto_approval_mode_recommended": true,
-    "domain_folders_opted_in": "{{TRUE_OR_FALSE}}",
-    "numbered_folder_prefixes": "{{TRUE_OR_FALSE}}"
+    "domain_folders_opted_in": {{TRUE_OR_FALSE}},
+    "numbered_folder_prefixes": {{TRUE_OR_FALSE}}
   }
 }

@@ -1,7 +1,7 @@
 ---
 name: document
 description: End-of-session handover. Summarises the session, captures decisions and lessons, and updates vault logs. Invoke proactively when the conversation is getting long, a substantial task is complete, or the session is winding down. Also use when the user says "wrap up", "save progress", "checkpoint", or signals goodbye.
-allowed-tools: Read, Write, Edit, Glob, Grep, Agent
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
 
 Perform an end-of-session handover. Review the full conversation and write updates to the vault.
@@ -63,7 +63,7 @@ If within budget, proceed silently — no need to report the numbers.
 
    (Suggested improvements — moved to step 16b so they can incorporate findings from the verification subagent, log maintenance, and archival sweeps. Generating them here produces shallower, pre-subagent output.)
 
-5. **Append to the Session Handoff Log** with today's date and a brief topic label:
+5. **Prepend to the Session Handoff Log** with today's date and a brief topic label. Newest entries go to the top of the file (immediately below the intro/`## Format` section), separated from earlier entries by a `---` line. `/session-start` reads from the top, so prepending is what makes the most recent session's context the first thing the next session sees.
    - What was done
    - Current state (complete, or what's pending)
    - Follow-up on prior session's "What's next" (addressed / still open / dropped)
@@ -273,7 +273,7 @@ If no sync script found, skip silently — the user isn't a contributor and this
 - Don't duplicate — if something was already logged earlier in the session (mid-session continuous documentation), reference it rather than re-writing it. The handover catches gaps, not repeats.
 - If the session was trivial (quick question, no real work done), say so and skip the logs.
 - If a log file doesn't exist, create it with a brief header (e.g., `# Session Handoff Log`) before appending.
-- All vault paths are relative to: `$VAULT_PATH`
+- All vault paths are relative to the vault root recorded in `~/.claude/projects/<project-key>/config.json` under `vault.path`. Don't hard-code a vault path here — derive it at runtime so the skill survives a vault rename.
 - The auto-memory directory is at `~/.claude/projects/.../memory/`. MEMORY.md is the index; individual memory files live alongside it. The vault copy at `05_AI WORKFLOW/CLAUDE/MEMORY (auto-memory).md` is symlinked — edits to either location propagate.
 
 ## Post-run improvement

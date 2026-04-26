@@ -34,19 +34,31 @@ If `/Applications/Ghostty.app` exists, set the tab title. Otherwise skip — thi
 [ -d /Applications/Ghostty.app ] && MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "onboarding" > "/tmp/claude-title-${MY_TTY}"
 ```
 
-### 1. Pre-flight — auto-approval mode + filesystem write capability
+### 1. Pre-flight — platform + auto-approval mode + Bash availability
 
-**1a. Auto-approval mode.** This system assumes Claude Code is in auto-approval mode — too many permission prompts kills the experience. If you can detect the current mode, do; otherwise ask:
+**1a. Platform check.** This onboarding flow is currently macOS-only. Run:
+
+```bash
+[ "$(uname)" = "Darwin" ] && echo "platform OK"
+```
+
+If the result is anything other than `platform OK`, halt and tell the user:
+
+> *"This setup flow is currently macOS-only — Windows and Linux support is on the v1 roadmap. If you're on Windows or Linux and want to run this anyway, ping Simon for a manual install."*
+
+Do not proceed past this check on non-Darwin platforms.
+
+**1b. Auto-approval mode.** This system assumes Claude Code is in auto-approval mode — too many permission prompts kills the experience. Ask:
 
 > *"Quick check: is Claude Code set to auto-approval mode? (Settings → Permissions → Auto-approve.) The system works much better that way — without it, I'll be interrupting you with a permission prompt for every file write, which gets old fast."*
 
 If they say no or don't know, walk them through enabling it before continuing. Don't proceed past Phase 2 in default-prompt mode — friction will wreck the rest of the flow.
 
-**1b. Filesystem write capability.** Try to write a small test file to `/tmp/onboard-test.txt`. If it succeeds, full filesystem mode — proceed normally. If it fails (e.g. running in Claude Chat web with no filesystem access), STOP and tell the user:
+**1c. Bash availability.** The rest of this skill assumes you can run shell commands. If your tools include Bash, you're in Claude Code (or Claude Desktop with filesystem MCP) — proceed. If you don't have a Bash tool at all, you're in Claude Chat — STOP and tell the user:
 
-> *"I can't write files in this environment, which means I can't actually install the system here. You'll want to either (a) open this conversation in Claude Code in the Claude Desktop app — same prompt, real filesystem access — or (b) for an in-Claude.ai alternative, switch to Cowork. Once you're there, paste the README prompt again and I'll resume."*
+> *"I can't run shell commands or write files in this environment, which means I can't actually install the system here. Open Claude Code in the Claude Desktop app — same Pro plan you already have, just a different surface — and paste the README prompt again. I'll resume from there."*
 
-Do not attempt the rest of the skill in a no-filesystem context.
+Do not attempt the rest of the skill in a no-Bash context. (Bash availability is the right signal: filesystem-write tests can succeed in restricted-MCP environments where the rest of the install would still fail.)
 
 ### 2. Detect & route
 
@@ -73,26 +85,26 @@ Wait for them to confirm install is complete. Don't try to install Obsidian prog
 
 **3b. Vault location.** Ask where they want the vault:
 
-> *"Where should your vault live? Suggested: `~/Documents/Obsidian Vault`. If you use iCloud / Dropbox / Google Drive sync, pick a location inside that sync folder so the vault syncs across devices."*
+> *"Where should your vault live? Suggested: `$HOME/Documents/Obsidian Vault`. If you use iCloud / Dropbox / Google Drive sync, pick a location inside that sync folder so the vault syncs across devices."*
 
 Numbered options:
-1. `~/Documents/Obsidian Vault` (default, no sync)
-2. iCloud (typical path: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/<name>`)
+1. `$HOME/Documents/Obsidian Vault` (default, no sync)
+2. iCloud (typical path: `$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/<name>`)
 3. Dropbox / Google Drive (user provides path)
 4. Other (user provides path)
 
 **3c. Sync option.** Note the sync choice for `Getting Started.md` later. Don't try to configure sync — instructional only.
 
-**3d. Create vault folder.**
+**3d. Create vault folder.** Before any Bash command, normalise the chosen path to an absolute one — quoted `~` does NOT expand in shell, so a literal `~/Documents/Obsidian Vault` would create a `~` directory in the current working directory. If the user said `~/Foo`, rewrite to `$HOME/Foo` (or expand to a full absolute path). Then:
 
 ```bash
-mkdir -p "<chosen-path>"
+mkdir -p "$VAULT_PATH"
 ```
 
 Verify writable:
 
 ```bash
-touch "<chosen-path>/.write-test" && rm "<chosen-path>/.write-test"
+touch "$VAULT_PATH/.write-test" && rm "$VAULT_PATH/.write-test"
 ```
 
 If write-test fails (e.g. iCloud not yet synced), explain and offer alternative paths.
@@ -203,27 +215,48 @@ These ship as templates the user can adopt later — when they encounter a real 
 ```markdown
 # Getting Started — your first vault note
 
-Set up by `/onboard` on {{INSTALL_DATE}}. This note is yours to edit; treat
-it as your map for the first week.
+Set up by `/onboard` on {{INSTALL_DATE}}. This note is yours to edit.
 
 ## What just happened
 
 - Your vault is at `{{VAULT_PATH}}`.
-- Root CLAUDE.md is populated with your identity, preferences, and domains.
+- Root CLAUDE.md is populated from your interview answers.
 - Folder-level CLAUDE.md exists for: {{DOMAIN_LIST}}.
-- Logs are ready at `AI_WORKFLOW/CLAUDE/`: Session Handoff, Decision, Friction.
+- Logs ready at `AI_WORKFLOW/CLAUDE/`: Session Handoff, Decision, Friction.
+- Skills installed: `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`.
 
-## Things to try this week
+## Day 1 — settle in
 
-1. **Format a real meeting** — record audio, drop the file in here, run
-   `/transcribe`. The skill produces a clean speaker-labelled transcript and
-   extracts TODOs and IDEAs into your daily note.
-2. **Draft an email** — ask Claude to "draft a reply to <person> about <topic>",
-   pointing at relevant project notes if you have them. The CLAUDE.md cascade
-   means your voice and conventions apply automatically.
-3. **End a session with `/document`** — when you wrap up, ask Claude to record
-   what was done and what's next. The next session reads it first and picks
-   up where you left off.
+The system is set up. There's nothing you have to do today besides:
+
+1. Open Obsidian and look around your folder structure.
+2. If you have existing notes, drop them into the appropriate folders.
+3. Try a simple Claude interaction — ask any question, point at a file you have, see how it feels.
+
+The cascade is active. Anything you ask Claude inside this vault now uses
+the rules you set up. You don't need to invoke any skill specifically;
+Claude reads the CLAUDE.md cascade automatically.
+
+## When you have actual work
+
+The starter skills handle the most common workflows:
+
+- **`/document`** — when you wrap up a session, ask Claude to record what
+  was done. The next session reads it first and picks up where you left off.
+- **`/session-start`** — at the top of a new session, this orients Claude
+  on what was happening and surfaces any stale Friction Log entries.
+- **`/update`** — keeps related notes current after substantial work in
+  one area.
+- **`/review-friction`** — weekly walk through your Friction Log, marking
+  entries resolved / deferred / wontfix.
+
+Use them as the work calls — there's no required order.
+
+## Friction is welcome
+
+When something feels harder than it should, tell Claude — corrections
+become permanent. The Friction Log captures these. Run `/review-friction`
+weekly (about 5 minutes once you're in the habit).
 
 ## Meeting capture
 
@@ -237,48 +270,33 @@ practices in this system. There's no perfect tool yet, but options include:
 - **Otter.ai** — meeting-focused, generates transcripts directly; web app.
 - **Phone voice memos** — universal fallback; quality varies but works.
 
-Once you have audio, run `/transcribe` to format it.
-
-## Friction is welcome
-
-When something feels harder than it should, tell Claude — corrections become
-permanent. The Friction Log captures these for review. Run `/review-friction`
-weekly (it takes ~5 minutes).
+Once you have an audio file or text transcript in your vault, ask Claude to
+clean it up and extract TODOs.
 
 ## Contributing back
 
-If you find something that could work better — a skill that needs a tweak,
-a step that's confusing, a workflow worth adding — you don't need to know
-git, branches, or pull requests to contribute. Just describe what you want
-to Claude Code:
+If you find something that could work better — a step that's confusing, a
+rule that fires too often, a workflow worth adding — describe what you want
+to Claude:
 
-> *"Add a step to /transcribe that strips out filler words."*
->
 > *"The kickoff note should mention X."*
 >
 > *"This rule in MEMORY.md fires too often — can we narrow it?"*
 
-Claude will edit the relevant files in a local clone of `mmf-claude-code`,
-commit with attribution, push to a branch, and open a pull request. The
-mechanics of contribution are no harder than describing the improvement.
+Claude can edit the relevant files in a local clone of `mmf-claude-code`,
+commit with attribution, push, and open a pull request. You don't need to
+know git, branches, or PR workflow — just describe the improvement.
 
-## More skills
+## Two-week check-in
 
-This system ships with five core skills (`/onboard`, `/document`,
-`/session-start`, `/update`, `/review-friction`). The
-[`mmf-claude-code` repo](https://github.com/marinemegafauna/mmf-claude-code)
-has more — `/transcribe`, `/red-team`, `/verify-citations`,
-`/pdf-to-markdown`, `/mmf-brand`. Add them as you hit work that benefits.
-
-## Self-improvement loop
-
-In about two weeks, Claude will check in to ask whether you'd like to install
-the nightly self-improvement automation — a scheduled process that scans your
-Friction Log overnight and proposes fixes. By then your log will have enough
-content for it to be useful. You can decline or defer when the time comes.
+There's a follow-up note in your INBOX dated {{DATE_PLUS_14}}:
+`INBOX/Onboarding follow-up — {{DATE_PLUS_14}}.md`. By that point your
+Friction Log will have a few entries; the note prompts you to consider
+whether you want the nightly self-improvement loop set up. Open it in two
+weeks (or sooner if you're curious).
 ```
 
-Substitute placeholders. Write to `<vault>/INBOX/Getting Started.md`.
+Substitute placeholders (including `{{DATE_PLUS_14}}` = today + 14 days, ISO format). Write to `<vault>/INBOX/Getting Started.md`.
 
 Open it in Obsidian:
 
@@ -318,13 +336,39 @@ Ask whether to use a numbered prefix (`01_<NAME>`) or unnumbered. Default sugges
 
 Write to `<vault>/<DOMAIN_FOLDER>/CLAUDE.md`.
 
-### 8. Schedule self-improvement follow-up
+### 8. Write the two-week follow-up note
 
-Invoke the `/schedule` skill (or use its underlying mechanism) to create a one-shot routine for **14 days from today**, prompt:
+Compute `{{DATE_PLUS_14}}` (today + 14 days, ISO format). Write to `<vault>/INBOX/Onboarding follow-up — {{DATE_PLUS_14}}.md`:
 
-> *"You've been using your Claude Code setup for two weeks now. Your Friction Log has had time to accumulate entries. Want me to walk you through installing the nightly self-improvement loop? It scans the log overnight and proposes fixes — about 30 minutes to set up, then runs without you. You can also defer or decline."*
+```markdown
+# Onboarding follow-up — {{DATE_PLUS_14}}
 
-Confirm to the user that the follow-up is scheduled. If `/schedule` isn't available, fall back to writing a System housekeeping entry in the Daily Log dated 14 days out.
+Written by `/onboard` on {{INSTALL_DATE}} as a two-week check-in. By the time
+you're reading this, you've had ~14 days with your Claude Code setup and your
+Friction Log will have a few entries.
+
+## Worth considering now
+
+- **Have you been running `/review-friction` weekly?** If the friction log
+  has accumulated 5+ `[OPEN]` entries, give it a read.
+- **Would the nightly self-improvement loop be useful?** It's a scheduled
+  automation (LaunchAgent on macOS) that scans your Friction Log overnight
+  and proposes fixes. Setup takes ~30 minutes. Ask Claude:
+  *"Walk me through installing the nightly self-improvement loop."*
+- **Domain folders.** If you skipped the domain pass during onboarding or
+  have added domains since, ask Claude to walk through the per-domain drill
+  for any new folder using the `folder-CLAUDE.template.md` template at
+  `<vault>/AI_WORKFLOW/templates/`.
+- **Voice references.** As you correct Claude's email/writing voice,
+  capture those rules in `<vault>/Voice References/<context>.md` for re-use.
+
+## How to dismiss
+
+Read it, decide what (if anything) to do, then delete the file or move it
+to `06_ARCHIVE/`. The system doesn't watch for it.
+```
+
+Substitute placeholders. This is a static dated note, not a scheduled automation — the user encounters it whenever they next browse INBOX. The kickoff `Getting Started.md` references it explicitly so they know it's there.
 
 ### 9. Confirm and close
 
@@ -337,7 +381,7 @@ Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
 Logs: ready at AI_WORKFLOW/CLAUDE/
 Skills installed: /onboard, /document, /session-start, /update, /review-friction
-Follow-up scheduled: <date> (self-improvement loop check-in)
+Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
 Your kickoff note is open in Obsidian — start there.
 ```

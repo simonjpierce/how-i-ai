@@ -42,10 +42,10 @@ The HTML comment `<!-- session:tag -->` is for grep — short identifying tag, k
 2. Ran the discovery interview — six questions, ~12 minutes.
 3. Vault created at `~/Documents/Obsidian Vault`. Root CLAUDE.md and Getting Started.md written.
 4. Opted into the domain-folder pass — three folders created with their own CLAUDE.md each.
-5. Scheduled the self-improvement loop follow-up for two weeks out.
+5. Two-week follow-up note placed in INBOX.
 
 **Current state:** Complete. System ready to use.
 
 **Follow-up on prior "What's next":** N/A (first session).
 
-**What's next:** Try `/transcribe` on a real meeting recording. Add at least one entry to Decision Log this week. Run `/review-friction` next Sunday.
+**What's next:** Settle in — open Obsidian, look around, drop in any existing notes. Use the system as work calls; the kickoff `Getting Started.md` lists what's installed.
