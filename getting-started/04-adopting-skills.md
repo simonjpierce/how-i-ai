@@ -1,3 +1,8 @@
+---
+audience: advanced-user
+note: For users who want to install skills manually rather than through `/onboard`. Most readers should run `/onboard` and let it copy the starter skills — this doc is for the rest.
+---
+
 # 04 — Adopting skills from this repo
 
 The pattern for installing a skill from this repo into your own Claude Code setup. Skills live in `~/.claude/skills/` and work the same way whether you use the desktop app or the CLI.
@@ -41,7 +46,7 @@ None of that affects the repo. If your modifications would help the rest of the 
 
 ## Don't install all of them
 
-There are six skills in v1. You probably don't want all of them. Install what you'll actually use this week; come back for more when you hit a task that would benefit.
+The repo ships a starter set of skills. You probably don't want all of them — install what you'll actually use this week; come back for more when you hit a task that would benefit. See `skills/` for the current list.
 
 ## What's next
 

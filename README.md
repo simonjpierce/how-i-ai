@@ -6,7 +6,7 @@ A complete Claude Code system for thinking knowledge work — memory across sess
 
 You don't need to read this repo to use it. Three steps:
 
-1. **Install [Claude Desktop](https://claude.ai/download).** Sign in with a Pro plan or higher (Claude Code is included in Pro at $20/month — the higher tiers aren't required).
+1. **Install [Claude Desktop](https://claude.com/download).** Sign in with a Pro plan or higher (Claude Code is included in Pro at $20/month — the higher tiers aren't required). If the Code tab is missing or asks you to upgrade, ask Simon before changing plans; MMF may have org access.
 2. **Open Claude Code** from the desktop app.
 3. **Paste this prompt:**
 

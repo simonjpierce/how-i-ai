@@ -1,3 +1,7 @@
+---
+audience: user
+---
+
 # 02 — Three Claudes
 
 The desktop app gives you three Claude tabs side by side: **Chat**, **Cowork**, and **Code**. They share the same engine but have different sweet spots — and picking the wrong one for the job costs hours. Install the desktop app and get familiar with all three; that's the minimum bar. The CLI sits above this for people who want keyboard-driven workflows or to wire Claude into automation, but it's optional and a real step up in setup.

@@ -1,3 +1,7 @@
+---
+audience: user
+---
+
 # 00 — How Simon AIs
 
 The overview document. If you read only one thing before touching any of this, read this. It covers how the whole setup fits together, why it looks the way it does, and where you can plug in without adopting all of it.
@@ -116,13 +120,11 @@ A **skill** is essentially a repeatable prompt — a markdown file at `~/.claude
 
 Skills compose. A single project can use several: `/transcribe` for a meeting, `/update` afterwards to bring project notes current, `/document` to hand off at session end.
 
-This repo's `skills/` directory has six skills you can copy into your own setup. Copy only the ones you'll actually use this week; come back for more when you hit a task that would benefit.
+This repo's `skills/` directory ships a starter set you can copy into your own setup. Copy only the ones you'll actually use this week; come back for more when you hit a task that would benefit.
 
 ## Skills useful for scientists
 
 The following skills are in this repo and are most useful for research work. Each has its own `SKILL.md` — the summaries below are just the hook.
-
-- **`/science-paper`** — the most load-bearing research skill in Simon's setup. Structures analysis sessions around a **lab notebook file** (the authoritative record — data, methods, decisions, results, interpretation; detail is a feature) and a **manuscript file** drafted from the completed lab notebook. The two-file discipline keeps exploratory analysis and final writing separate, enforces that every analytical step is documented before proceeding to the next, and produces better drafts because the lab notebook has already captured the hard thinking. Two modes: *lab notebook* (activate at session start for interactive analysis) and *manuscript* (draft the paper from a completed notebook). See `skills/science-paper/SKILL.md`.
 
 - **`/transcribe`** — meeting audio → speaker-labelled transcript with action items extracted. Uses Whisper locally (no data leaves your machine). Fits directly into a daily-note workflow.
 
@@ -136,7 +138,7 @@ The following skills are in this repo and are most useful for research work. Eac
 
 - **`/document`** — end-of-session handover. Writes the structured summary that tomorrow's session reads first.
 
-Detailed guides for the highest-leverage workflows (lab notebook → manuscript pipeline, manuscript pre-submission review) live in `guides/`.
+Additional setup notes for the workflows that need them (e.g. Ghostty terminal configuration) live in `guides/`. Most users won't need anything in there.
 
 ## Hooks and automations — when friction turns into infrastructure
 

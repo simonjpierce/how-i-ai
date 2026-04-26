@@ -1,3 +1,7 @@
+---
+audience: user
+---
+
 # 01 — Install Claude Code
 
 Claude Code has two interfaces: a **desktop app** (graphical, friendlier to start with) and a **CLI** (terminal, more flexible for scripting and automation). They run the same engine and share configuration — pick whichever fits how you work, or install both.

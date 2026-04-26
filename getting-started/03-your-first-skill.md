@@ -1,3 +1,8 @@
+---
+audience: advanced-user
+note: For users who want to understand or build skills manually. The default onboarding path is `/onboard`, which installs starter skills automatically — most readers won't need this.
+---
+
 # 03 — Your first skill
 
 A **skill** is a reusable instruction set for Claude. It lives as a markdown file in `~/.claude/skills/`. When you type `/<skill-name>` at the Claude Code prompt, Claude reads the skill file and follows its instructions.
