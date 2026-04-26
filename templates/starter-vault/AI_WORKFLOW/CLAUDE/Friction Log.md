@@ -6,6 +6,7 @@ Things that are harder than they should be. The point is to surface recurring an
 
 - `[OPEN]` — unresolved, needs review
 - `[STUCK]` — no autonomous path forward; needs your judgement
+- `[DEFERRED]` — set aside until a specific date (entry body has `**Defer to:** YYYY-MM-DD`); ignored by `/session-start`'s stale-friction surfacing until you re-tag as `[OPEN]`
 - `[RESOLVED]` — fixed, kept here for searchable lessons
 - `[WONTFIX]` — accepted as a platform limitation or out-of-scope
 

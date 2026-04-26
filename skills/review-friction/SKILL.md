@@ -52,13 +52,13 @@ For each open entry:
    ```
    1. Resolved — fix has landed, mark [RESOLVED]
    2. Wontfix — accepted as platform limitation or out-of-scope, mark [WONTFIX]
-   3. Defer — not now, but revisit on a specific date (you'll be asked for the date)
+   3. Defer — not now, but revisit on a specific date, mark [DEFERRED] (you'll be asked for the date)
    4. Stuck — needs my judgement, mark [STUCK] (auto-tagged after 3 days anyway)
    5. Skip — leave [OPEN], we'll see it again next review
    ```
 
 4. **Wait** for the user's reply.
-5. **Apply the change inline** by editing the entry's status tag and (for defer) appending a "Defer to YYYY-MM-DD" line. Use the Edit tool — preserve everything else verbatim.
+5. **Apply the change inline** by editing the entry's status tag and, for defer, appending a `**Defer to:** YYYY-MM-DD` line. `[DEFERRED]` entries are ignored by `/session-start`'s stale-friction surfacing; on or after the defer-to date, the user can re-tag them `[OPEN]` to bring them back. Use the Edit tool — preserve everything else verbatim.
 6. **Brief confirmation** — one sentence — and move to the next entry.
 
 **Kill switch:** if the user says `done`, `stop`, `enough`, or signals fatigue mid-list, exit cleanly. Skip remaining entries; close.
