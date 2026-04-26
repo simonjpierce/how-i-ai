@@ -36,10 +36,11 @@
     "self_improvement_followup_scheduled_for": "{{INSTALL_DATE_PLUS_14_DAYS}}"
   },
 
-  "_features_comment": "Booleans below are real JSON booleans, not strings. /onboard substitutes {{TRUE_OR_FALSE}} placeholders with the literal token `true` or `false` (no quotes). For zero domains, write `\"domains\": []` and skip the placeholder block entirely.",
+  "_features_comment": "Booleans below are real JSON booleans, not strings. /onboard substitutes {{TRUE_OR_FALSE}} placeholders with the literal token `true` or `false` (no quotes). For zero domains, write `\"domains\": []` and skip the placeholder block entirely. `is_simon` should always be false for newcomer installs — it gates Simon-personal behaviours in /document and /update (Things 3 calls, simonjpierce/claude-code-config commits, Daily Log housekeeping, voice references). Setting it true on any other machine will cause those skills to attempt operations against folders/repos/tools that don't exist there.",
   "features": {
     "auto_approval_mode_recommended": true,
     "domain_folders_opted_in": {{TRUE_OR_FALSE}},
-    "numbered_folder_prefixes": {{TRUE_OR_FALSE}}
+    "numbered_folder_prefixes": {{TRUE_OR_FALSE}},
+    "is_simon": false
   }
 }

@@ -16,7 +16,7 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 
 ## Steps
 
-### Pre-flight: MEMORY.md health check
+### Pre-flight: load config + MEMORY.md health check
 
 Before step 1, run:
 
@@ -26,12 +26,28 @@ Before step 1, run:
 # absolute vault path to a hyphen, so /Users/.../Simon's Vault becomes
 # -Users-...-Simon-s-Vault.
 PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
-MEMORY_FILE="$HOME/.claude/projects/$PROJECT_KEY/memory/MEMORY.md"
+PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
+CONFIG_FILE="$PROJECT_DIR/config.json"
+MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
+
+# Read the is_simon feature flag from config.json. Defaults to false if
+# missing. This gates Simon-personal behaviours below — Things 3 task
+# offers, Daily Log housekeeping writes, voice-reference reads, and the
+# claude-code-config auto-commit. New users do not have these tools or
+# repos, so running them yields no-ops or errors.
+IS_SIMON=false
+if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
+  IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
+fi
+echo "is_simon=$IS_SIMON"
+
 [ -f "$MEMORY_FILE" ] || { echo "MEMORY.md not found at $MEMORY_FILE — skipping pre-flight"; }
 LINES=$([ -f "$MEMORY_FILE" ] && wc -l < "$MEMORY_FILE" || echo 0)
 BYTES=$([ -f "$MEMORY_FILE" ] && wc -c < "$MEMORY_FILE" || echo 0)
 echo "MEMORY.md: $LINES lines, $BYTES bytes (caps: 200 / 25600)"
 ```
+
+The `IS_SIMON` value above gates several Simon-personal sections later in this skill — they're flagged with `**SIMON-ONLY**` headers. If `IS_SIMON=false` (the default for newcomer installs), skip those sections entirely.
 
 If `$LINES > 150` or `$BYTES > 20000`, flag this at the top of the handover entry so step 13 (Distil to MEMORY.md) knows to route new rules to Tier 2 leaves rather than Tier 1 inline. See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
 
@@ -68,7 +84,7 @@ If within budget, proceed silently — no need to report the numbers.
    - Current state (complete, or what's pending)
    - Follow-up on prior session's "What's next" (addressed / still open / dropped)
    - What the next session should do or read first
-   - **Offer Things 3 tasks for deferred items**: For each actionable item in "What's next" that Simon needs to take or review (not "continue work on X" session context), ask whether he wants a `/todo` created for it. List the items and let him pick.
+   - **(SIMON-ONLY)** **Offer Things 3 tasks for deferred items**: If `IS_SIMON=true`, for each actionable item in "What's next" that Simon needs to take or review (not "continue work on X" session context), ask whether he wants a `/todo` created for it. List the items and let him pick. Skip this entire bullet if `IS_SIMON=false` — non-Simon users may not have Things 3 installed.
 
 6. **Append to the Decision Log** if any non-obvious choices were made this session that haven't already been logged mid-session. Skip if none. For decisions that are provisional or context-dependent, add a `**Revisit by:** YYYY-MM-DD` line so future sessions know when to reassess.
 
@@ -170,8 +186,8 @@ If within budget, proceed silently — no need to report the numbers.
 
    Review the subagent's report and act on it:
    - **Apply now** items: make the changes directly.
-   - **Create TODO (Things 3)** items: create Things 3 tasks with vault links and clear descriptions. Only for Simon-must-act items.
-   - **System housekeeping (Daily Log)** items: append to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, and a named verification check. Claude picks these up on future sessions after the date.
+   - **(SIMON-ONLY)** **Create TODO (Things 3)** items: if `IS_SIMON=true`, create Things 3 tasks with vault links and clear descriptions. If `IS_SIMON=false`, downgrade these items to "Note for next session" (next bullet).
+   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, and a named verification check. Claude picks these up on future sessions after the date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
    - **Note for next session** items: add to the "What's next" section of the handoff entry (update step 5 entry if already written).
    - Report all items and actions taken to the user in step 18.
 
@@ -209,7 +225,7 @@ If within budget, proceed silently — no need to report the numbers.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.
    - **Friction Log**: Move entries marked ✓ to the `## Resolved` section. Compress to one-line summaries.
 
-14b. **Consider syncing `~/.claude/` changes to a contributor repo (if applicable)**: If this session modified files in `~/.claude/skills/`, `~/.claude/templates/`, or `~/.claude/CLAUDE.md`, check whether the user has a contributor-side repo configured for syncing those changes outward. Detection: look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/` or wherever the user keeps their git checkouts. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`.
+14b. **(SIMON-ONLY)** **Consider syncing `~/.claude/` changes to a contributor repo (if applicable)**: Skip this step entirely if `IS_SIMON=false` — newcomer users don't have the `claude-code-config` repo and shouldn't be offered to push there. If `IS_SIMON=true`: this session modified files in `~/.claude/skills/`, `~/.claude/templates/`, or `~/.claude/CLAUDE.md`, check whether the user has a contributor-side repo configured for syncing those changes outward. Detection: look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/` or wherever the user keeps their git checkouts. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`.
 
 If found, surface as a single offer in step 17:
 

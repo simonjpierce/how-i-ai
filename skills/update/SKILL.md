@@ -16,7 +16,7 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 
 ## Steps
 
-### Pre-flight: MEMORY.md health check
+### Pre-flight: load config + MEMORY.md health check
 
 Before any steps, run:
 
@@ -25,12 +25,26 @@ Before any steps, run:
 # directory. Claude Code sanitises any non-alphanumeric character in the
 # absolute vault path to a hyphen.
 PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
-MEMORY_FILE="$HOME/.claude/projects/$PROJECT_KEY/memory/MEMORY.md"
+PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
+CONFIG_FILE="$PROJECT_DIR/config.json"
+MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
+
+# Read is_simon feature flag. Defaults to false. Gates Simon-personal
+# behaviours below — GitHub repo creation under simonjpierce/<name> and
+# the claude-code-config auto-commit + push.
+IS_SIMON=false
+if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
+  IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
+fi
+echo "is_simon=$IS_SIMON"
+
 [ -f "$MEMORY_FILE" ] || { echo "MEMORY.md not found at $MEMORY_FILE — skipping pre-flight"; }
 LINES=$([ -f "$MEMORY_FILE" ] && wc -l < "$MEMORY_FILE" || echo 0)
 BYTES=$([ -f "$MEMORY_FILE" ] && wc -c < "$MEMORY_FILE" || echo 0)
 echo "MEMORY.md: $LINES lines, $BYTES bytes (caps: 200 / 25600)"
 ```
+
+The `IS_SIMON` value above gates two Simon-personal sub-steps in step 9 (Code backup check) — they're flagged with `(SIMON-ONLY)` markers. If `IS_SIMON=false` (the default for newcomer installs), commit locally only and do NOT create new GitHub repos or push to `simonjpierce/claude-code-config`.
 
 If `$LINES > 150` or `$BYTES > 20000`, warn Simon: "MEMORY.md approaching loader cap — any new rules added this session should go in Tier 2 leaves (`memory/feedback_*.md`), not Tier 1 inline." See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
 
@@ -140,12 +154,12 @@ If within budget, proceed silently — no need to report the numbers unless aske
 9. **Code backup check**. If the session created or modified scripts, analysis code, or data outputs:
    - Check `git status` in each relevant repo for uncommitted changes.
    - Check whether the repo has a GitHub remote (`git remote -v`).
-   - **If scripts/outputs exist outside any repo** (e.g., on Desktop, in a project folder): assess whether a GitHub repo would be useful. It is if there are ≥2 scripts or the analysis is non-trivial. If so, **create a private repo** on Simon's GitHub (`gh repo create simonjpierce/<name> --private`), initialize locally, add relevant files (scripts, cleaned data, outputs — not raw data from third-party papers), commit, push, and update the Artifacts table with the new repo path.
+   - **(SIMON-ONLY)** **If scripts/outputs exist outside any repo** (e.g., on Desktop, in a project folder): if `IS_SIMON=true`, assess whether a GitHub repo would be useful. It is if there are ≥2 scripts or the analysis is non-trivial. If so, **create a private repo** on Simon's GitHub (`gh repo create simonjpierce/<name> --private`), initialize locally, add relevant files (scripts, cleaned data, outputs — not raw data from third-party papers), commit, push, and update the Artifacts table with the new repo path. If `IS_SIMON=false`, commit to a local repo only and ask the user where (if anywhere) they want it pushed — do NOT use the `simonjpierce/` namespace.
    - **If repo exists but has uncommitted or unpushed changes**: stage, commit with a descriptive message, and push. /update is an implicit request to bring everything current — that includes the repo.
    - **Mixed authorship — split commits**: If the staging area mixes your edits with pre-existing uncommitted Simon edits (files changed before this session started, or files Simon edited mid-session that you didn't touch), split into TWO commits before pushing — his changes first with a clear attribution (no `Co-Authored-By: Claude` line, short descriptive message), then yours (with the `Co-Authored-By` line). This keeps `git blame` clean and respects the Commit authorisation section of global CLAUDE.md. Identify his edits by running `git diff --stat` on the staged files and asking: did the session touch this file? If no, it's his.
    - **Figure sync**: If the repo has a `sync_figures.sh` script (created by `/science-paper`), run it to copy figures from `outputs/` to the vault figures folder and Google Drive. Do this before committing so the vault copy is current.
    - Repos to check: any path mentioned in the session's Artifacts tables or file edits under `~/repos/`.
-   - **`~/.claude/` repo**: If the session modified skills, hooks, or settings in `~/.claude/`, commit and push to `simonjpierce/claude-code-config`. This is infrastructure — don't wait for the 05:30 catch-up push. Run: `cd ~/.claude && git add -A && git diff --cached --quiet || git commit -m "auto: [brief description]" && git push origin main`.
+   - **(SIMON-ONLY)** **`~/.claude/` repo**: Skip entirely if `IS_SIMON=false` — newcomer machines may have `~/.claude/` as a plain directory (no git repo) or pointed at a different remote. If `IS_SIMON=true` and the session modified skills, hooks, or settings in `~/.claude/`, commit and push to `simonjpierce/claude-code-config`. This is infrastructure — don't wait for the 05:30 catch-up push. Run: `cd ~/.claude && git add -A && git diff --cached --quiet || git commit -m "auto: [brief description]" && git push origin main`.
    - **Check current branch before committing.** Run `git branch --show-current` in each repo first. If HEAD is NOT on `main`, a naïve commit lands on the side branch (e.g. a `workhorse/regression-*` branch from a recent workhorse run) and your fix never ships. Default flow: stash ALL pending working-tree changes with bare `git stash push -u -m "tmp"` (do NOT pass `-- <path>` — partial stash leaves other dirty tracked files that will block `git checkout main`, and a later `stash pop` will hit merge conflicts when main has moved on for the same paths), `git checkout main`, stage your file and commit there, push, `git checkout <original-branch>`, `git stash pop`. Failure history: 2026-04-21 /update + /document, 2026-04-24 (this turn) — all hit the same wrong-branch landing.
      - **Cherry-pick salvage.** If you've already committed on the wrong branch before noticing, recover with: stash any conflicting working-tree changes (bare `git stash push -u`), `git checkout main`, `git cherry-pick <hash>`, push, return to the original branch, pop the stash, drop the now-redundant stash on the old branch. Tonight's run did this twice — works but adds friction. Better: check the branch first.
      - **Mixed-authorship + wrong-branch combo.** If pre-existing dirty files in the working tree are Simon's (not from this session), and a bare stash would lump them in with yours, use the split-stash dance: (1) `git stash push -m "claude" -- <your-file>`; (2) `git stash push -m "simon"` for the rest; (3) `git checkout main`; (4) `git stash pop stash@{1}` (yours, now at index 1); (5) commit + push; (6) `git checkout <original-branch>`; (7) `git stash pop stash@{0}` to restore Simon's work. Verify with `git stash list` between pops — the index shifts. Only needed when authorship matters; for ordinary cleanup the bare-stash flow above is simpler.
