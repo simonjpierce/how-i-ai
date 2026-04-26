@@ -1,6 +1,14 @@
 # mmf-claude-code — notes for Claude
 
-This repo is a **two-way mirror** of Simon's local `~/.claude/`. Three canonical locations on Simon's Mac:
+If you're reading this because a user just pasted *"Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine..."* into Claude Code: **read [`getting-started/05-set-up-your-vault.md`](./getting-started/05-set-up-your-vault.md) next, and follow it.** That doc tells you how to install `/onboard` and the supporting skills, then run the onboarding flow for the user. The user is not expected to read this file or any of the others — that's your job.
+
+If you're not in an onboarding context (you're working on the repo itself, or running `/update` for Simon), the rest of this file applies.
+
+---
+
+## What this repo is
+
+A two-way mirror of Simon Pierce's local Claude Code setup, packaged for the MMF science team and close collaborators. Three canonical locations on Simon's Mac:
 
 - **Skills** — `~/.claude/skills/`. The vault's `05_AI WORKFLOW/CLAUDE/Skills/` has symlinks back there for Obsidian visibility.
 - **Templates** — `~/.claude/templates/` (added 2026-04-26). Houses `starter-claude-config/` and `starter-vault/`, the file skeletons `/onboard` installs into newcomers' machines.
@@ -11,14 +19,14 @@ The repo's `skills/`, `guides/`, and `templates/` directories synchronise with t
 ## The sync scripts
 
 - **`sync/sync-from-vault.sh`** — pushes Simon's local changes out to the repo. Pulls `origin/main` first (so recently merged PRs aren't overwritten), sanitises paths, scans for credentials, then commits. Dry-run by default; `--commit` to apply and push.
-- **`sync/sync-to-vault.sh`** — pulls merged PRs from the repo back into Simon's local `~/.claude/skills/`. Dry-run by default; `--apply` to copy. Pulls `origin/main` first.
+- **`sync/sync-to-vault.sh`** — pulls merged PRs from the repo back into Simon's local `~/.claude/`. Dry-run by default; `--apply` to copy. Pulls `origin/main` first.
 
 ## When /update runs against this repo
 
-Follow this exact sequence. **Do not** run plain `git add` / `git commit` on files in `skills/`, `guides/`, or `templates/` — always go through the sync scripts so the canonical source (`~/.claude/skills/`) stays authoritative.
+Follow this exact sequence. **Do not** run plain `git add` / `git commit` on files in `skills/`, `guides/`, or `templates/` — always go through the sync scripts so the canonical sources stay authoritative.
 
-1. **Pull merged PRs into Simon's local copy.** Run `./sync/sync-to-vault.sh` (dry-run) from the repo root. If anything has merged into the repo that isn't yet in `~/.claude/skills/`, the script lists the differences. Surface the count to Simon in a single line ("N skills differ between repo and `~/.claude/skills/` — apply?"). If he agrees, re-run with `--apply`. If he declines or is unsure, stop and let him investigate.
-2. **Push Simon's local changes to the repo.** Run `./sync/sync-from-vault.sh --commit` from the repo root. The script pulls `origin/main` first, then copies `~/.claude/skills/` into the repo, commits, and pushes.
+1. **Pull merged PRs into Simon's local copy.** Run `./sync/sync-to-vault.sh` (dry-run) from the repo root. If anything has merged into the repo that isn't yet in `~/.claude/`, the script lists the differences. Surface the count to Simon in a single line ("N items differ between repo and `~/.claude/` — apply?"). If he agrees, re-run with `--apply`. If he declines or is unsure, stop and let him investigate.
+2. **Push Simon's local changes to the repo.** Run `./sync/sync-from-vault.sh --commit` from the repo root. The script pulls `origin/main` first, then copies `~/.claude/` into the repo, commits, and pushes.
 
 Simon has confirmed (2026-04-25) that `/update` runs both steps in order when operating on this repo.
 
@@ -28,7 +36,7 @@ Either script's credential scanner will abort if it detects a token-like pattern
 
 Direct merges are fine for any file, including `skills/`, `guides/`, and `templates/`. Review the PR, merge in GitHub's UI. Git history carries the contributor as author.
 
-The `sync-to-vault.sh` script is what brings the merged PR into Simon's local `~/.claude/skills/` so his Claude Code instance picks up the improvement. Either he runs it manually, or `/update` does it next time.
+The `sync-to-vault.sh` script is what brings the merged PR into Simon's local `~/.claude/` so his Claude Code instance picks up the improvement. Either he runs it manually, or `/update` does it next time.
 
 ## Conflict case (rare)
 
