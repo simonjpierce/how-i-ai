@@ -32,6 +32,25 @@ trap 'rm -rf "$STAGE_DIR"' EXIT
 cd "$REPO_ROOT"
 git pull origin main --quiet
 
+# Pre-flight: warn if there are open PRs touching the same paths we're about
+# to overwrite. This catches the case where a contributor has work in flight
+# that would be silently discarded by our push. Best-effort — only fires if
+# `gh` is installed and authenticated; otherwise silent.
+if command -v gh >/dev/null 2>&1; then
+  open_prs=$(gh pr list --state open --json number,title,headRefName --limit 20 2>/dev/null || true)
+  pr_count=$(echo "$open_prs" | python3 -c 'import json,sys; data=sys.stdin.read().strip(); print(len(json.loads(data)) if data else 0)' 2>/dev/null || echo 0)
+  if [[ "$pr_count" -gt 0 ]]; then
+    echo ""
+    echo "NOTE: $pr_count open PR(s) on this repo. If any touch paths you're"
+    echo "about to push, your push could silently discard their work."
+    echo "$open_prs" | python3 -c 'import json,sys; [print(f"  #{p[\"number\"]} ({p[\"headRefName\"]}): {p[\"title\"]}") for p in json.loads(sys.stdin.read())]' 2>/dev/null || true
+    echo ""
+    echo "To check what each PR changes: gh pr diff <number>"
+    echo "Continuing in 5 seconds — Ctrl-C to abort."
+    sleep 5
+  fi
+fi
+
 # Source → target mappings. Format: "source_absolute_path::target_path_in_repo"
 # All skills canonically live in ~/.claude/skills/. The vault (05_AI WORKFLOW/
 # CLAUDE/Skills/) has symlinks back there for Obsidian visibility — we sync from
