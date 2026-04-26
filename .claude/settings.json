@@ -12,6 +12,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/credential-scan-on-push.sh"
+          }
+        ]
+      }
     ]
   }
 }
