@@ -1,0 +1,44 @@
+{
+  "_comment": "Per-vault config written by /onboard. Skills read paths from this file rather than hard-coding them, so the user can rename folders without breaking anything. Keys are stable; values are user-specific.",
+
+  "vault": {
+    "path": "{{VAULT_ABSOLUTE_PATH}}",
+    "name": "{{VAULT_NAME}}",
+    "url_encoded_name": "{{VAULT_NAME_URL_ENCODED}}"
+  },
+
+  "folders": {
+    "inbox": "INBOX",
+    "ai_workflow": "AI_WORKFLOW",
+    "logs_relative": "AI_WORKFLOW/CLAUDE",
+    "specs_relative": "AI_WORKFLOW/SPECS",
+    "templates_relative": "AI_WORKFLOW/templates"
+  },
+
+  "logs": {
+    "session_handoff": "Session Handoff Log.md",
+    "decision": "Decision Log.md",
+    "friction": "Friction Log.md"
+  },
+
+  "domains": [
+    {
+      "_comment": "Populated from discovery Q2 if user opted into the domain pass. Empty array if they chose root-CLAUDE.md-only.",
+      "folder_name": "{{DOMAIN_FOLDER_NAME}}",
+      "display_name": "{{DOMAIN_DISPLAY_NAME}}",
+      "claude_md_path": "{{DOMAIN_FOLDER_NAME}}/CLAUDE.md"
+    }
+  ],
+
+  "install": {
+    "version": "v0",
+    "installed_at": "{{INSTALL_ISO_TIMESTAMP}}",
+    "self_improvement_followup_scheduled_for": "{{INSTALL_DATE_PLUS_14_DAYS}}"
+  },
+
+  "features": {
+    "auto_approval_mode_recommended": true,
+    "domain_folders_opted_in": "{{TRUE_OR_FALSE}}",
+    "numbered_folder_prefixes": "{{TRUE_OR_FALSE}}"
+  }
+}
