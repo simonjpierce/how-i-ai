@@ -203,6 +203,19 @@ If within budget, proceed silently — no need to report the numbers.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.
    - **Friction Log**: Move entries marked ✓ to the `## Resolved` section. Compress to one-line summaries.
 
+14b. **Consider syncing `~/.claude/` changes to a contributor repo (if applicable)**: If this session modified files in `~/.claude/skills/`, `~/.claude/templates/`, or `~/.claude/CLAUDE.md`, check whether the user has a contributor-side repo configured for syncing those changes outward. Detection: look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/` or wherever the user keeps their git checkouts. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`.
+
+If found, surface as a single offer in step 17:
+
+> *"This session modified N skills/templates that are tracked by the `mmf-claude-code` sync. Want me to commit to `claude-code-config` and run the sync to push them upstream?"*
+
+Numbered options:
+1. Yes — commit and sync now
+2. Just commit to `~/.claude/` (defer the sync)
+3. Skip — handle later
+
+If no sync script found, skip silently — the user isn't a contributor and this step doesn't apply. **Do not** invent a sync target or push to a repo the user hasn't established a sync flow with.
+
 15. **Flag completed notes for archiving**: If any vault notes worked on this session are now complete (plans executed, audits finished, process docs promoted to skills), note them for archival to `06_ARCHIVE/`. Move them if Simon has given standing approval, or list them for confirmation.
 
 16. **Evaluate skill candidates**: If any process doc has been used 3+ times with stable steps, note it as a candidate for skill promotion.

@@ -227,6 +227,23 @@ When something feels harder than it should, tell Claude — corrections become
 permanent. The Friction Log captures these for review. Run `/review-friction`
 weekly (it takes ~5 minutes).
 
+## Contributing back
+
+If you find something that could work better — a skill that needs a tweak,
+a step that's confusing, a workflow worth adding — you don't need to know
+git, branches, or pull requests to contribute. Just describe what you want
+to Claude Code:
+
+> *"Add a step to /transcribe that strips out filler words."*
+>
+> *"The kickoff note should mention X."*
+>
+> *"This rule in MEMORY.md fires too often — can we narrow it?"*
+
+Claude will edit the relevant files in a local clone of `mmf-claude-code`,
+commit with attribution, push to a branch, and open a pull request. The
+mechanics of contribution are no harder than describing the improvement.
+
 ## More skills
 
 This system ships with five core skills (`/onboard`, `/document`,
