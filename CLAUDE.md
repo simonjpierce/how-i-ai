@@ -1,6 +1,12 @@
 # mmf-claude-code — notes for Claude
 
-This repo is a **two-way mirror** of Simon's local `~/.claude/skills/`. Skills canonically live on Simon's Mac at `~/.claude/skills/`; the vault's `05_AI WORKFLOW/CLAUDE/Skills/` has symlinks back there for Obsidian visibility. The repo's `skills/`, `guides/`, and `templates/` directories synchronise with that canonical location via two scripts.
+This repo is a **two-way mirror** of Simon's local `~/.claude/`. Three canonical locations on Simon's Mac:
+
+- **Skills** — `~/.claude/skills/`. The vault's `05_AI WORKFLOW/CLAUDE/Skills/` has symlinks back there for Obsidian visibility.
+- **Templates** — `~/.claude/templates/` (added 2026-04-26). Houses `starter-claude-config/` and `starter-vault/`, the file skeletons `/onboard` installs into newcomers' machines.
+- **Guides** — sourced from individual vault process docs at `05_AI WORKFLOW/CLAUDE/Processes/`, mapped explicitly per-file via the `GUIDES` array in `sync-from-vault.sh`.
+
+The repo's `skills/`, `guides/`, and `templates/` directories synchronise with these canonical locations via two scripts.
 
 ## The sync scripts
 
