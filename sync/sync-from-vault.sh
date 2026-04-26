@@ -97,7 +97,7 @@ credential_scan() {
   # Cheap safety net — looks for common token shapes before committing.
   # Aborts the commit if it finds anything that looks like a real credential.
   local found
-  found=$(grep -rE "(ghp_|gho_|ghs_|sk-[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{35}|ya29\.[A-Za-z0-9_-]{20,})" "$STAGE_DIR" 2>/dev/null || true)
+  found=$(grep -rE "(ghp_|gho_|ghs_|sk-ant-api03-|sk-[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{35}|ya29\.[A-Za-z0-9_-]{20,}|xox[bopa]-[0-9A-Za-z-]{10,})" "$STAGE_DIR" 2>/dev/null || true)
   if [[ -n "$found" ]]; then
     echo "ERROR: Likely credential found in staged content:" >&2
     echo "$found" >&2
