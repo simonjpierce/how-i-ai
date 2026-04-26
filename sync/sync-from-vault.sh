@@ -45,11 +45,21 @@ SKILLS=(
   "$CLAUDE_CONFIG/skills/document::skills/document"
   "$CLAUDE_CONFIG/skills/verify-citations::skills/verify-citations"
   "$CLAUDE_CONFIG/skills/mmf-brand::skills/mmf-brand"
+  "$CLAUDE_CONFIG/skills/onboard::skills/onboard"
+  "$CLAUDE_CONFIG/skills/review-friction::skills/review-friction"
+  "$CLAUDE_CONFIG/skills/session-start::skills/session-start"
 )
 
 GUIDES=(
   # Add mappings as process docs are adapted into guides.
   "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
+)
+
+TEMPLATES=(
+  # Templates ship to the repo's templates/ dir. /onboard installs them into
+  # users' machines on first run.
+  "$CLAUDE_CONFIG/templates/starter-claude-config::templates/starter-claude-config"
+  "$CLAUDE_CONFIG/templates/starter-vault::templates/starter-vault"
 )
 
 # --- Helpers ---
@@ -112,6 +122,17 @@ if [[ ${#GUIDES[@]} -gt 0 ]]; then
   echo ""
   echo "Guides:"
   for mapping in "${GUIDES[@]}"; do
+    source="${mapping%%::*}"
+    target="${mapping##*::}"
+    echo "  $target"
+    copy_and_sanitise "$source" "$target" || true
+  done
+fi
+
+if [[ ${#TEMPLATES[@]} -gt 0 ]]; then
+  echo ""
+  echo "Templates:"
+  for mapping in "${TEMPLATES[@]}"; do
     source="${mapping%%::*}"
     target="${mapping##*::}"
     echo "  $target"

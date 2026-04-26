@@ -1,48 +1,53 @@
 # MMF Claude Code
 
-Shared Claude Code skills, guides, and templates for the Marine Megafauna Foundation team and close research collaborators.
+A complete Claude Code system for thinking knowledge work — memory across sessions, behavioural defaults, log-driven self-customisation. Built up by Simon over the past year and shared here for the MMF team and close collaborators. Set up in about 15 minutes. **No reading required.**
 
-Simon has built a deep Claude Code setup over the past year — skills, process docs, templates, automations — that have reshaped how he writes, analyses data, and runs the organisation. This repository is how that setup gets shared with the rest of us, and iterated on collectively.
+## How to set this up
 
-If you've just got Claude Code working for the first time, start at [`getting-started/`](./getting-started/).
+You don't need to read this repo to use it. Three steps:
+
+1. **Install [Claude Desktop](https://claude.ai/download).** Sign in with a Pro plan or higher (Claude Code is included in Pro at $20/month — the higher tiers aren't required).
+2. **Open Claude Code** from the desktop app.
+3. **Paste this prompt:**
+
+   > Walk me through setting up the system at github.com/marinemegafauna/mmf-claude-code on my machine. I'm new to all of this — please hand-hold me through it, asking one question at a time.
+
+Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. You can dictate the answers via ChatGPT's voice transcription if you'd rather not type.
 
 ## Who this is for
 
-The MMF science team and collaborators — the people working with Simon on research, writing, and operations who use (or want to use) Claude Code in that work.
+The MMF science team and close collaborators — the people working with Simon on research, writing, and operations who use (or want to use) Claude Code in that work.
 
 This is **not** a public resource. The content references MMF projects, funders, and internal workflows, and assumes you have context from working with Simon.
 
-## Quick start
+## Already using Claude Code?
 
-**If you want the philosophy and the big picture first:**
-Read [`getting-started/00-how-simon-ais.md`](./getting-started/00-how-simon-ais.md). It's the overview — how the whole setup fits together, why it looks the way it does, and which pieces you can adopt without the others. Roughly a ten-minute read. Most people will want to start here.
+If you have an existing setup and want to browse rather than reinstall:
 
-**If you've never used Claude Code and want to just install and go:**
-Start with [`getting-started/01-install-claude-code.md`](./getting-started/01-install-claude-code.md) and work through the numbered guides (01 → 04). You'll be using your first skill on a real task inside 30 minutes.
+- **The big picture and philosophy** — [`getting-started/00-how-simon-ais.md`](./getting-started/00-how-simon-ais.md). Architectural overview; ~10 min read.
+- **Browse skills** — [`skills/`](./skills/). Each `SKILL.md` has a one-line description. Two-command install: see [`getting-started/04-adopting-skills.md`](./getting-started/04-adopting-skills.md).
+- **Deeper workflow docs** — [`guides/`](./guides/).
+- **Contribute** — [`CONTRIBUTING.md`](./CONTRIBUTING.md). Small improvements welcome; large changes best discussed first.
 
-**If you know Claude Code and want to try a skill:**
-Browse [`skills/`](./skills/). Each skill has a `SKILL.md` with a one-line description. Copy the ones you want into your own `~/.claude/skills/` directory — see [`getting-started/04-adopting-skills.md`](./getting-started/04-adopting-skills.md) for the two-command install.
-
-**If you've written a skill you think others would find useful:**
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the PR workflow. Small improvements welcome; large changes best discussed first.
+The numbered onboarding guides (`getting-started/01–04`) and the tactical setup doc (`getting-started/05-set-up-your-vault.md`) are written for Claude to read when walking a newcomer through the install above. You can read them directly if you want the architecture detail, but you don't have to.
 
 ## Repository map
 
 ```
 mmf-claude-code/
-├── getting-started/    Numbered onboarding guides — read in order if you're new
+├── getting-started/    Numbered onboarding guides + tactical setup doc Claude reads during /onboard
 ├── skills/             Installable Claude Code skills (one folder per skill)
-├── guides/             Deeper-dive workflow docs — lab notebook, CMR, manuscript review
-├── templates/          CLAUDE.md starters and a skill boilerplate
-└── sync/               The script Simon uses to mirror his vault's skills into this repo
+├── guides/             Deeper-dive workflow docs — Ghostty setup, lab notebook, manuscript review
+├── templates/          Starter vault and `~/.claude/` templates that ship with /onboard
+└── sync/               The script Simon uses to mirror his vault's skills and templates into this repo
 ```
 
 ## The stack
 
 This setup assumes:
 
-- **[Claude Code](https://docs.claude.com/claude-code)** — the underlying tool, available as a desktop app or CLI. Skills are markdown files loaded from `~/.claude/skills/` and work identically in either.
-- **[Obsidian](https://obsidian.md)** — where notes live. Most guides reference Obsidian workflows, but the skills themselves don't require it.
+- **[Claude Code](https://docs.claude.com/claude-code)** — the underlying tool, available as a desktop app or CLI. Skills are markdown files loaded from `~/.claude/skills/` and work identically in either. The `/onboard` flow defaults to the desktop app for newcomers; the terminal CLI is the path for advanced users wanting hooks and shell-tool integration (see [`guides/ghostty-setup.md`](./guides/ghostty-setup.md)).
+- **[Obsidian](https://obsidian.md)** — where notes live. Most guides reference Obsidian workflows, but the skills themselves don't require it. `/onboard` walks you through Obsidian install if you don't have it yet.
 - **[Codex CLI](https://github.com/openai/codex)** (optional) — ChatGPT's equivalent, useful for a second-opinion peer review from inside Claude Code. `/red-team` uses it when available.
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** (optional) — free for 1,000 requests/day. Used as a third reviewer by `/red-team`.
 
