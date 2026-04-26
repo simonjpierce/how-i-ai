@@ -75,10 +75,11 @@ For each conflict:
 3. Ask the user which to take, with these numbered options:
    - **1. Take the repo version** (recommended unless the user has unique local edits worth preserving) — back up the user's copy first, then accept the upstream version
    - **2. Keep my version** — skip this file in the apply
-   - **3. Hand-merge later** — back up both versions to a known location, skip the apply, give the user paths to compare
+   - **3. Auto-merge** — invoke the `sync-conflict-merger` subagent (defined at `.claude/agents/sync-conflict-merger.md` in the cloned repo) to produce a merged proposal. The subagent writes `<target>.merge-proposal-<ts>` and reports what was taken from each side and any hunks needing human review. The user reviews the proposal and applies it themselves.
+   - **4. Hand-merge later** — back up both versions to a known location, skip the apply, give the user paths to compare
 4. Apply the choice immediately for that file, then move to the next.
 
-For backups, use `<target>.bak-$(date +%Y%m%d-%H%M%S)` in the same directory.
+For backups, use `<target>.bak-$(date +%Y%m%d-%H%M%S)` in the same directory. To invoke the merger subagent, use the Agent tool with subagent_type=`sync-conflict-merger` and pass `LOCAL_PATH`, `REPO_PATH`, and `CATEGORY` in the prompt.
 
 ### 5. Apply the resolved set
 
