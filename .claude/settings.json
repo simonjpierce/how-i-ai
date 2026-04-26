@@ -1,0 +1,17 @@
+{
+  "_comment": "Project-level Claude Code settings for the mmf-claude-code repo. Loaded automatically when Claude Code is run from any directory inside the repo.",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"${CLAUDE_TOOL_INPUT_FILE_PATH:-}\" == */sync/*.sh ]]; then if ! bash -n \"${CLAUDE_TOOL_INPUT_FILE_PATH}\" 2>&1; then echo \"SYNTAX ERROR in ${CLAUDE_TOOL_INPUT_FILE_PATH} — fix before committing.\" >&2; exit 2; fi; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
