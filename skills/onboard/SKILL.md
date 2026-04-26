@@ -26,10 +26,12 @@ If a step fails (template path missing, vault path not writable, /schedule unava
 
 ## Steps
 
-### 0. Set tab title
+### 0. Set tab title (Ghostty only)
+
+If `/Applications/Ghostty.app` exists, set the tab title. Otherwise skip — this is Ghostty-specific.
 
 ```bash
-MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "onboarding" > "/tmp/claude-title-${MY_TTY}"
+[ -d /Applications/Ghostty.app ] && MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "onboarding" > "/tmp/claude-title-${MY_TTY}"
 ```
 
 ### 1. Pre-flight — auto-approval mode + filesystem write capability
@@ -95,6 +97,12 @@ touch "<chosen-path>/.write-test" && rm "<chosen-path>/.write-test"
 
 If write-test fails (e.g. iCloud not yet synced), explain and offer alternative paths.
 
+**3e. Register the folder as an Obsidian vault.** A `mkdir`'d folder is not yet a vault — Obsidian needs to know about it. Walk the user through:
+
+> *"Switch to Obsidian. Click 'Open another vault' (folder icon, lower-left), choose 'Open folder as vault', and select `<chosen-path>`. The vault will open with no notes in it — that's expected; we're about to create them."*
+
+Wait for the user to confirm the vault is open in Obsidian before proceeding. If they hit "vault not found" or a permissions prompt, troubleshoot before moving on — every later `obsidian://open?vault=<name>&file=...` link depends on Obsidian recognising this vault by name. Once confirmed, derive the URL-encoded vault name from the folder's basename for use in later steps' obsidian:// URIs.
+
 ### 4. Discovery interview
 
 Ask the questions one at a time. Number-replies-OK except where genuinely free-form.
@@ -153,30 +161,40 @@ mkdir -p "<vault>/INBOX"
 **6c. AI_WORKFLOW folder + log files.**
 
 ```bash
-mkdir -p "<vault>/AI_WORKFLOW/CLAUDE" "<vault>/AI_WORKFLOW/templates"
+mkdir -p "<vault>/AI_WORKFLOW/CLAUDE/Processes" "<vault>/AI_WORKFLOW/templates"
 ```
 
 Copy from templates:
 - `Session Handoff Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Session Handoff Log.md`
 - `Decision Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Decision Log.md`
 - `Friction Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Friction Log.md`
+- `Processes/Process Note Template.md` → `<vault>/AI_WORKFLOW/CLAUDE/Processes/Process Note Template.md`
 - `folder-CLAUDE.template.md` → `<vault>/AI_WORKFLOW/templates/folder-CLAUDE.template.md`
 
 Each is template content as-is — examples included to show shape; user deletes when adding their first real entry.
 
 **6d. Global `~/.claude/CLAUDE.md`.** If it doesn't already exist, copy from `~/.claude/templates/starter-claude-config/CLAUDE.md`. Substitute:
 
-- `{{VAULT_PROJECT_KEY}}` → URL-encoded vault path (the project subdirectory key Claude Code uses)
+- `{{VAULT_PROJECT_KEY}}` → Claude Code's per-vault project key. **Computed by replacing every non-alphanumeric character in the absolute vault path with a hyphen** (NOT URL-encoded — Claude Code uses dash-sanitisation). Bash: `PROJECT_KEY=$(echo "$VAULT_PATH" | sed 's|[^a-zA-Z0-9]|-|g')`. Example: `/Users/jane/Documents/My Vault` → `-Users-jane-Documents-My-Vault`.
 
 If `~/.claude/CLAUDE.md` already exists, ASK the user whether to overwrite, append, or skip — don't silently clobber existing customisations.
 
-**6e. Starter `MEMORY.md`.** Compute the project key (Claude Code's URL-encoded vault path), create the directory:
+**6e. Starter `MEMORY.md`.** Compute the project key (Claude Code's dash-sanitised absolute vault path — every non-alphanumeric char replaced with a hyphen), create the directory:
 
 ```bash
 mkdir -p "$HOME/.claude/projects/<project-key>/memory"
 ```
 
 Copy `~/.claude/templates/starter-claude-config/MEMORY.md` to `$HOME/.claude/projects/<project-key>/memory/MEMORY.md`. Substitute `{{VAULT_PROJECT_KEY}}` and `{{VAULT_NAME_URL_ENCODED}}`.
+
+Then copy the Tier 2 leaf examples (the `.example` files keep them dormant — they don't auto-load until the user renames them):
+
+```bash
+cp ~/.claude/templates/starter-claude-config/memory_examples/*.md.example \
+   "$HOME/.claude/projects/<project-key>/memory/"
+```
+
+These ship as templates the user can adopt later — when they encounter a real piece of feedback that fits one of the patterns (email voice, tool quirks), they edit the example, drop the `.example` suffix, and add a one-line pointer in the MEMORY.md "Tier 2" section.
 
 **6f. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session. Write to `$HOME/.claude/projects/<project-key>/config.json`.
 
@@ -212,8 +230,8 @@ it as your map for the first week.
 Capturing meetings as text the vault can read is one of the highest-value
 practices in this system. There's no perfect tool yet, but options include:
 
-- **Audio Hijack** ($60, macOS) — what the system author uses; produces
-  highest-quality recordings.
+- **Audio Hijack** ($60, macOS) — what Simon uses; produces highest-quality
+  recordings.
 - **ChatGPT voice mode** — decent quality, free with a Plus plan; handy on the
   go.
 - **Otter.ai** — meeting-focused, generates transcripts directly; web app.

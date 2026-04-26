@@ -1,0 +1,31 @@
+---
+name: Email drafting & voice calibration
+description: Voice rules for email drafts. Read before drafting any email and after the user shares an edited version for calibration.
+type: feedback
+example: true
+---
+
+# Email drafting & voice
+
+> **DELETE OR REPLACE THIS FILE.** This is an example Tier 2 memory leaf showing the shape of a context-triggered feedback rule. Either delete it, or replace its contents with your own real voice rules. The `.example` suffix prevents Claude from loading it as a real leaf — once you have real content, save the file as `feedback_email_voice.md` (drop the `.example`).
+
+Workflow gate: before drafting any email, READ this file. Do not start drafting until voice register is confirmed.
+
+## Voice register
+
+(Replace this section with the conventions you actually want Claude to follow.)
+
+Example placeholders for the kinds of things that go here:
+
+- **Salutation style.** First-name on first contact? "Dear ___" for formal? Different by audience?
+- **Sign-off.** "Best", "Cheers", "Warm regards" — pick a default, name the exceptions.
+- **Sentence length.** Short and direct, or measured paragraphs?
+- **What to never say.** Phrases or framings the user has corrected before.
+
+## Calibration loop
+
+When the user edits one of your draft emails, READ this file and the diff together. If the edit reveals a pattern not yet captured here, append a one-liner under "Voice register" so the rule fires next time.
+
+---
+
+*This is a starter example. Once you have real corrections from a real email, replace the placeholders above and rename the file to `feedback_email_voice.md` (drop the `.example`). Until then, this file is dormant.*

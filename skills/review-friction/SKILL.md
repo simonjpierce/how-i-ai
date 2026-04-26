@@ -12,10 +12,12 @@ If the Friction Log file isn't where the config says it is, or the parsing break
 
 ## Steps
 
-### 0. Set tab title
+### 0. Set tab title (Ghostty only)
+
+If `/Applications/Ghostty.app` exists, set the tab title. Otherwise skip — this is Ghostty-specific.
 
 ```bash
-MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "review friction" > "/tmp/claude-title-${MY_TTY}"
+[ -d /Applications/Ghostty.app ] && MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "review friction" > "/tmp/claude-title-${MY_TTY}"
 ```
 
 ### 1. Locate the Friction Log

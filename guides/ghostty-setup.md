@@ -1,3 +1,8 @@
+---
+audience: advanced-user
+note: Advanced. Not part of `/onboard`. Skip unless you specifically want a Ghostty-based terminal workflow with hooks and a statusline.
+---
+
 # Ghostty Setup Guide for Claude Code
 
 A self-contained guide to setting up Ghostty terminal with Claude Code tab-title management, notification sounds, and a context-usage statusline. Give this file to Claude Code and ask it to set everything up.

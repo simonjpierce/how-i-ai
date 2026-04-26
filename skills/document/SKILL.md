@@ -21,9 +21,15 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 Before step 1, run:
 
 ```bash
-MEMORY_FILE="$HOME/.claude/projects/-Users-simonjpierce-Library-Mobile-Documents-iCloud-md-obsidian-Documents-Simon-s-Vault/memory/MEMORY.md"
-LINES=$(wc -l < "$MEMORY_FILE")
-BYTES=$(wc -c < "$MEMORY_FILE")
+# Derive Claude Code's per-vault project key from the current working
+# directory. Claude Code sanitises any non-alphanumeric character in the
+# absolute vault path to a hyphen, so /Users/.../Simon's Vault becomes
+# -Users-...-Simon-s-Vault.
+PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
+MEMORY_FILE="$HOME/.claude/projects/$PROJECT_KEY/memory/MEMORY.md"
+[ -f "$MEMORY_FILE" ] || { echo "MEMORY.md not found at $MEMORY_FILE — skipping pre-flight"; }
+LINES=$([ -f "$MEMORY_FILE" ] && wc -l < "$MEMORY_FILE" || echo 0)
+BYTES=$([ -f "$MEMORY_FILE" ] && wc -c < "$MEMORY_FILE" || echo 0)
 echo "MEMORY.md: $LINES lines, $BYTES bytes (caps: 200 / 25600)"
 ```
 

@@ -1,0 +1,36 @@
+---
+name: Tool quirks
+description: System-level idiosyncrasies — tool version drifts, MCP authentication patterns, library bugs, environment-specific behaviour. Read when troubleshooting a tool that behaves unexpectedly.
+type: reference
+example: true
+---
+
+# Tool quirks
+
+> **DELETE OR REPLACE THIS FILE.** This is an example Tier 2 memory leaf showing the shape of a tool-quirks reference. Replace its contents with quirks you actually encounter, then rename the file to `tool_quirks.md` (drop the `.example`).
+
+A scratchpad for system-level idiosyncrasies — the things that aren't bugs in your code, they're just *how this tool behaves on this machine*. Keep entries one-paragraph, with the symptom first, then the workaround.
+
+## Format
+
+```
+### <tool or domain> — <one-line symptom>
+
+**Symptom:** What goes wrong.
+**Cause:** Why (if known).
+**Workaround:** What to do instead. Pin a version, set an env var, swap out the tool, etc.
+```
+
+## Examples to inspire your real entries
+
+(Replace with actual quirks you hit. These are illustrative only.)
+
+### Bash on macOS — bash 3.2 default
+
+**Symptom:** Modern bash features (associative arrays, `declare -n` namerefs, `${var,,}` lowercasing) fail with "bad substitution" or syntax errors.
+**Cause:** macOS ships with bash 3.2 by default; modern features need 4+.
+**Workaround:** Use `/opt/homebrew/bin/bash` (Homebrew bash) for scripts that need newer features, or stick to portable POSIX shell idioms.
+
+---
+
+*This is a starter example. Once you've captured a real quirk, replace these placeholders and rename the file to `tool_quirks.md` (drop the `.example`). Until then, this file is dormant.*

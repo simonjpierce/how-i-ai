@@ -10,7 +10,15 @@ Threshold: **mechanical and non-detrimental** → just do it. **Requires user ju
 
 ## Vault path
 
-Read the vault path from `~/.claude/projects/{{VAULT_PROJECT_KEY}}/config.json` (the `/onboard` skill writes this at install). Don't hard-code paths in skills or instructions — paths can drift if the user reorganises.
+Read the vault path from `~/.claude/projects/<project-key>/config.json` (the `/onboard` skill writes this at install). Don't hard-code paths in skills or instructions — paths can drift if the user reorganises.
+
+**The project key is Claude Code's path-derived identifier for this vault.** It's the absolute vault path with every non-alphanumeric character replaced by a hyphen. So `/Users/jane/Documents/My Vault` becomes `-Users-jane-Documents-My-Vault`, and `~/.claude/projects/-Users-jane-Documents-My-Vault/` is where this vault's memory and config live. To compute it from a Bash session running inside the vault:
+
+```bash
+PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
+```
+
+Skills should derive this at runtime (or read it from the active session metadata) rather than embedding a literal key.
 
 ## Session start
 
