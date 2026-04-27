@@ -43,6 +43,9 @@ STARTER_SKILLS=(
   update
   review-friction
   refresh-skills
+  todo
+  science-paper
+  research
 )
 
 # install_path SRC DST LABEL

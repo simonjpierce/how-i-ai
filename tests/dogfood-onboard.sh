@@ -58,7 +58,7 @@ HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes >/dev/null
 
 echo ""
 echo "  Skills installed:"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research; do
   check "skills/$skill/SKILL.md present" \
     "[[ -f '$FAKE_HOME/.claude/skills/$skill/SKILL.md' ]]"
 done
@@ -93,14 +93,14 @@ echo ""
 echo "Phase 2 — bootstrap.sh re-run safety (idempotent)"
 RERUN_OUTPUT=$(HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes 2>&1 || true)
 UNCHANGED_COUNT=$(echo "$RERUN_OUTPUT" | grep -c '^  unchanged:' || true)
-# Expect 8: 2 templates + 6 skills.
-if [[ "$UNCHANGED_COUNT" -eq 8 ]]; then
+# Expect 11: 2 templates + 9 skills.
+if [[ "$UNCHANGED_COUNT" -eq 11 ]]; then
   PASS=$((PASS + 1))
-  echo "  ✓ re-run reports 'unchanged' for all 8 entries (idempotent)"
+  echo "  ✓ re-run reports 'unchanged' for all 11 entries (idempotent)"
 else
   FAIL=$((FAIL + 1))
-  FAILURES+=("re-run idempotency: expected 8 unchanged, got $UNCHANGED_COUNT")
-  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 8)"
+  FAILURES+=("re-run idempotency: expected 11 unchanged, got $UNCHANGED_COUNT")
+  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 11)"
 fi
 
 # --- Phase 3: simulate /onboard file-creation steps --------------------------
@@ -213,7 +213,7 @@ Set up by \`/onboard\` on $INSTALL_DATE. This note is yours to edit.
 - Your vault is at \`$FAKE_VAULT\`.
 - Root CLAUDE.md is populated from your interview answers.
 - Logs ready at \`AI_WORKFLOW/CLAUDE/\`: Session Handoff, Decision, Friction.
-- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`.
+- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/todo\`, \`/science-paper\`, \`/research\`.
 
 The two-week follow-up note: \`INBOX/Onboarding follow-up — $DATE_PLUS_14.md\`.
 KICKOFF
@@ -290,11 +290,35 @@ else
   echo "  ✗ features.is_simon is not false in newcomer config"
 fi
 
+# tools block — populated during /onboard Q7 + step 6f. Newcomer starter
+# template ships with task_manager=null and *_available=false; verify that
+# (a) the keys exist, (b) types are correct.
+if python3 - <<PYEOF 2>/dev/null
+import json, sys
+c = json.load(open("$PROJECT_DIR/config.json"))
+t = c.get("tools", {})
+ok = (
+    "task_manager" in t
+    and (t["task_manager"] is None or isinstance(t["task_manager"], str))
+    and isinstance(t.get("codex_available"), bool)
+    and isinstance(t.get("gemini_available"), bool)
+)
+sys.exit(0 if ok else 1)
+PYEOF
+then
+  PASS=$((PASS + 1))
+  echo "  ✓ tools block present with valid types (task_manager, codex_available, gemini_available)"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("tools block malformed in starter config.json")
+  echo "  ✗ tools block missing keys or wrong types"
+fi
+
 # --- Phase 7: kickoff promises align with what was installed -----------------
 echo ""
 echo "Phase 7 — kickoff Getting Started.md promises align with installed skills"
 KICKOFF_FILE="$FAKE_VAULT/INBOX/Getting Started.md"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research; do
   if grep -q "/${skill}\b" "$KICKOFF_FILE"; then
     if [[ -f "$FAKE_HOME/.claude/skills/$skill/SKILL.md" ]]; then
       PASS=$((PASS + 1))
