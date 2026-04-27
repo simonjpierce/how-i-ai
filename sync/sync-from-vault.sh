@@ -69,6 +69,9 @@ SKILLS=(
   "$CLAUDE_CONFIG/skills/session-start::skills/session-start"
   "$CLAUDE_CONFIG/skills/refresh-skills::skills/refresh-skills"
   "$CLAUDE_CONFIG/skills/polish::skills/polish"
+  "$CLAUDE_CONFIG/skills/todo::skills/todo"
+  "$CLAUDE_CONFIG/skills/science-paper::skills/science-paper"
+  "$CLAUDE_CONFIG/skills/research::skills/research"
 )
 
 GUIDES=(
@@ -79,6 +82,12 @@ GUIDES=(
   # THEN sync. Don't write directly to repo/guides/ — it'll be wiped on next sync.
   "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
   "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Inviting Collaborators to mmf-claude-code.md::guides/inviting-collaborators.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Scientific Analysis — Process Guide.md::guides/ai-assisted-scientific-analysis.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Scientific Writing – Process Guide.md::guides/ai-assisted-scientific-writing.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Writing — Reports, Manuscripts & Analysis.md::guides/ai-assisted-writing.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Literature Intake & Integration Workflow.md::guides/literature-intake-and-integration.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Pre-Submission Manuscript Review – Prompt Template.md::guides/pre-submission-manuscript-review.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Research Workflow.md::guides/research-workflow.md"
 )
 
 TEMPLATES=(
@@ -167,6 +176,33 @@ if [[ ${#TEMPLATES[@]} -gt 0 ]]; then
 fi
 
 credential_scan
+
+# Pre-flight: warn about orphans — files in the repo's target dirs that have no
+# mapping in this script. On --commit, these are deleted by the `rm -rf <dir>`
+# step before re-copy. This catches the case where someone wrote directly to
+# the repo (e.g. guides/X.md) without adding a mapping; without this warning
+# their work would be silently wiped on next sync.
+echo ""
+echo "--- Orphan check ---"
+orphan_count=0
+for dir in skills guides templates; do
+  if [[ -d "$REPO_ROOT/$dir" ]]; then
+    while IFS= read -r repo_file; do
+      rel="${repo_file#$REPO_ROOT/}"
+      if [[ ! -e "$STAGE_DIR/$rel" ]]; then
+        echo "  WARNING: $rel is in repo but has no mapping — will be deleted by --commit"
+        orphan_count=$((orphan_count + 1))
+      fi
+    done < <(find "$REPO_ROOT/$dir" -type f)
+  fi
+done
+if [[ $orphan_count -eq 0 ]]; then
+  echo "  No orphans — all repo files have a mapping."
+else
+  echo ""
+  echo "  To preserve an orphan: write the canonical version in the vault, add a"
+  echo "  mapping above (SKILLS/GUIDES/TEMPLATES), then re-run."
+fi
 
 echo ""
 echo "--- Diff (repo → staged) ---"

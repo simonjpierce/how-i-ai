@@ -16,7 +16,7 @@ You don't need to read this repo to use it. Three steps:
    Walk me through setting up the system at github.com/marinemegafauna/mmf-claude-code on my machine. I'm new to all of this — please hand-hold me through it, asking me one question at a time.
    ```
 
-Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. Dictation strongly recommended over typing (macOS: press Fn twice in any text field; or ChatGPT voice mode with Plus). Ramble is fine — unstructured monologues, tangents, contradictions are all welcome. Claude will sort through what you said and ask follow-ups if anything's unclear.
+Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. **Dictation strongly recommended over typing** — in the Claude Code desktop app, **press and hold the microphone button** in the prompt area, talk, release to send. (Terminal users: macOS Fn-Fn dictation works anywhere, or ChatGPT voice mode with Plus + paste.) Ramble is fine — unstructured monologues, tangents, contradictions are all welcome. Claude will sort through what you said and ask follow-ups if anything's unclear.
 
 ## Already using Claude Code?
 

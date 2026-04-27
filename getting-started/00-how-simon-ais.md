@@ -14,6 +14,7 @@ The overview document. If you read only one thing before touching any of this, r
 - **Obsidian** is the external memory. Every note, transcript, analysis, draft, decision, and project plan lives in a folder of plain markdown files. Claude reads the same files you do. One set of documents, two readers.
 - **Skills, CLAUDE.md files, hooks, and memory** are the customisation layers. They let Claude start every session knowing who you are, what you're working on, and how you like to work — so you don't re-brief it from scratch each time.
 - **The philosophy** — maximise memory, enable personalisation, customise continuously, keep improving the system. Every correction is remembered. Each session leaves the system better than it found it.
+- **Speak, don't type, for anything substantial.** The Claude Code desktop app has a built-in voice-input button right in the prompt area — that's the recommended path. **Press and hold** to record, release to stop. Unstructured monologues are fine — Claude sorts through tangents and contradictions and asks follow-ups if anything's unclear. See "A practical note on voice input" below for the longer version.
 
 You can adopt any one layer without the others and still get value. The rest is additive.
 
@@ -185,11 +186,38 @@ Migration path, easiest to fullest. Every step is optional and reversible:
 
 The system is additive. No step depends on doing the next one.
 
-## A practical note on voice input
+## Optimal desktop-app setup + voice input
 
-For longer inputs — describing a project, documenting a decision, drafting a long message — Simon dictates rather than typing. As of early 2026, ChatGPT's voice transcription (available in the ChatGPT iOS and desktop apps) is still materially better than Claude's own voice transcription. The workflow: dictate into ChatGPT, copy the resulting text, paste it into Claude Code.
+For anything longer than a paragraph — describing a project, documenting a decision, drafting a long message, or answering the `/onboard` interview — speaking is faster than typing. The desktop app makes this easy with two small tweaks:
 
-Use whichever voice-to-text tool produces the cleanest output for you at the time you read this. The point is just that for anything longer than a paragraph, speaking is usually faster than typing — and Claude Code accepts pasted text at any length.
+### 1. Switch to Auto mode
+
+The bottom-left of the prompt area shows a small badge that cycles between three permission modes: **default** (asks before every action), **Accept edits** (auto-accepts file writes but still prompts for shell commands), and **Auto mode** (auto-accepts everything — formerly called "bypass permissions" or YOLO mode). For day-to-day use, Auto mode is what you want — clicks add up fast in default or Accept-edits modes. You can also press Shift-Tab to cycle.
+
+To make Auto mode the default for every session, add this to `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}
+```
+
+(`bypassPermissions` is the internal name for Auto mode.) Trade-off: Auto mode lets Claude run any shell command on your machine without asking. Only enable it if you're comfortable with that.
+
+### 2. Press-and-hold the microphone
+
+The microphone button in the prompt area uses **press-and-hold to record, release to stop, then send**. That's the fastest way to enter long answers and instructions. Don't structure what you say — ramble, tangent, contradict yourself. Claude sorts through it and asks follow-ups if anything's ambiguous.
+
+### Terminal-only fallbacks
+
+If you're using Claude Code in a terminal (Ghostty etc.) instead of the desktop app, the in-app mic button isn't available:
+
+- **macOS dictation** — press Fn twice to start, Fn twice to stop. Zero setup; works in any text field, including the terminal.
+- **ChatGPT voice mode** (requires ChatGPT Plus) — dictate into the ChatGPT app, copy the text out, paste it into Claude Code. Highest-quality transcription, but you're paying the copy-paste tax.
+
+Claude Code accepts pasted text at any length, so the longer-form-equals-speak rule applies in both directions.
 
 ## Where to go next
 
