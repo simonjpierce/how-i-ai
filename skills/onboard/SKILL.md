@@ -12,11 +12,13 @@ This skill is the bridge from "nothing installed" to "working Claude system." It
 Welcome. I'll walk you through setting up Claude Code + Obsidian as a working
 system. About 6 quick questions, plus a few more if you want me to set up
 domain folders for the different kinds of work you do — ~15 minutes total.
-Short answers are fine.
 
-If you'd rather dictate than type: macOS's built-in dictation works (press Fn
-twice in any text field). ChatGPT's voice mode is also good if you have a
-Plus account.
+Strongly recommend dictating rather than typing — macOS's built-in dictation
+works (press Fn twice in any text field), or ChatGPT's voice mode if you
+have a Plus account. Ramble. You don't need to give structured answers — go
+off on tangents, contradict yourself, mention things that come to mind but
+don't seem related, whatever's natural. I'll sort through what you said and
+ask follow-ups if anything's unclear.
 
 Two things I'll check at the start, then we'll get going.
 ```
@@ -131,7 +133,7 @@ Ask the questions one at a time. Number-replies-OK except where genuinely free-f
 
 **Q1.** *"In a sentence or two — who are you, and what kinds of work will you mostly use this setup for?"*
 
-**Q2.** *"When you switch tasks, what are the main 'modes' or 'hats' you switch between? List 2–5. Examples: 'research papers and a personal blog'; 'three different clients I consult for'; 'work + parenting + creative writing'."*
+**Q2.** *"When you switch tasks, what are the main 'modes' or 'hats' you switch between? List 2–5. Examples: 'research papers and a personal blog'; 'three different clients I consult for'; 'work + parenting + creative writing'. If you're not sure, list every distinct audience you write for — your team, your students, yourself, a funder. Better to over-list now; you can always merge folders later."*
 
 **Q3.** *"Spelling preference — UK / US / NZ / Australian, or 'doesn't matter'? (If you're unsure: working with the MMF team in marine biology, NZ/UK is the safe default; writing for US journals or US donors, US.) And anything else about how you write — typical formality, words you avoid, emoji preferences?"*
 
