@@ -21,9 +21,33 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
+# Resolve VAULT_PATH and AI_WORKFLOW_DIR for guide-target mappings.
+# Priority: env override > config.json discovery > Simon's hardcoded fallback.
+# This matters because guides land inside the user's vault, not under
+# ~/.claude/, so the script must know where the user's vault actually is.
+# Codex red-team C5: previously this defaulted to Simon's hardcoded
+# iCloud path, so a newcomer running /refresh-skills would create a fake
+# "Simon's Vault" folder on their Mac.
+
 if [[ -z "${VAULT_PATH:-}" ]]; then
-  VAULT_PATH="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Simon's Vault"
+  for cfg in "$HOME/.claude/projects"/*/config.json; do
+    [[ -f "$cfg" ]] || continue
+    candidate=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("vault",{}).get("path","").strip())' "$cfg" 2>/dev/null || echo "")
+    if [[ -n "$candidate" ]]; then
+      VAULT_PATH="$candidate"
+      AI_WORKFLOW_DIR=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("folders",{}).get("ai_workflow","AI_WORKFLOW").strip())' "$cfg" 2>/dev/null || echo "AI_WORKFLOW")
+      break
+    fi
+  done
+  if [[ -z "${VAULT_PATH:-}" ]]; then
+    VAULT_PATH="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Simon's Vault"
+    AI_WORKFLOW_DIR="05_AI WORKFLOW"
+    echo "Note: no config.json with vault.path found — falling back to Simon's vault layout." >&2
+  fi
 fi
+AI_WORKFLOW_DIR="${AI_WORKFLOW_DIR:-05_AI WORKFLOW}"
+VAULT_PROCESSES="$VAULT_PATH/$AI_WORKFLOW_DIR/CLAUDE/Processes"
+
 CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"
 MODE="${1:-dry-run}"
 
@@ -63,7 +87,18 @@ TEMPLATES=(
 )
 
 GUIDES=(
-  "guides/ghostty-setup.md::$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md"
+  # Mirror of sync-from-vault.sh's GUIDES array, reversed (repo → vault). When
+  # a contributor PR edits any of these guides in the repo, /refresh-skills
+  # uses this array to pull the changes back into the user's vault. Keep in
+  # sync with sync-from-vault.sh — dogfood Phase 14 enforces parity.
+  "guides/ghostty-setup.md::$VAULT_PROCESSES/Ghostty Setup Guide for Claude Code.md"
+  "guides/inviting-collaborators.md::$VAULT_PROCESSES/Inviting Collaborators to mmf-claude-code.md"
+  "guides/ai-assisted-scientific-analysis.md::$VAULT_PROCESSES/AI-Assisted Scientific Analysis — Process Guide.md"
+  "guides/ai-assisted-scientific-writing.md::$VAULT_PROCESSES/AI-Assisted Scientific Writing – Process Guide.md"
+  "guides/ai-assisted-writing.md::$VAULT_PROCESSES/AI-Assisted Writing — Reports, Manuscripts & Analysis.md"
+  "guides/literature-intake-and-integration.md::$VAULT_PROCESSES/Literature Intake & Integration Workflow.md"
+  "guides/pre-submission-manuscript-review.md::$VAULT_PROCESSES/Pre-Submission Manuscript Review – Prompt Template.md"
+  "guides/research-workflow.md::$VAULT_PROCESSES/Research Workflow.md"
 )
 
 # --- Helpers ---

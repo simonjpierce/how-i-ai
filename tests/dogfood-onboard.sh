@@ -468,6 +468,26 @@ for skill in onboard document session-start update review-friction refresh-skill
   fi
 done
 
+# --- Phase 14: sync-from-vault and sync-to-vault GUIDES arrays match --------
+# Codex red-team C2: sync-to-vault.sh shipped with only 1 of 8 guide
+# mappings, so contributor PRs editing any other guide would silently fail
+# to flow back into the canonical vault. Mirror the array; check parity here.
+echo ""
+echo "Phase 14 — sync-from-vault and sync-to-vault GUIDES mappings match"
+# from-vault mappings: "$VAULT_PATH/...::guides/foo.md" — basename comes after the ::
+# to-vault mappings:   "guides/foo.md::$VAULT_PROCESSES/..." — basename comes before
+FROM_BASENAMES=$(grep -oE '::guides/[a-zA-Z0-9_-]+\.md' "$REPO_ROOT/sync/sync-from-vault.sh" 2>/dev/null | sed 's|^::||' | sort -u || true)
+TO_BASENAMES=$(grep -oE '"guides/[a-zA-Z0-9_-]+\.md::' "$REPO_ROOT/sync/sync-to-vault.sh" 2>/dev/null | sed 's|^"||; s|::$||' | sort -u || true)
+if diff <(echo "$FROM_BASENAMES") <(echo "$TO_BASENAMES") > /dev/null; then
+  PASS=$((PASS + 1))
+  echo "  ✓ GUIDES arrays match in both sync scripts ($(echo "$FROM_BASENAMES" | wc -l | tr -d ' ') guides)"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("GUIDES arrays diverge between sync-from-vault and sync-to-vault")
+  echo "  ✗ GUIDES arrays diverge:"
+  diff <(echo "$FROM_BASENAMES") <(echo "$TO_BASENAMES") | sed 's/^/      /'
+fi
+
 # --- Phase 13: /onboard config.json + kickoff written AFTER domain pass -----
 # Codex red-team C13: previously /onboard step 6f wrote config.json before
 # step 7's domain-pass decisions, leaving stale domain_folders_opted_in /
