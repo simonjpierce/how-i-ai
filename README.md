@@ -1,6 +1,6 @@
 # MMF Claude Code
 
-A complete Claude Code system for thinking knowledge work — memory across sessions, behavioural defaults, log-driven self-customisation. Built up by Simon over the past year and shared here for the MMF team and close collaborators. Block 30 minutes total: ~10 minutes downloading apps, then a 10–15 minute interview where Claude asks you questions. **No reading required.**
+A complete **Claude Code + Obsidian** system for thinking knowledge work — memory across sessions, behavioural defaults, log-driven self-customisation. Two apps wired together: Claude Code does the work, Obsidian is where your notes live. Built up by Simon over the past year and shared here for the MMF team and close collaborators. Block 30 minutes total: ~10 minutes downloading both apps, then a 10–15 minute interview where Claude asks you questions. **No reading required.**
 
 **Currently macOS-only.** Windows and Linux support is on the v1 roadmap. If you're on Windows or Linux and want to set this up anyway, ping Simon for a manual install — `/onboard` will halt cleanly otherwise.
 
