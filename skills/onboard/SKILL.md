@@ -223,7 +223,7 @@ Set up by `/onboard` on {{INSTALL_DATE}}. This note is yours to edit.
 - Root CLAUDE.md is populated from your interview answers.
 - Folder-level CLAUDE.md exists for: {{DOMAIN_LIST}}.
 - Logs ready at `AI_WORKFLOW/CLAUDE/`: Session Handoff, Decision, Friction.
-- Skills installed: `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`.
+- Skills installed: `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`.
 
 ## Day 1 — settle in
 
@@ -380,7 +380,7 @@ Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
 Logs: ready at AI_WORKFLOW/CLAUDE/
-Skills installed: /onboard, /document, /session-start, /update, /review-friction
+Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
 Your kickoff note is open in Obsidian — start there.

@@ -19,7 +19,7 @@ If a step in this skill fails or needs a workaround, update this skill file with
 - **Headings:** Futura Std Heavy, uppercase, Dark Cyan
 - **Subheadings:** Futura Std Medium Condensed, uppercase, JK Black
 - **Body:** Futura Std Book/Heavy 10–12 pt, black (white on dark) — or Source Serif Pro 10–12 pt for text-heavy reports
-- **Spelling:** American English (organization, center, program)
+- **Spelling:** Audience-driven — American English (organization, center, program) for US-audience MMF artifacts; NZ/UK English for international / scientific audiences. See full rule in *Spelling and tone* below.
 - **Logo placement:** top-left or bottom-left; minimum 1 cm; do not stretch or recolour
 - **Page margins:** ≥1 cm; long body text in 2 columns with 5 mm gap
 
@@ -128,7 +128,7 @@ The variant assignments above are inferred from filenames and the 2016 Brand Man
 
 ## Spelling and tone
 
-- **Spelling:** **American English** throughout MMF content — *organization* not *organisation*, *center* not *centre*, *program* not *programme*. This is a deliberate brand choice and overrides Simon's vault-default NZ/UK English for any MMF-facing artifact.
+- **Spelling:** Audience-driven, not blanket. **American English** for US-audience MMF artifacts — board decks, US-donor materials, US-grant applications, anything with the MMF Inc. entity as the primary voice (*organization* not *organisation*, *center* not *centre*, *program* not *programme*). **NZ/UK English** for international / scientific audiences — conference talks, scientific presentations, international funder decks (these match the vault default). When the audience is ambiguous, confirm with Simon before drafting. *Updated 2026-04-27 — earlier blanket "American English throughout MMF content" rule narrowed to US-audience output specifically; conference / scientific contexts join scientific manuscripts in following journal/audience convention.*
 - **Tone:** professional, evidence-based, accessible to non-specialist audiences (donors, board, partners). See `02_MARINE MEGAFAUNA/CLAUDE.md` for the full MMF tone guidance, and `05_AI WORKFLOW/CLAUDE/Voice References/` for format-specific voice guides.
 - **Brand expression:** *"Saving ocean giants from extinction."*
 - **Brand purpose touchstone:** *"United for the future of marine life."*
