@@ -41,7 +41,7 @@ This skill ships ready-to-use but expects:
 
 1. **Definitive output over speed.** Each run should produce the best possible answer on the topic. Don't optimise for token efficiency at the expense of thoroughness.
 2. **The vault is a primary resource.** It gets more valuable over time. Read documents in full, follow wikilinks, don't skimp on vault searches.
-3. **Always wait for all models.** Three-model triangulation is a core feature. Never finalise the report without Codex and Gemini input.
+3. **Always wait for all *available* models.** Three-model triangulation is the gold-standard feature when Codex and Gemini are present. When the user's `tools.codex_available` or `tools.gemini_available` is `false` (their CLI isn't installed/authenticated), the pipeline degrades cleanly to whatever subset is available rather than blocking. Single-model runs are valid output, not a failure mode — they just record the degradation explicitly in the report's methodology section.
 4. **Quality governs, not the clock.** Typical 15–30+ minutes. Longer is fine if the research warrants it.
 
 # Model selection
@@ -87,29 +87,43 @@ Run these in parallel:
    MY_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ') && echo "research: {topic}" > "/tmp/claude-title-${MY_TTY}"
    ```
 
-4. **Codex pre-flight**:
+4. **Read tool availability from config**:
+   ```bash
+   PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
+   CONFIG="$HOME/.claude/projects/$PROJECT_KEY/config.json"
+   CODEX_FLAG=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("tools",{}).get("codex_available", False)).lower())' "$CONFIG" 2>/dev/null || echo false)
+   GEMINI_FLAG=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("tools",{}).get("gemini_available", False)).lower())' "$CONFIG" 2>/dev/null || echo false)
+   ```
+
+   Set `CODEX_ACTIVE` and `GEMINI_ACTIVE` based on the config flags. These gate Phase 3b and 3c launch as well as Phase 3d wait.
+
+5. **Codex pre-flight (only if `CODEX_FLAG=true`)**:
    ```bash
    which codex && echo "Reply with OK" | codex exec -m "gpt-5.4" --full-auto --sandbox danger-full-access - 2>&1
    ```
 
    | Result | Action |
    |--------|--------|
-   | Returns OK | Proceed with Codex |
-   | `which codex` fails | "Codex CLI not installed. Install with `npm i -g @openai/codex`." User decides. |
-   | Auth/model error | "Codex needs login. Run `codex login`, then tell me to continue." Pause and wait. |
+   | Returns OK | `CODEX_ACTIVE=true`. Proceed with Codex. |
+   | `which codex` fails | `CODEX_ACTIVE=false`. Print "Codex unavailable — pipeline will run Claude + Gemini only" and continue. (Don't block — the user may have intentionally not installed Codex.) |
+   | Auth/model error | If interactive: "Codex needs login. Run `codex login`, then tell me to continue." Pause and wait. If autonomous: `CODEX_ACTIVE=false` and continue. |
 
-5. **Gemini pre-flight**:
+   If `CODEX_FLAG=false`, skip the pre-flight entirely and set `CODEX_ACTIVE=false`.
+
+6. **Gemini pre-flight (only if `GEMINI_FLAG=true`)**:
    ```bash
    which gemini && gemini -p "Reply with OK" --output-format text 2>&1
    ```
 
    | Result | Action |
    |--------|--------|
-   | Returns OK | Proceed with Gemini |
-   | `which gemini` fails | "Gemini CLI not installed. Install with `npm i -g @google/gemini-cli`." User decides. |
-   | Auth error | "Gemini needs login. Run `gemini` interactively to authenticate, then tell me to continue." Pause and wait. |
+   | Returns OK | `GEMINI_ACTIVE=true`. Proceed with Gemini. |
+   | `which gemini` fails | `GEMINI_ACTIVE=false`. Print "Gemini unavailable — pipeline will run Claude + Codex only" and continue. |
+   | Auth error | If interactive: "Gemini needs login. Run `gemini` interactively to authenticate, then tell me to continue." Pause and wait. If autonomous: `GEMINI_ACTIVE=false` and continue. |
 
-Print: `[0/9] Pre-flight complete — tools loaded, Codex {available/unavailable}, Gemini {available/unavailable}`
+   If `GEMINI_FLAG=false`, skip the pre-flight entirely and set `GEMINI_ACTIVE=false`.
+
+Print: `[0/9] Pre-flight complete — tools loaded, Codex {active/inactive}, Gemini {active/inactive}`. If both Codex and Gemini are inactive, also print: "Single-model run (Claude only). The report will note the reduced triangulation in its methodology section."
 
 ## Phase 1: Scoping
 
@@ -302,7 +316,9 @@ Numbering `{NN}` is zero-padded (01, 02, ...) and matches the sub-question order
 
 All launch in parallel as background agents.
 
-### 3b: Codex CLI (simultaneous)
+### 3b: Codex CLI (simultaneous, only if `CODEX_ACTIVE=true`)
+
+Skip this entire phase if Phase 0 set `CODEX_ACTIVE=false`. Otherwise:
 
 Read `references/subagent-prompt.md` for the Codex prompt template. Build prompt at `/tmp/research/codex_prompt.md` with full vault briefing and comms briefing (Codex is a single call covering all sub-questions).
 
@@ -315,7 +331,9 @@ Timeout: 600000ms.
 
 Fallback chain: `gpt-5.4` → `o3` → retry once → alert user.
 
-### 3c: Gemini CLI (simultaneous)
+### 3c: Gemini CLI (simultaneous, only if `GEMINI_ACTIVE=true`)
+
+Skip this entire phase if Phase 0 set `GEMINI_ACTIVE=false`. Otherwise:
 
 Build prompt at `/tmp/research/gemini_prompt.md` with full vault briefing and comms briefing. Same sub-questions as Codex but with its own open-ended framing — do NOT copy the Codex prompt. Each external model should approach the research independently.
 
@@ -326,11 +344,13 @@ gemini -p "" --output-format text --yolo < /tmp/research/gemini_prompt.md 2>&1 |
 
 Timeout: 600000ms.
 
-### 3d: Wait for all workers
+### 3d: Wait for launched workers
 
-**Always wait for Claude subagents, Codex, AND Gemini to complete before proceeding to synthesis.** All available models' input is required — never skip one that's still running.
+**Wait for every worker that was actually launched in Phase 3a/3b/3c — not for workers that were skipped at launch.** Claude subagents always run (3a is unconditional). Codex (3b) only runs if `CODEX_ACTIVE=true`; if it was skipped, do not block waiting on it. Gemini (3c) only runs if `GEMINI_ACTIVE=true`; same rule.
 
-While waiting (if some workers finish first), read completed outputs to prepare for synthesis. But do not write the report until all workers are done. **Wait for background task completion notifications**, not just file-existence checks — subagent output files may be written incrementally, and late-arriving findings can contain critical insights that require report revision if missed.
+While waiting (if some workers finish first), read completed outputs to prepare for synthesis. But do not write the report until all *launched* workers are done. **Wait for background task completion notifications**, not just file-existence checks — subagent output files may be written incrementally, and late-arriving findings can contain critical insights that require report revision if missed.
+
+If only Claude subagents launched (both Codex and Gemini inactive), this phase finishes immediately as soon as the subagents return. Synthesis proceeds with single-model output and records the degradation in Phase 4 — see "Methodology section in degraded mode".
 
 ### 3e: Output validation (Codex and Gemini)
 
@@ -362,12 +382,13 @@ Maximum 2 attempts per model. If both attempts go off-topic, alert user and proc
 |---------|--------|
 | Codex off-topic | Restart with strengthened prompt. Max 2 attempts. |
 | Gemini off-topic | Restart with strengthened prompt. Max 2 attempts. |
-| Codex fails entirely (after retries) | Alert user. Proceed with Claude + Gemini. |
-| Gemini fails entirely (after retries) | Alert user. Proceed with Claude + Codex. |
-| Both external models fail | Alert user. Proceed Claude-only only with user approval. |
-| Individual subagent fails | Note gap. Sub-question still has external model coverage. |
+| Codex fails entirely (after retries) | Alert user. Proceed with whatever else launched (Claude + Gemini, or Claude-only). |
+| Gemini fails entirely (after retries) | Alert user. Proceed with whatever else launched (Claude + Codex, or Claude-only). |
+| Both external models fail at runtime | Alert user. Proceed Claude-only and record degradation in Phase 4 methodology. |
+| Codex / Gemini *not active* per Phase 0 | Not a failure — proceed with the active subset. Phase 4 records the degradation in methodology. |
+| Individual subagent fails | Note gap. Sub-question still has whatever external model coverage was active. |
 
-Graceful degradation: three-model → dual-model → single-model. Never silently drop a model.
+Graceful degradation: three-model → dual-model → single-model. The pre-flight (Phase 0) and the runtime failure handler (this table) both produce the same effect — fewer models, with the report explicit about which ran. Never silently drop a model that was launched without recording it.
 
 Print: `[3/9] Research complete — {N} sources found`
 
@@ -384,6 +405,13 @@ Merge and deduplicate sources across all three models' workers.
 ### 4b: Write report
 
 Read `references/report-template.md`. Write the report following that structure.
+
+**Methodology section in degraded mode.** If `CODEX_ACTIVE=false` or `GEMINI_ACTIVE=false`, add a brief paragraph in the report's methodology section noting the reduced triangulation. Examples:
+
+- Both external models inactive: *"This run used Claude only — Codex and Gemini CLIs were not available on the user's machine. Single-model findings have been validated against vault sources and primary literature, but the cross-model triangulation that normally surfaces blind spots was not possible. Treat this as a one-pass research output."*
+- One external inactive: *"This run used Claude + {Codex|Gemini}. The other external model was unavailable, so the dual-model triangulation may have missed blind spots a third model would have caught."*
+
+This is a methodology disclosure, not an apology — single-model and dual-model runs are valid; the note exists so a future reader knows the rigour of the pass.
 
 **Synthesis principles** (in priority order):
 1. **Write for the audience, not the user or the audit trail.** If the audience is external (e.g., field researchers, funders, collaborators), the report must be a standalone document they can use without vault context. Remove: internal methodology notes, model attribution ("[CONFIRMED by Codex]"), references to "the previous briefing note", partner recommendations the audience would find patronising, and cost/funding framing if not requested. Use the audience's local currency. Include only context they needed during research, not context the user needed during research.
