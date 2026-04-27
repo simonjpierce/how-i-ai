@@ -65,7 +65,7 @@ Skills are markdown files Claude reads to know how to handle specific tasks. The
 ### Writing & research
 
 - **`/research`** ★ — three-model deep research (Claude + Codex + Gemini), claim verification, formal report. *Optional: Codex CLI + Gemini CLI logged in. Without them, runs Claude-only.*
-- **`/science-paper`** ★ — lab-notebook discipline during analysis sessions; manuscript drafting from a completed notebook.
+- **`/science-paper`** ★ — lab-notebook discipline during analysis sessions; manuscript drafting from a completed notebook. *Optional: GitHub CLI (`gh`) authenticated to push the analysis repo to GitHub. Without it, the skill creates a local-only git repo and tells you how to add a remote later.*
 - **`/todo`** ★ — add a task to your task manager (Things 3, Todoist, Apple Reminders, or a vault `TODO.md`). Routes based on the choice you made during `/onboard`. Other task managers (Asana, Linear, Notion) aren't natively routed yet — fall back to `vault_todo` or ask Claude to add a routing branch for your tool.
 - **`/polish`** — grammar and style checks via LanguageTool + Vale, then apply fixes. *Requires LanguageTool + Vale installed locally.*
 - **`/verify-citations`** ★ — verify scientific citations against Semantic Scholar, CrossRef, OpenAlex. *Requires Python 3 + the `requests` library.*

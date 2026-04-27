@@ -73,12 +73,33 @@ Activate at the start of an interactive analysis session. The analysis note is t
    Drafting happens after the lab notebook is complete. See [[Analysis — ...]].
    ```
 
-4. **Create a GitHub repo.** Any analysis code gets its own private repo. Default to the authenticated user's namespace; use an org if the user publishes under one (ask if unsure):
+4. **Create a code repo for the analysis.** Any analysis code gets its own version-controlled repo. Pre-flight `gh` (GitHub CLI) availability before deciding which path to take:
+
+   ```bash
+   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+     GH_AVAILABLE=true
+   else
+     GH_AVAILABLE=false
+   fi
+   ```
+
+   **If `GH_AVAILABLE=true` (preferred):** create a private GitHub repo. Default to the authenticated user's namespace; use an org if the user publishes under one (ask if unsure):
+
    ```bash
    GH_USER=$(gh api user --jq .login)
    gh repo create "$GH_USER/<project-name>" --private
+   git clone "https://github.com/$GH_USER/<project-name>.git" "$HOME/repos/<project-name>"
    ```
-   Initialize locally at `~/repos/<project-name>/` with `scripts/`, `data/cleaned/`, `outputs/` directories.
+
+   **If `GH_AVAILABLE=false` (no `gh`, or not authenticated):** create a local-only git repo. Tell the user *"GitHub CLI isn't installed/authenticated, so I'm creating a local-only repo at `~/repos/<project-name>/`. To later push to GitHub: install `gh` (`brew install gh`), authenticate (`gh auth login`), then add a remote with `cd ~/repos/<project-name> && gh repo create --source=. --private --push`."* Then:
+
+   ```bash
+   mkdir -p "$HOME/repos/<project-name>"
+   cd "$HOME/repos/<project-name>"
+   git init -q
+   ```
+
+   In either case, set up the directory structure: `scripts/`, `data/cleaned/`, `outputs/`. Don't block the rest of `/science-paper` setup on remote-repo creation — the lab notebook + local git history are the rigorous core; remote push is a backup convenience.
 
 5. **(Optional) Create a Google Drive folder** for shareable artifacts (figures, tables, supplementary material). Skip if Google Drive isn't mounted locally. Adapt this path to your account:
    ```
@@ -96,7 +117,7 @@ Activate at the start of an interactive analysis session. The analysis note is t
 
 8. **Register with /update.** The `/update` skill reads the Artifacts table to find associated documents. By listing everything in Artifacts, `/update` will automatically check, maintain, and push code changes. No additional configuration needed — the Artifacts table is the contract.
 
-9. **Announce the gate.** Confirm to the user: "Project folder, lab notebook, manuscript, GitHub repo, and Google Drive folder set up. Lab notebook gate active — I'll update the analysis note after each step before proceeding."
+9. **Announce the gate.** Confirm to the user: "Project folder, lab notebook, manuscript, {GitHub|local-only} repo, and Google Drive folder set up. Lab notebook gate active — I'll update the analysis note after each step before proceeding." (Substitute "GitHub" if `GH_AVAILABLE=true` was set in step 4, "local-only" otherwise.)
 
 7b. **Create `sync_figures.sh`** in the repo root. This script copies all figures from the repo `outputs/` to the vault and Google Drive in one command:
 
