@@ -13,12 +13,15 @@ Welcome. I'll walk you through setting up Claude Code + Obsidian as a working
 system. About 6 quick questions, plus a few more if you want me to set up
 domain folders for the different kinds of work you do — ~15 minutes total.
 
-Strongly recommend dictating rather than typing — macOS's built-in dictation
-works (press Fn twice in any text field), or ChatGPT's voice mode if you
-have a Plus account. Ramble. You don't need to give structured answers — go
-off on tangents, contradict yourself, mention things that come to mind but
-don't seem related, whatever's natural. I'll sort through what you said and
-ask follow-ups if anything's unclear.
+Strongly recommend dictating rather than typing. If you're in the Claude
+Code desktop app, there's a microphone button right in the prompt area —
+**press and hold** to record, release to stop, then send. That's the
+fastest way to get long answers in. (If you're in a terminal instead,
+macOS Fn-Fn dictation works in any text field, or ChatGPT voice mode +
+paste if you have Plus.) Ramble. You don't need to give structured
+answers — go off on tangents, contradict yourself, mention things that
+come to mind but don't seem related, whatever's natural. I'll sort
+through what you said and ask follow-ups if anything's unclear.
 
 Two things I'll check at the start, then we'll get going.
 ```
@@ -51,13 +54,23 @@ If the result is anything other than `platform OK`, halt and tell the user:
 
 Do not proceed past this check on non-Darwin platforms.
 
-**1b. Auto-approval mode.** This system assumes Claude Code is in auto-approval mode — too many permission prompts kills the experience. Tell the user what it is, what it affects, and how to turn it on, before asking anything:
+**1b. Auto mode.** This system assumes Claude Code is in **Auto mode** (formerly called bypassPermissions/YOLO mode) — the highest auto-approval level. The prompt area shows a red "Auto mode" badge when it's on; the alternatives are "Accept edits" (auto-accepts file writes only — still prompts for Bash) and the default mode (prompts for everything). Auto mode is the recommended setting for this onboarding because we'll be writing 20+ files AND running shell commands; anything less makes the flow miserable.
 
-> *"Before we go further: Claude Code asks for permission every time it writes a file unless you turn on auto-approve. For this setup we'll be writing 20+ files, so the prompts get old fast. Auto-approve only affects this app — it can't run anything outside the folders you've pointed it at, and you can turn it off again any time."*
->
-> *"To enable it: in the Claude desktop app, click the Claude menu in the top-left of your screen → Settings → Permissions tab → toggle 'Auto-approve file edits' on. Tell me when it's done."*
+> *"Before we go further: switch Claude Code to Auto mode so I can write files and run setup commands without stopping every few seconds for permission. In the desktop app, look at the bottom-left of the prompt area — there's a small badge that says either 'Accept edits' or 'Auto mode'. Click it once or twice until it shows red 'Auto mode'. (You can also press Shift-Tab to cycle modes.) Auto mode lets me run any shell command on your machine without asking — only enable it if you're comfortable with that. You can switch back to Accept edits or default mode any time. Tell me when it's done."*
 
-If the user reports a different layout (Anthropic moves these toggles between releases), suggest searching Settings for "auto-approve" or "permission". Don't proceed past Phase 2 in default-prompt mode — friction will wreck the rest of the flow.
+To make Auto mode the default for every session (recommended once trust is established), add to `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  }
+}
+```
+
+(`bypassPermissions` is the internal name for Auto mode; `acceptEdits` is the internal name for "Accept edits".)
+
+If the user reports a different layout (Anthropic moves these toggles between releases), suggest searching Settings for "permission" or "mode". Don't proceed past Phase 2 in default-prompt or Accept-edits mode — Bash-prompt friction will wreck the rest of the flow.
 
 **1c. Bash availability.** The rest of this skill assumes you can run shell commands. If your tools include Bash, proceed. If you don't have a Bash tool, STOP and tell the user:
 
@@ -143,6 +156,10 @@ Ask the questions one at a time. Number-replies-OK except where genuinely free-f
 
 **Q6.** *"Anything specific about how you work, who you work with, or context I should keep in mind that the questions above missed?"*
 
+**Q7.** *"What other tools do you use day-to-day that we should know about? I'm especially interested in: where do your TODOs live (Things, Todoist, Apple Reminders, Asana, Linear, a notebook, nowhere yet)? Anything else worth mentioning — calendars, AI tools, writing apps — feel free to ramble."*
+
+Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminders`, `asana`, `linear`, `vault_todo` (= "I'll keep a TODO.md in the vault" / "nothing yet, just the vault is fine"), or `null` (= "I have no idea / skip"). Hold the full free-text answer too — it goes into `~/.claude/CLAUDE.md` so future sessions know what's around.
+
 Hold all answers in working memory for the generation phase.
 
 ### 5. Locate templates
@@ -227,7 +244,15 @@ cp ~/.claude/templates/starter-claude-config/memory_examples/*.md.example \
 
 These ship as templates the user can adopt later — when they encounter a real piece of feedback that fits one of the patterns (email voice, tool quirks), they edit the example, drop the `.example` suffix, and add a one-line pointer in the MEMORY.md "Tier 2" section.
 
-**6f. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session. Write to `$HOME/.claude/projects/<project-key>/config.json`.
+**6f. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session, then populate the `tools` block:
+
+- `tools.task_manager` → string from Q7 mapping (`things3`, `todoist`, `apple_reminders`, `asana`, `linear`, `vault_todo`) or `null` if the user wasn't sure or skipped. Quote the value if non-null; write `null` (no quotes) if null.
+- `tools.codex_available` → run `command -v codex >/dev/null 2>&1` — write `true` if exit 0, else `false`.
+- `tools.gemini_available` → run `command -v gemini >/dev/null 2>&1 && [ -f "$HOME/.gemini/oauth_creds.json" ]` — write `true` only if the CLI is installed AND the user has logged in (no creds file = unauthenticated, so skills should treat as unavailable).
+
+Write the result to `$HOME/.claude/projects/<project-key>/config.json`.
+
+After writing, validate with `python3 -c 'import json; json.load(open("..."))'` — if parsing fails, print the offending line, fix, and rewrite. Skills downstream depend on this file being valid JSON.
 
 **6g. Kickoff `Getting Started.md`.** Generate a personalised note. Approximate template:
 
@@ -256,6 +281,24 @@ There's nothing you have to do today besides this:
 
 That's the whole loop. Notes live in Obsidian, you ask Claude, Claude reads
 the same notes you do.
+
+**Optimal desktop-app setup.** Two one-time tweaks make day-to-day use
+much smoother:
+
+1. **Switch to Auto mode.** Look at the bottom-left of the prompt area —
+   a small badge cycles between "default" / "Accept edits" / "Auto mode"
+   (also via Shift-Tab). Use Auto mode. To make it default forever, add
+   to `~/.claude/settings.json`:
+
+   ```json
+   { "permissions": { "defaultMode": "bypassPermissions" } }
+   ```
+
+2. **Press-and-hold the microphone button** in the prompt area to record
+   voice notes. This is the fastest way to enter long answers and
+   instructions — release to stop, then send. Don't structure what you
+   say; ramble. Claude sorts through tangents and asks follow-ups when
+   needed.
 
 ## The two skills worth knowing
 

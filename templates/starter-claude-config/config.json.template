@@ -30,6 +30,13 @@
     }
   ],
 
+  "_tools_comment": "Tool integrations discovered during /onboard Q7. Empty/null values mean the tool isn't available — skills check for these and degrade gracefully (e.g. /research skips its Codex pass when codex_available is false; /todo falls back to writing to vault TODO.md when task_manager is null). task_manager values: 'things3', 'todoist', 'asana', 'linear', 'apple_reminders', 'vault_todo', or null.",
+  "tools": {
+    "task_manager": null,
+    "codex_available": false,
+    "gemini_available": false
+  },
+
   "install": {
     "version": "v0",
     "installed_at": "{{INSTALL_ISO_TIMESTAMP}}",

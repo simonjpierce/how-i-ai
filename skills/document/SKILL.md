@@ -289,6 +289,19 @@ If no sync script found, skip silently — the user isn't a contributor and this
 
    Add a one-line offer at the end: "Reply with a number to apply, or `none` to skip all." This is the easy-pick mechanism — Simon should be able to act on a recommendation without having to retype anything.
 
+16c. **Lightweight self-improvement sweep — scan `[OPEN]` friction entries for now-obvious fixes.** Distinct from 16b: 16b generates *new* improvement ideas; 16c looks at the *existing* Friction Log for entries that have become mechanically fixable since they were logged.
+
+   Read the Friction Log. For each entry tagged `[OPEN]` (or unmarked) that is older than this session, ask:
+   - Is the root cause now understood (e.g. logged with a workaround that has since stabilised)?
+   - Is the fix mechanical and non-detrimental (a path correction, a docs update, a guardrail, a one-line skill edit)?
+   - Does an existing skill/script/process now cover it (so the entry can be marked `✓` and closed)?
+
+   Cap the sweep at 5 entries — this is a lightweight pass, not a full friction review (use `/review-friction` for that). Skip entries that need Simon's judgement (design choices, scope decisions) or that aren't yet fixable (waiting on external state, missing tool).
+
+   **Action per surviving entry**: include in the Step 17 report under a `## Open friction — mechanical fixes available` subsection, with the entry number/title, a one-line proposed fix, and a verdict (`Apply now` / `Apply soon` / `Cut — already resolved`). Simon's reply applies the chosen fixes; "none" skips.
+
+   **Skip threshold**: If the Friction Log has fewer than 5 `[OPEN]` entries total, or if all open entries are recently logged this session, skip 16c entirely (nothing to sweep).
+
 17. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead.
 
    **Required section order in the final report** (Simon flagged 2026-04-27 — recurring failure mode):

@@ -272,6 +272,32 @@ Show:
 - Post-processing steps completed
 - Any vocabulary suggestions for `transcribe.sh` (if applicable)
 
+### 8. MMF board-deck accumulation scan (when MMF-relevant)
+
+If the transcript is MMF-related (team meeting, funder call, partner call, board-side call — touches an MMF project, programme, funder, partner, team member, or board-level event), scan it for content suitable for the next-quarter board update. The intent is continuous accumulation of the next quarter's slide-deck markdown so meeting prep is curate-and-polish, not draft-from-zero. See `05_AI WORKFLOW/CLAUDE/Processes/MMF Board Updates — Workflow.md` § *Continuous slide-deck accumulation* for the full design.
+
+**Skip the scan entirely if** the transcript is a personal call, non-MMF context (Planet Ocean / photography / Sony partnership), or a purely scientific discussion that doesn't touch board-level matters. When in doubt, skip — the weekly workhorse compile will catch anything missed via project-note review.
+
+**Locate the next-quarter draft slide-deck file:**
+
+```bash
+ACCUM_DIR="$VAULT_PATH/02_MARINE MEGAFAUNA/MMF BOARD MEETINGS"
+ACCUM_FILE=$(grep -l "^status: accumulating" "$ACCUM_DIR"/*"Slide Deck Content"*.md 2>/dev/null | head -1)
+```
+
+If `ACCUM_FILE` is empty, no accumulating draft exists yet — flag this in the post-run summary (`board-deck-accumulation: no draft found at <ACCUM_DIR>`) and skip the append. Don't auto-create the skeleton; that's Simon's call at the start of each quarter.
+
+**Trigger phrase categories.** See the workflow doc § *Trigger phrase reference* table. Project lifecycle / funding / outputs / people / partnerships-governance / risk-regulatory.
+
+**For each board-relevant item that fires:**
+- Apply the four-question test from `memory/feedback_board_content.md` *Headlines only* section (completed deliverable? would change a board decision? summarisable in one sentence with one number? would Simon mention it in a 30-second verbal update?). At least 2 of 4 should pass.
+- Identify the relevant holding-bin section in the draft (regional or cross-cutting heading).
+- Append a draft paragraph in narrative-prose style per `memory/feedback_board_content.md` *Slide deck text density* section. US English. 2–4 sentences. Numbers embedded inline.
+- Tag with: `<!-- draft <YYYY-MM-DD> from transcript: <transcript filename> -->`
+- Don't ask Simon for confirmation per item — the append is autonomous. Weekly workhorse compile and Simon's prep-time review are the curation layers.
+
+**Report in the step 7 summary:** `Board-deck accumulation: appended N items to <draft file>` (or `skipped — content not MMF-board-relevant` / `skipped — no accumulating draft found`).
+
 ## Guidelines
 
 - **Output folder**: `00_INBOX/TRANSCRIPTS/` for all transcript types.
