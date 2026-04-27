@@ -318,6 +318,8 @@ Read each related document identified in Step 1. Check for contradictions, stale
 
 If you can't determine which source is current, flag it for the user rather than guessing. Be especially careful with spec-to-code drift: a spec feature not in the code could mean "not yet implemented" (spec is correct, code is behind) rather than "outdated spec" (code moved on). Check git history and commit messages for intent before deciding which to update.
 
+**Spec-body literal-claim check** (added 2026-04-27 after the v0 onboarding red-team caught spec drift twice in one pass — `00_INBOX` vs `INBOX`, `/schedule` mechanism still claimed in body): for each spec under review, grep the body for backtick-quoted file paths, skill names (`/foo`), and folder references. Verify each exists as described in the implementation. Flag any literal claim in the spec body that doesn't match what the implementation actually does. This catches the "implementation status section was updated but the older spec body sections still describe the original design" failure mode.
+
 #### 8b. Implementation review
 
 Run three parallel agents on the associated code detected in Step 1. Each agent gets the full code file(s) and the reviewed document as context.
