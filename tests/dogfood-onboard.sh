@@ -548,6 +548,31 @@ else
   echo "  ✗ step 8 missing or wrong heading"
 fi
 
+# --- Phase 16: /onboard collects Q8 + builds Day-1 task block ---------------
+# Q8 ("most pressing thing this week") drives a personalised {{DAY_1_TASK}}
+# substitution in the kickoff, replacing the previous vague "drop a note,
+# ask Claude something" text. Catches regressions that drop Q8 or revert
+# the kickoff to the generic Day-1 instructions.
+echo ""
+echo "Phase 16 — /onboard collects Q8 and builds Day-1 task from the answer"
+ONBOARD_SKILL_FILE="$REPO_ROOT/skills/onboard/SKILL.md"
+if grep -qE "^\*\*Q8\." "$ONBOARD_SKILL_FILE" && grep -q "pressing thing on your plate" "$ONBOARD_SKILL_FILE"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ Q8 (pressing thing this week) present in discovery interview"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("/onboard missing Q8 (pressing thing this week question)")
+  echo "  ✗ Q8 missing from /onboard discovery interview"
+fi
+if grep -q "{{DAY_1_TASK}}" "$ONBOARD_SKILL_FILE" && grep -qE "DAY_1_TASK.*Q8|Q8.*DAY_1_TASK" "$ONBOARD_SKILL_FILE"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ kickoff template uses {{DAY_1_TASK}} placeholder built from Q8"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("/onboard missing {{DAY_1_TASK}} placeholder or Q8 → task wiring")
+  echo "  ✗ kickoff template missing {{DAY_1_TASK}} substitution from Q8"
+fi
+
 # --- Phase 11: /onboard hands the user off to relaunch Code in the vault -----
 # After /onboard, the user's Claude Code session is still pointed at the
 # throwaway scratch folder they picked at install. /onboard MUST tell them

@@ -4,6 +4,20 @@ A complete **Claude Code + Obsidian** system for thinking knowledge work — mem
 
 **Currently macOS-only.** Windows and Linux support is on the v1 roadmap. If you're on Windows or Linux and want to set this up anyway, ping Simon for a manual install — `/onboard` will halt cleanly otherwise.
 
+## What this gives you
+
+A working AI collaborator that knows your projects, your voice, and how you work — without you having to remember to remind it every session. The system bundles **Claude Code** (does the work) with **Obsidian** (where your notes live), wired together so notes you take become context Claude reads, and outputs Claude produces become notes you can find again.
+
+Real workflows the system ships with:
+
+- **Drafting reports and updates** — funder reports, board updates, supporter newsletters. Claude reads your project notes and drafts in your voice. See [`guides/ai-assisted-writing.md`](./guides/ai-assisted-writing.md).
+- **Running analyses and drafting manuscripts** — lab-notebook discipline (every analytical step recorded as you go), then a manuscript drafted from the completed notebook. See [`guides/ai-assisted-scientific-analysis.md`](./guides/ai-assisted-scientific-analysis.md) and [`guides/ai-assisted-scientific-writing.md`](./guides/ai-assisted-scientific-writing.md).
+- **Pre-submission peer review** — three-model adversarial critique on a manuscript before you send it to journals or co-authors. See [`guides/pre-submission-manuscript-review.md`](./guides/pre-submission-manuscript-review.md).
+- **Deep research** — Claude + Codex + Gemini investigate a topic in parallel, claims verified against primary literature, formal report delivered. See [`guides/research-workflow.md`](./guides/research-workflow.md).
+- **Literature intake and integration** — papers in, findings woven into your project notes. See [`guides/literature-intake-and-integration.md`](./guides/literature-intake-and-integration.md).
+
+Each of those is one Slack message away from "rough idea" to "polished output" once setup is done. The 30 minutes of setup is what makes that possible — Claude can't do these things well without knowing the shape of your work.
+
 ## How to set this up
 
 You don't need to read this repo to use it. Three steps:

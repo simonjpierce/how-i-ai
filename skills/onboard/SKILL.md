@@ -142,7 +142,7 @@ Wait for the user to confirm the vault is open in Obsidian before proceeding. If
 
 ### 4. Discovery interview
 
-**CRITICAL CONSTRAINT — read this before anything else in this section.** Ask exactly ONE question at a time. Wait for the user's reply. Then ask the next one. Do NOT batch Q1–Q7 in a single message regardless of what the user's onboarding prompt said. Do NOT preview upcoming questions ("next I'll ask about..."). The whole point of `/onboard` is hand-holding for non-technical users — a wall-of-text interview is the single fastest way to lose a newcomer. If the user pastes their answers in batches anyway, that's their choice; you still ask one at a time.
+**CRITICAL CONSTRAINT — read this before anything else in this section.** Ask exactly ONE question at a time. Wait for the user's reply. Then ask the next one. Do NOT batch Q1–Q8 in a single message regardless of what the user's onboarding prompt said. Do NOT preview upcoming questions ("next I'll ask about..."). The whole point of `/onboard` is hand-holding for non-technical users — a wall-of-text interview is the single fastest way to lose a newcomer. If the user pastes their answers in batches anyway, that's their choice; you still ask one at a time.
 
 Number-replies-OK except where genuinely free-form.
 
@@ -161,6 +161,22 @@ Number-replies-OK except where genuinely free-form.
 **Q7.** *"What other tools do you use day-to-day that we should know about? I'm especially interested in: where do your TODOs live (Things, Todoist, Apple Reminders, a notebook, nowhere yet)? Anything else worth mentioning — calendars, AI tools, writing apps — feel free to ramble."*
 
 Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminders`, `vault_todo` (= "I'll keep a TODO.md in the vault" / "nothing yet, just the vault is fine"), or `null` (= "I have no idea / skip"). If the user names another task manager (Asana, Linear, Notion, etc.), record their answer in the free-text reply but write `vault_todo` to config — `/todo` doesn't ship routing for those yet, and a user can ask Claude later to add a branch for their tool. Hold the full free-text answer too — it goes into `~/.claude/CLAUDE.md` so future sessions know what's around.
+
+**Q8.** *"Last one. What's the most pressing thing on your plate this week — a paper draft, a literature search, a report due, a manuscript awaiting review, a research question you've been chewing on? Doesn't have to be polished; just tell me what's on your mind. I'll suggest a concrete first task to anchor your Day 1 with the system."*
+
+Q8 maps to a `{{DAY_1_TASK}}` block in the kickoff note (filled at step 8b after the domain pass). Map the user's answer to one of these patterns:
+
+| User mentions | Day-1 recommendation |
+|---|---|
+| paper, draft, manuscript, writing up | "Drop your existing draft (or skeleton) into `<vault>/<domain-folder>/` and run `/science-paper` — it'll set up a lab notebook + manuscript pair and walk you through completing the next analytical step or section." |
+| research, find, investigate, literature search, what's known about X | "Run `/research` with your question. It'll launch Claude + Codex + Gemini in parallel and deliver a formal report with verified citations." |
+| review, peer review, feedback, co-author, before submission | "Drop the manuscript into `<vault>/<domain-folder>/` and run `/red-team` (after installing it via `/refresh-skills`) — pre-submission three-model adversarial critique. See `guides/pre-submission-manuscript-review.md`." |
+| citations, references, verify | "Run `/verify-citations` against your manuscript. It checks each reference against Semantic Scholar, CrossRef, and OpenAlex." |
+| meeting recording, audio, transcribe, voice memo | "Drop the audio file into `<vault>/INBOX/` and ask Claude to transcribe and format it. Claude handles audio natively." |
+| TODO list, tasks, things to do | "Tell Claude `/todo <task description>` for each item. It routes to your task manager (configured during this onboarding)." |
+| vague, "I'm not sure", skipped, "lots of things" | Default fallback: "Drop one note about something you're working on into `<vault>/<domain-folder>/`. Ask Claude something simple about it — 'summarise this', 'what would I need to do next', 'who else has written about this?' — to feel out the loop. Then come back and ask for help with the actual pressing thing once you've seen Claude has access." |
+
+If the user names something not covered above (e.g. "I'm building a website" / "I need to plan a trip"), pick the closest match or use the default fallback. Substitute the chosen recommendation as `{{DAY_1_TASK}}` in step 8b.
 
 Hold all answers in working memory for the generation phase.
 
@@ -278,18 +294,21 @@ If you skip this, Claude won't read your CLAUDE.md files and the system
 behaves like vanilla Claude Code — no memory, no behavioural defaults,
 no folder context. So: do it now.
 
-## Day 1 — try one thing
+## Day 1 — try this concretely
 
-There's nothing you have to do today besides this:
+You told me the most pressing thing on your plate this week, so here's a
+specific anchor for your first session with the system:
 
-1. Open Obsidian and look at your folder structure.
-2. Drop one existing note (or create a new one about something you're working
-   on this afternoon) into the relevant folder.
-3. Ask Claude something about that note: "summarise this", "what would I need
-   to do to finish this", whatever's on your mind.
+{{DAY_1_TASK}}
 
 That's the whole loop. Notes live in Obsidian, you ask Claude, Claude reads
-the same notes you do.
+the same notes you do — plus all the context from your CLAUDE.md cascade.
+
+If the suggestion above doesn't land or your priorities shifted: open
+Obsidian, drop one note about anything you're thinking about into the
+relevant folder, and ask Claude something simple about it ("summarise
+this", "what would I need to do next"). The loop is the same regardless
+of what you point it at.
 
 **Optimal desktop-app setup.** Two one-time tweaks make day-to-day use
 much smoother:
@@ -388,6 +407,7 @@ Write the result to `$HOME/.claude/projects/<project-key>/config.json`. After wr
 
 - `{{DOMAIN_LIST}}` → comma-separated list of folders created in step 7. If zero folders were created, replace the entire bullet with: `- Folder-level CLAUDE.md: none created during onboarding (root vault only — you can add domains later by saying "set up a folder for X" to Claude).`
 - `{{DATE_PLUS_14}}` → today + 14 days, ISO format.
+- `{{DAY_1_TASK}}` → the concrete first-task recommendation built from Q8 per the mapping table in step 4. If the user skipped Q8 or gave a vague answer, use the default fallback prose from the mapping table. The recommendation should be specific (name a skill or a concrete action), not generic ("try the system out") — the whole point of Q8 is to give them a non-empty Day-1 starting point.
 
 Write to `<vault>/INBOX/Getting Started.md`, then open it in Obsidian:
 
