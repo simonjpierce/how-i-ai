@@ -156,9 +156,9 @@ Ask the questions one at a time. Number-replies-OK except where genuinely free-f
 
 **Q6.** *"Anything specific about how you work, who you work with, or context I should keep in mind that the questions above missed?"*
 
-**Q7.** *"What other tools do you use day-to-day that we should know about? I'm especially interested in: where do your TODOs live (Things, Todoist, Apple Reminders, Asana, Linear, a notebook, nowhere yet)? Anything else worth mentioning — calendars, AI tools, writing apps — feel free to ramble."*
+**Q7.** *"What other tools do you use day-to-day that we should know about? I'm especially interested in: where do your TODOs live (Things, Todoist, Apple Reminders, a notebook, nowhere yet)? Anything else worth mentioning — calendars, AI tools, writing apps — feel free to ramble."*
 
-Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminders`, `asana`, `linear`, `vault_todo` (= "I'll keep a TODO.md in the vault" / "nothing yet, just the vault is fine"), or `null` (= "I have no idea / skip"). Hold the full free-text answer too — it goes into `~/.claude/CLAUDE.md` so future sessions know what's around.
+Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminders`, `vault_todo` (= "I'll keep a TODO.md in the vault" / "nothing yet, just the vault is fine"), or `null` (= "I have no idea / skip"). If the user names another task manager (Asana, Linear, Notion, etc.), record their answer in the free-text reply but write `vault_todo` to config — `/todo` doesn't ship routing for those yet, and a user can ask Claude later to add a branch for their tool. Hold the full free-text answer too — it goes into `~/.claude/CLAUDE.md` so future sessions know what's around.
 
 Hold all answers in working memory for the generation phase.
 
@@ -246,7 +246,7 @@ These ship as templates the user can adopt later — when they encounter a real 
 
 **6f. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session, then populate the `tools` block:
 
-- `tools.task_manager` → string from Q7 mapping (`things3`, `todoist`, `apple_reminders`, `asana`, `linear`, `vault_todo`) or `null` if the user wasn't sure or skipped. Quote the value if non-null; write `null` (no quotes) if null.
+- `tools.task_manager` → string from Q7 mapping (`things3`, `todoist`, `apple_reminders`, `vault_todo`) or `null` if the user wasn't sure or skipped. Quote the value if non-null; write `null` (no quotes) if null. If the user named an unsupported task manager (Asana, Linear, etc.), write `vault_todo` so /todo has a working fallback.
 - `tools.codex_available` → run `command -v codex >/dev/null 2>&1` — write `true` if exit 0, else `false`.
 - `tools.gemini_available` → run `command -v gemini >/dev/null 2>&1 && [ -f "$HOME/.gemini/oauth_creds.json" ]` — write `true` only if the CLI is installed AND the user has logged in (no creds file = unauthenticated, so skills should treat as unavailable).
 

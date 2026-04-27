@@ -30,7 +30,7 @@
     }
   ],
 
-  "_tools_comment": "Tool integrations discovered during /onboard Q7. Empty/null values mean the tool isn't available — skills check for these and degrade gracefully (e.g. /research skips its Codex pass when codex_available is false; /todo falls back to writing to vault TODO.md when task_manager is null). task_manager values: 'things3', 'todoist', 'asana', 'linear', 'apple_reminders', 'vault_todo', or null.",
+  "_tools_comment": "Tool integrations discovered during /onboard Q7. Empty/null values mean the tool isn't available — skills check for these and degrade gracefully (e.g. /research skips its Codex pass when codex_available is false; /todo falls back to writing to vault TODO.md when task_manager is null or unrecognised). task_manager values: 'things3', 'todoist', 'apple_reminders', 'vault_todo', or null. Other task managers (Asana, Linear, Notion, etc.) aren't routed natively yet — set 'vault_todo' for now and ask Claude to add a branch if you'd like first-class routing.",
   "tools": {
     "task_manager": null,
     "codex_available": false,

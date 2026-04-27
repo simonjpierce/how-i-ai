@@ -75,6 +75,8 @@ Claude Code prompt:
 
 ### 5. Route based on `tools.task_manager`
 
+If the value matches one of the branches below (`things3`, `todoist`, `apple_reminders`, `vault_todo`), follow that branch. If the value is `null`, missing, or unrecognised (e.g. `asana`, `linear`, `notion`, or any other string this skill hasn't been extended for yet), fall back to **5d (`vault_todo`)** and tell the user: *"Your config says `task_manager: <value>` but `/todo` doesn't have a routing branch for that yet. Falling back to vault `TODO.md`. Ask Claude to add a branch (or open a PR to `mmf-claude-code/skills/todo/`) if you'd like first-class routing."*
+
 #### 5a. `things3` (macOS, Things 3 installed)
 
 ```bash
