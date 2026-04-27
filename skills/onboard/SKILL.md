@@ -239,78 +239,38 @@ Set up by `/onboard` on {{INSTALL_DATE}}. This note is yours to edit.
 - Your vault is at `{{VAULT_PATH}}`.
 - Root CLAUDE.md is populated from your interview answers.
 - Folder-level CLAUDE.md exists for: {{DOMAIN_LIST}}.
-- Logs ready at `AI_WORKFLOW/CLAUDE/`: Session Handoff, Decision, Friction.
-- Skills installed: `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`.
+- The system is active. Anything you ask Claude inside this vault uses the
+  rules you just set up — Claude reads the CLAUDE.md files automatically.
 
-## Day 1 — settle in
+## Day 1 — try one thing
 
-The system is set up. There's nothing you have to do today besides:
+There's nothing you have to do today besides this:
 
-1. Open Obsidian and look around your folder structure.
-2. If you have existing notes, drop them into the appropriate folders.
-3. Try a simple Claude interaction — ask any question, point at a file you have, see how it feels.
+1. Open Obsidian and look at your folder structure.
+2. Drop one existing note (or create a new one about something you're working
+   on this afternoon) into the relevant folder.
+3. Ask Claude something about that note: "summarise this", "what would I need
+   to do to finish this", whatever's on your mind.
 
-The cascade is active. Anything you ask Claude inside this vault now uses
-the rules you set up. You don't need to invoke any skill specifically;
-Claude reads the CLAUDE.md cascade automatically.
+That's the whole loop. Notes live in Obsidian, you ask Claude, Claude reads
+the same notes you do.
 
-## When you have actual work
+## The two skills worth knowing
 
-The starter skills handle the most common workflows:
+- **`/document`** at the end of a session — Claude records what was done so
+  the next session picks up where you left off.
+- **`/session-start`** at the top of a new session — Claude reads the last
+  handoff and orients before any work.
 
-- **`/document`** — when you wrap up a session, ask Claude to record what
-  was done. The next session reads it first and picks up where you left off.
-- **`/session-start`** — at the top of a new session, this orients Claude
-  on what was happening and surfaces any stale Friction Log entries.
-- **`/update`** — keeps related notes current after substantial work in
-  one area.
-- **`/review-friction`** — weekly walk through your Friction Log, marking
-  entries resolved / deferred / wontfix.
-
-Use them as the work calls — there's no required order.
-
-## Friction is welcome
-
-When something feels harder than it should, tell Claude — corrections
-become permanent. The Friction Log captures these. Run `/review-friction`
-weekly (about 5 minutes once you're in the habit).
-
-## Meeting capture
-
-Capturing meetings as text the vault can read is one of the highest-value
-practices in this system. There's no perfect tool yet, but options include:
-
-- **Audio Hijack** ($60, macOS) — what Simon uses; produces highest-quality
-  recordings.
-- **ChatGPT voice mode** — decent quality, free with a Plus plan; handy on the
-  go.
-- **Otter.ai** — meeting-focused, generates transcripts directly; web app.
-- **Phone voice memos** — universal fallback; quality varies but works.
-
-Once you have an audio file or text transcript in your vault, ask Claude to
-clean it up and extract TODOs.
-
-## Contributing back
-
-If you find something that could work better — a step that's confusing, a
-rule that fires too often, a workflow worth adding — describe what you want
-to Claude:
-
-> *"The kickoff note should mention X."*
->
-> *"This rule in MEMORY.md fires too often — can we narrow it?"*
-
-Claude can edit the relevant files in a local clone of `mmf-claude-code`,
-commit with attribution, push, and open a pull request. You don't need to
-know git, branches, or PR workflow — just describe the improvement.
+The other skills (`/update`, `/review-friction`, `/refresh-skills`) surface
+when they're useful — Claude will mention them in context. You don't need
+to learn them in advance.
 
 ## Two-week check-in
 
 There's a follow-up note in your INBOX dated {{DATE_PLUS_14}}:
-`INBOX/Onboarding follow-up — {{DATE_PLUS_14}}.md`. By that point your
-Friction Log will have a few entries; the note prompts you to consider
-whether you want the nightly self-improvement loop set up. Open it in two
-weeks (or sooner if you're curious).
+`INBOX/Onboarding follow-up — {{DATE_PLUS_14}}.md`. Worth opening then;
+no urgency before.
 ```
 
 Substitute placeholders (including `{{DATE_PLUS_14}}` = today + 14 days, ISO format). Write to `<vault>/INBOX/Getting Started.md`.
@@ -360,29 +320,33 @@ Compute `{{DATE_PLUS_14}}` (today + 14 days, ISO format). Write to `<vault>/INBO
 ```markdown
 # Onboarding follow-up — {{DATE_PLUS_14}}
 
-Written by `/onboard` on {{INSTALL_DATE}} as a two-week check-in. By the time
-you're reading this, you've had ~14 days with your Claude Code setup and your
-Friction Log will have a few entries.
+Written by `/onboard` on {{INSTALL_DATE}} as a two-week check-in. You've had
+~14 days with your Claude Code setup. A couple of things worth considering
+now that you've lived with it.
 
-## Worth considering now
+## The nightly self-improvement loop
 
-- **Have you been running `/review-friction` weekly?** If the friction log
-  has accumulated 5+ `[OPEN]` entries, give it a read.
-- **Would the nightly self-improvement loop be useful?** It's a scheduled
-  automation (LaunchAgent on macOS) that scans your Friction Log overnight
-  and proposes fixes. Setup takes ~30 minutes. Ask Claude:
-  *"Walk me through installing the nightly self-improvement loop."*
-- **Domain folders.** If you skipped the domain pass during onboarding or
-  have added domains since, ask Claude to walk through the per-domain drill
-  for any new folder using the `folder-CLAUDE.template.md` template at
-  `<vault>/AI_WORKFLOW/templates/`.
-- **Voice references.** As you correct Claude's email/writing voice,
-  capture those rules in `<vault>/Voice References/<context>.md` for re-use.
+Optional, but useful once friction has accumulated. It's a scheduled
+automation (a macOS background task) that scans your Friction Log overnight
+and proposes fixes — the system improves itself while you sleep. Setup takes
+~30 minutes. To install, ask Claude:
+
+> *"Walk me through installing the nightly self-improvement loop."*
+
+## New domain folder?
+
+If you've discovered a new area of work since onboarding (a project, a
+client, a new role), ask Claude to set up a folder for it:
+
+> *"Set up a folder for {{NEW_DOMAIN}}."*
+
+Claude uses the per-domain template and walks through the same drill as
+the original interview.
 
 ## How to dismiss
 
 Read it, decide what (if anything) to do, then delete the file or move it
-to `06_ARCHIVE/`. The system doesn't watch for it.
+to your archive folder. The system doesn't watch for it.
 ```
 
 Substitute placeholders. This is a static dated note, not a scheduled automation — the user encounters it whenever they next browse INBOX. The kickoff `Getting Started.md` references it explicitly so they know it's there.
