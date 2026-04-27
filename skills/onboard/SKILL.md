@@ -10,12 +10,13 @@ This skill is the bridge from "nothing installed" to "working Claude system." It
 
 ```
 Welcome. I'll walk you through setting up Claude Code + Obsidian as a working
-system in about 10–15 minutes. This is an interview, not an essay — short
-answers are fine.
+system. About 6 quick questions, plus a few more if you want me to set up
+domain folders for the different kinds of work you do — ~15 minutes total.
+Short answers are fine.
 
-If you'd rather dictate than type, ChatGPT's voice transcription (desktop or
-iOS app) is currently the cleanest tool for this — speak into ChatGPT, copy
-the text, paste here.
+If you'd rather dictate than type: macOS's built-in dictation works (press Fn
+twice in any text field). ChatGPT's voice mode is also good if you have a
+Plus account.
 
 Two things I'll check at the start, then we'll get going.
 ```
@@ -48,17 +49,22 @@ If the result is anything other than `platform OK`, halt and tell the user:
 
 Do not proceed past this check on non-Darwin platforms.
 
-**1b. Auto-approval mode.** This system assumes Claude Code is in auto-approval mode — too many permission prompts kills the experience. Ask:
+**1b. Auto-approval mode.** This system assumes Claude Code is in auto-approval mode — too many permission prompts kills the experience. Tell the user what it is, what it affects, and how to turn it on, before asking anything:
 
-> *"Quick check: is Claude Code set to auto-approval mode? (Settings → Permissions → Auto-approve.) The system works much better that way — without it, I'll be interrupting you with a permission prompt for every file write, which gets old fast."*
+> *"Before we go further: Claude Code asks for permission every time it writes a file unless you turn on auto-approve. For this setup we'll be writing 20+ files, so the prompts get old fast. Auto-approve only affects this app — it can't run anything outside the folders you've pointed it at, and you can turn it off again any time."*
+>
+> *"To enable it: in the Claude desktop app, click the Claude menu in the top-left of your screen → Settings → Permissions tab → toggle 'Auto-approve file edits' on. Tell me when it's done."*
 
-If they say no or don't know, walk them through enabling it before continuing. Don't proceed past Phase 2 in default-prompt mode — friction will wreck the rest of the flow.
+If the user reports a different layout (Anthropic moves these toggles between releases), suggest searching Settings for "auto-approve" or "permission". Don't proceed past Phase 2 in default-prompt mode — friction will wreck the rest of the flow.
 
-**1c. Bash availability.** The rest of this skill assumes you can run shell commands. If your tools include Bash, you're in Claude Code (or Claude Desktop with filesystem MCP) — proceed. If you don't have a Bash tool at all, you're in Claude Chat — STOP and tell the user:
+**1c. Bash availability.** The rest of this skill assumes you can run shell commands. If your tools include Bash, proceed. If you don't have a Bash tool, STOP and tell the user:
 
 > *"I can't run shell commands or write files in this environment, which means I can't actually install the system here. Open Claude Code in the Claude Desktop app — same Pro plan you already have, just a different surface — and paste the README prompt again. I'll resume from there."*
 
-Do not attempt the rest of the skill in a no-Bash context. (Bash availability is the right signal: filesystem-write tests can succeed in restricted-MCP environments where the rest of the install would still fail.)
+Do not attempt the rest of the skill in a no-Bash context.
+
+<!-- Notes for Claude (don't quote to user): Bash availability is the right pre-flight signal. Filesystem-write tests can succeed in restricted-MCP environments where the rest of the install would still fail; Bash is a stricter check. -->
+
 
 ### 2. Detect & route
 
@@ -67,8 +73,8 @@ Ask:
 > *"Do you already have an Obsidian vault, or are we setting one up from scratch?"*
 
 Numbered options:
-1. Fresh — set up Obsidian and a new vault
-2. Existing — I have a vault already, point Claude at it
+1. Fresh (set up Obsidian and a new vault)
+2. Existing (I have a vault already; point Claude at it)
 
 Branch on the answer:
 
@@ -107,11 +113,15 @@ Verify writable:
 touch "$VAULT_PATH/.write-test" && rm "$VAULT_PATH/.write-test"
 ```
 
-If write-test fails (e.g. iCloud not yet synced), explain and offer alternative paths.
+If write-test fails: most common cause is iCloud Drive not enabled. Tell the user:
+
+> *"That folder isn't writeable yet. Most common reason: iCloud Drive isn't turned on. Open System Settings → Apple ID → iCloud and check that 'iCloud Drive' is on, then tell me. Otherwise, pick a non-cloud path (your Documents folder is fine) and we can move the vault later if you want sync."*
+
+Offer numbered options: retry the same path, switch to `$HOME/Documents/Obsidian Vault`, or specify a different path.
 
 **3e. Register the folder as an Obsidian vault.** A `mkdir`'d folder is not yet a vault — Obsidian needs to know about it. Walk the user through:
 
-> *"Switch to Obsidian. Click 'Open another vault' (folder icon, lower-left), choose 'Open folder as vault', and select `<chosen-path>`. The vault will open with no notes in it — that's expected; we're about to create them."*
+> *"Switch to Obsidian. If you see a welcome screen, click 'Open folder as vault' and select `<chosen-path>`. If you're already inside a different vault, click the small vault-name dropdown in the top-left of the Obsidian sidebar (or press Cmd-comma to open Settings and search 'Manage vaults') → 'Open folder as vault'. The vault will open with no notes in it — that's expected; we're about to create them."*
 
 Wait for the user to confirm the vault is open in Obsidian before proceeding. If they hit "vault not found" or a permissions prompt, troubleshoot before moving on — every later `obsidian://open?vault=<name>&file=...` link depends on Obsidian recognising this vault by name. Once confirmed, derive the URL-encoded vault name from the folder's basename for use in later steps' obsidian:// URIs.
 
@@ -123,7 +133,7 @@ Ask the questions one at a time. Number-replies-OK except where genuinely free-f
 
 **Q2.** *"When you switch tasks, what are the main 'modes' or 'hats' you switch between? List 2–5. Examples: 'research papers and a personal blog'; 'three different clients I consult for'; 'work + parenting + creative writing'."*
 
-**Q3.** *"Spelling — UK / US / NZ / Australian / other? And anything else about how you write — typical formality, words you avoid, emoji preferences?"*
+**Q3.** *"Spelling preference — UK / US / NZ / Australian, or 'doesn't matter'? (If you're unsure: working with the MMF team in marine biology, NZ/UK is the safe default; writing for US journals or US donors, US.) And anything else about how you write — typical formality, words you avoid, emoji preferences?"*
 
 **Q4.** *"Response style — do you prefer concise direct answers, or detailed step-by-step? And: when something's ambiguous, do you want me to ask first, or make a best-guess and let you correct me?"*
 
@@ -138,16 +148,21 @@ Hold all answers in working memory for the generation phase.
 Templates ship with the system. Look in this order:
 
 1. `~/.claude/templates/starter-claude-config/` and `~/.claude/templates/starter-vault/` — if both exist, use these.
-2. If missing, clone the repo to a temp directory:
+2. If missing, clone the repo to a stable location:
 
    ```bash
-   TMP_REPO="/tmp/mmf-claude-code-onboard-$(date +%s)"
-   git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git "$TMP_REPO"
+   STABLE_REPO="$HOME/.claude/repos/mmf-claude-code"
+   if [ ! -d "$STABLE_REPO" ]; then
+     mkdir -p "$HOME/.claude/repos"
+     git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git "$STABLE_REPO"
+   fi
    ```
 
-   Templates are under `$TMP_REPO/templates/`. Copy them into `~/.claude/templates/` so future runs find them locally.
+   Templates are under `$STABLE_REPO/templates/`. Copy them into `$HOME/.claude/templates/` so future runs find them locally. (Use `$HOME`, not `~`, in any quoted Bash arg — see step 3d.)
 
-3. If git is unavailable, fall back to fetching individual template files via WebFetch from `https://raw.githubusercontent.com/marinemegafauna/mmf-claude-code/main/templates/...`. This is slower; only use if git fails.
+3. If `git clone` fails (network, auth, or no `git` installed): the repo is private, so `WebFetch` against `raw.githubusercontent.com` won't work either. Halt and tell the user:
+
+   > *"I can't reach the templates this system needs. The repo is private, and I can't fetch it without `git` and access. If you're seeing this, either: (a) you don't have access yet — message Simon with your GitHub username; (b) git isn't installed — open Terminal and run `xcode-select --install` to install Apple's Command Line Tools (a few minutes), then say 'continue'; (c) you're offline."*
 
 ### 6. Generate baseline outputs
 
@@ -189,7 +204,9 @@ Each is template content as-is — examples included to show shape; user deletes
 
 - `{{VAULT_PROJECT_KEY}}` → Claude Code's per-vault project key. **Computed by replacing every non-alphanumeric character in the absolute vault path with a hyphen** (NOT URL-encoded — Claude Code uses dash-sanitisation). Bash: `PROJECT_KEY=$(echo "$VAULT_PATH" | sed 's|[^a-zA-Z0-9]|-|g')`. Example: `/Users/jane/Documents/My Vault` → `-Users-jane-Documents-My-Vault`.
 
-If `~/.claude/CLAUDE.md` already exists, ASK the user whether to overwrite, append, or skip — don't silently clobber existing customisations.
+If `~/.claude/CLAUDE.md` already exists with content the user didn't write this session: back it up to `~/.claude/CLAUDE.md.bak-<timestamp>` automatically, replace with the starter, then tell the user:
+
+> *"I found an existing global Claude config from before today and saved a copy to `~/.claude/CLAUDE.md.bak-<timestamp>`. The new starter config is now live. If you remember adding rules to the old one, tell me 'merge the backup' and I'll walk through it."*
 
 **6e. Starter `MEMORY.md`.** Compute the project key (Claude Code's dash-sanitised absolute vault path — every non-alphanumeric char replaced with a hyphen), create the directory:
 
@@ -311,9 +328,9 @@ If the user listed 2+ domains in Q2, ask:
 > *"You named these domains: A, B, C. Want to set up folders for each with their own CLAUDE.md now? Recommended if you already know your domains; you can always add more later."*
 
 Numbered options:
-1. Yes — set up folders for all of them
-2. Just one — pick the most active for now
-3. Skip — root CLAUDE.md only is fine for now
+1. Yes (set up folders for all of them)
+2. Just one (pick the most active for now)
+3. Skip (system works fine with just the root vault; you can always add a domain folder later by saying "set up a folder for X" to Claude)
 
 If yes (1 or 2), for each chosen domain:
 
