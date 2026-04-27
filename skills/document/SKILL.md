@@ -281,6 +281,8 @@ If no sync script found, skip silently — the user isn't a contributor and this
 
    Pass the subagent the full internal draft text plus 3–5 sentences of session context.
 
+   **Phase B verdicts are inputs, not authoritative.** After the Opus filter returns, re-read each surviving suggestion + verdict and check it against your own first-principles read of the underlying evidence. Opus operates from the framing you gave it; if you disagree with a verdict (e.g. it says Defer but the evidence supports Apply now, or vice versa), surface your own assessment alongside the Opus verdict rather than rendering the filter output verbatim. The most common failure mode: Opus calling for a `--flag` opt-in when the evidence supports flipping the default outright (or vice versa). Calibration source: 2026-04-28 onboarding round — Opus filter recommended a `--sequential` opt-in flag for /red-team Step 6; Simon pushed back ("sequential did show value here?") and the C1 catch (regression-of-a-fix that only sequential would have caught) supported flipping the default rather than keeping parallel. Don't make Simon do that re-evaluation — do it before surfacing.
+
    **Step 17 output format.** Render the Opus-reviewed list under the **Suggested improvements** heading as a numbered list (`1.`, `2.`, `3.`) with the verdict inline so Simon can reply with just a number to apply one. Format per item:
 
    ```
