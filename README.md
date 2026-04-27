@@ -51,7 +51,7 @@ mmf-claude-code/
 
 ## Available skills
 
-Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs nine of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"*). You don't need to memorise slash-command names; plain-English requests work too.
+Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs ten of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"*). You don't need to memorise slash-command names; plain-English requests work too.
 
 ### Core onboarding & workflow
 
@@ -68,7 +68,7 @@ Skills are markdown files Claude reads to know how to handle specific tasks. The
 - **`/science-paper`** ★ — lab-notebook discipline during analysis sessions; manuscript drafting from a completed notebook.
 - **`/todo`** ★ — add a task to your task manager (Things 3, Todoist, Apple Reminders, Asana, Linear, or a vault `TODO.md`). Routes based on the choice you made during `/onboard`.
 - **`/polish`** — grammar and style checks via LanguageTool + Vale, then apply fixes. *Requires LanguageTool + Vale installed locally.*
-- **`/verify-citations`** — verify scientific citations against Semantic Scholar, CrossRef, OpenAlex. *Requires Python 3 + the `requests` library.*
+- **`/verify-citations`** ★ — verify scientific citations against Semantic Scholar, CrossRef, OpenAlex. *Requires Python 3 + the `requests` library.*
 
 ### Ingestion
 

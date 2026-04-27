@@ -46,6 +46,7 @@ STARTER_SKILLS=(
   todo
   science-paper
   research
+  verify-citations
 )
 
 # install_path SRC DST LABEL

@@ -58,7 +58,7 @@ HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes >/dev/null
 
 echo ""
 echo "  Skills installed:"
-for skill in onboard document session-start update review-friction refresh-skills todo science-paper research; do
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research verify-citations; do
   check "skills/$skill/SKILL.md present" \
     "[[ -f '$FAKE_HOME/.claude/skills/$skill/SKILL.md' ]]"
 done
@@ -93,14 +93,14 @@ echo ""
 echo "Phase 2 — bootstrap.sh re-run safety (idempotent)"
 RERUN_OUTPUT=$(HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes 2>&1 || true)
 UNCHANGED_COUNT=$(echo "$RERUN_OUTPUT" | grep -c '^  unchanged:' || true)
-# Expect 11: 2 templates + 9 skills.
-if [[ "$UNCHANGED_COUNT" -eq 11 ]]; then
+# Expect 12: 2 templates + 10 skills.
+if [[ "$UNCHANGED_COUNT" -eq 12 ]]; then
   PASS=$((PASS + 1))
-  echo "  ✓ re-run reports 'unchanged' for all 11 entries (idempotent)"
+  echo "  ✓ re-run reports 'unchanged' for all 12 entries (idempotent)"
 else
   FAIL=$((FAIL + 1))
-  FAILURES+=("re-run idempotency: expected 11 unchanged, got $UNCHANGED_COUNT")
-  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 11)"
+  FAILURES+=("re-run idempotency: expected 12 unchanged, got $UNCHANGED_COUNT")
+  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 12)"
 fi
 
 # --- Phase 3: simulate /onboard file-creation steps --------------------------
@@ -213,7 +213,7 @@ Set up by \`/onboard\` on $INSTALL_DATE. This note is yours to edit.
 - Your vault is at \`$FAKE_VAULT\`.
 - Root CLAUDE.md is populated from your interview answers.
 - Logs ready at \`AI_WORKFLOW/CLAUDE/\`: Session Handoff, Decision, Friction.
-- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/todo\`, \`/science-paper\`, \`/research\`.
+- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/todo\`, \`/science-paper\`, \`/research\`, \`/verify-citations\`.
 
 The two-week follow-up note: \`INBOX/Onboarding follow-up — $DATE_PLUS_14.md\`.
 KICKOFF
@@ -377,7 +377,7 @@ fi
 echo ""
 echo "Phase 9 — kickoff Getting Started.md promises align with installed skills"
 KICKOFF_FILE="$FAKE_VAULT/INBOX/Getting Started.md"
-for skill in onboard document session-start update review-friction refresh-skills todo science-paper research; do
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research verify-citations; do
   if grep -q "/${skill}\b" "$KICKOFF_FILE"; then
     if [[ -f "$FAKE_HOME/.claude/skills/$skill/SKILL.md" ]]; then
       PASS=$((PASS + 1))
