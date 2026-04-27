@@ -266,8 +266,23 @@ Set up by `/onboard` on {{INSTALL_DATE}}. This note is yours to edit.
 - Your vault is at `{{VAULT_PATH}}`.
 - Root CLAUDE.md is populated from your interview answers.
 - Folder-level CLAUDE.md exists for: {{DOMAIN_LIST}}.
-- The system is active. Anything you ask Claude inside this vault uses the
-  rules you just set up — Claude reads the CLAUDE.md files automatically.
+- The system is *almost* active — see "One last setup step" below.
+
+## One last setup step — point Claude Code at your vault
+
+You ran `/onboard` from a temporary scratch folder, so the Claude Code
+session that just finished can't actually see this vault. To activate the
+CLAUDE.md cascade:
+
+1. **Quit Claude Code** (Cmd-Q in the desktop app).
+2. **Reopen the Claude desktop app** and click the Code tab.
+3. **Choose this folder as the project**: `{{VAULT_PATH}}`.
+4. **Run `/session-start`** in that new session — it should read this
+   note back to you and confirm everything's loaded.
+
+If you skip this, Claude won't read your CLAUDE.md files and the system
+behaves like vanilla Claude Code — no memory, no behavioural defaults,
+no folder context. So: do it now.
 
 ## Day 1 — try one thing
 
@@ -411,10 +426,26 @@ Logs: ready at AI_WORKFLOW/CLAUDE/
 Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research, /verify-citations
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
-Your kickoff note is open in Obsidian — start there.
+⚠️ ONE LAST STEP — point Claude Code at your vault.
+
+You ran /onboard from a throwaway folder. Your vault now exists at:
+
+  <path>
+
+But Claude Code is still pointed at the folder you started in, so it
+can't see your vault's CLAUDE.md cascade. To finish setup:
+
+1. Quit Claude Code (Cmd+Q).
+2. Reopen the Claude desktop app and click the Code tab.
+3. When it asks which folder to open, choose your vault folder above.
+4. Run /session-start in that new session — it will read your kickoff
+   note and confirm the cascade is loading correctly.
+
+Your kickoff note (INBOX/Getting Started.md) is open in Obsidian for
+reference. See you in the next session.
 ```
 
-End. Don't chain into other skills. Don't suggest follow-on work. The user has their kickoff note; they'll take it from here.
+End. Don't chain into other skills. Don't suggest follow-on work — the user MUST quit and relaunch Claude Code against the vault, and any skill chain would happen in the wrong project root.
 
 ## Self-assessment (post-run)
 

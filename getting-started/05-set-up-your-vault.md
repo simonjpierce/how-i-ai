@@ -79,4 +79,4 @@ Once the user confirms they've restarted, invoke `/onboard`. The skill handles p
 
 ## After `/onboard` finishes
 
-The skill ends with a personalised `Getting Started.md` open in the user's Obsidian vault. That's their first read. Don't chain into other skills — they'll take it from there.
+The skill ends with a personalised `Getting Started.md` open in the user's Obsidian vault, plus a hard handoff: it tells them to quit Claude Code, relaunch, and pick the new vault folder as the project root. That step is **not optional** — the current session is still pointed at the temporary scratch folder they chose at install time, so the vault's CLAUDE.md cascade is not loading. Don't chain into other skills, don't suggest follow-on work in this session — they need to relaunch first.

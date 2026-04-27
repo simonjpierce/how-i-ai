@@ -215,6 +215,10 @@ Set up by \`/onboard\` on $INSTALL_DATE. This note is yours to edit.
 - Logs ready at \`AI_WORKFLOW/CLAUDE/\`: Session Handoff, Decision, Friction.
 - Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/todo\`, \`/science-paper\`, \`/research\`, \`/verify-citations\`.
 
+## One last setup step — point Claude Code at your vault
+
+Quit Claude Code (Cmd-Q), reopen, and choose \`$FAKE_VAULT\` as the project. Then run /session-start.
+
 The two-week follow-up note: \`INBOX/Onboarding follow-up — $DATE_PLUS_14.md\`.
 KICKOFF
 
@@ -412,6 +416,34 @@ for skill in onboard document session-start update review-friction refresh-skill
     echo "  ✓ /$skill: no unbundled ~/bin/* references"
   fi
 done
+
+# --- Phase 11: /onboard hands the user off to relaunch Code in the vault -----
+# After /onboard, the user's Claude Code session is still pointed at the
+# throwaway scratch folder they picked at install. /onboard MUST tell them
+# (a) in the terminal close, and (b) in the kickoff note, to quit and
+# reopen the Code tab against the new vault. Codex red-team C4.
+echo ""
+echo "Phase 11 — /onboard tells user to relaunch Code against the vault"
+ONBOARD_FILE="$REPO_ROOT/skills/onboard/SKILL.md"
+KICKOFF_TEMPLATE="$REPO_ROOT/skills/onboard/SKILL.md"  # template lives inline in step 6g
+relaunch_count=$(grep -cE "Quit Claude Code|quit Claude Code" "$ONBOARD_FILE" 2>/dev/null || echo 0)
+if [[ $relaunch_count -ge 2 ]]; then
+  PASS=$((PASS + 1))
+  echo "  ✓ /onboard mentions 'Quit Claude Code' $relaunch_count times (terminal close + kickoff)"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("/onboard missing relaunch instruction (found $relaunch_count of expected 2)")
+  echo "  ✗ /onboard missing relaunch instruction (found $relaunch_count of 2)"
+fi
+# Generated kickoff file should also have the relaunch section after substitution.
+if [[ -f "$KICKOFF_FILE" ]] && grep -q "One last setup step" "$KICKOFF_FILE" 2>/dev/null; then
+  PASS=$((PASS + 1))
+  echo "  ✓ generated kickoff includes 'One last setup step' section"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("generated kickoff missing relaunch section ('One last setup step')")
+  echo "  ✗ generated kickoff missing 'One last setup step' section"
+fi
 
 # --- Summary ------------------------------------------------------------------
 echo ""

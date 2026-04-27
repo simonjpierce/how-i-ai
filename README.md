@@ -9,7 +9,7 @@ A complete **Claude Code + Obsidian** system for thinking knowledge work — mem
 You don't need to read this repo to use it. Three steps:
 
 1. **Install [Claude Desktop](https://claude.com/download).** Claude Code is included on a Pro plan ($20/month) and any higher tier. **MMF science team:** Simon should have added you to the MMF org plan before sending this link — if you sign in and the Code tab still says "upgrade," DM him your GitHub username + the email you signed in to Claude with. **Close collaborators outside MMF:** Pro is the right plan; the higher tiers aren't necessary.
-2. **Click the "Code" tab** in the desktop app (you'll see Chat, Cowork, and Code tabs). Despite the name, "Code" isn't just for programming — it's the only tab that can read and write files on your Mac. Click **Select folder** and pick any folder for now (your Documents folder is fine — Claude will move you to the right one in a minute).
+2. **Click the "Code" tab** in the desktop app (you'll see Chat, Cowork, and Code tabs). Despite the name, "Code" isn't just for programming — it's the only tab that can read and write files on your Mac. Click **Select folder** and pick any folder for now (your Documents folder is fine). This is a temporary "scratch" folder just to run the install. At the end of `/onboard`, Claude will tell you to quit and relaunch the Code tab pointed at your new vault — that's where all your real work happens.
 3. **Paste this prompt** into the Code tab:
 
    ```
