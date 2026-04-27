@@ -142,7 +142,9 @@ Wait for the user to confirm the vault is open in Obsidian before proceeding. If
 
 ### 4. Discovery interview
 
-Ask the questions one at a time. Number-replies-OK except where genuinely free-form.
+**CRITICAL CONSTRAINT — read this before anything else in this section.** Ask exactly ONE question at a time. Wait for the user's reply. Then ask the next one. Do NOT batch Q1–Q7 in a single message regardless of what the user's onboarding prompt said. Do NOT preview upcoming questions ("next I'll ask about..."). The whole point of `/onboard` is hand-holding for non-technical users — a wall-of-text interview is the single fastest way to lose a newcomer. If the user pastes their answers in batches anyway, that's their choice; you still ask one at a time.
+
+Number-replies-OK except where genuinely free-form.
 
 **Q1.** *"In a sentence or two — who are you, and what kinds of work will you mostly use this setup for?"*
 
