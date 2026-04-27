@@ -468,6 +468,31 @@ for skill in onboard document session-start update review-friction refresh-skill
   fi
 done
 
+# --- Phase 15: sync-from-vault.sh has missing-source guard ------------------
+# Codex red-team C10: previously --commit could silently delete repo content
+# if a mapped local source went missing. The script now tracks
+# missing_sources separately and aborts --commit unless --allow-missing is
+# explicitly passed. Catch any future regression that removes the guard.
+echo ""
+echo "Phase 15 — sync-from-vault.sh has missing-source guard for --commit"
+SYNC_FROM="$REPO_ROOT/sync/sync-from-vault.sh"
+if grep -q "missing_sources" "$SYNC_FROM" && grep -qE "ALLOW_MISSING.*true|--allow-missing" "$SYNC_FROM"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ sync-from-vault tracks missing_sources and supports --allow-missing"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("sync-from-vault.sh missing the missing-source guard")
+  echo "  ✗ sync-from-vault.sh missing the C10 guard (missing_sources + --allow-missing)"
+fi
+if grep -qE "ABORT:.*--commit blocked.*missing" "$SYNC_FROM"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ sync-from-vault aborts --commit on missing sources by default"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("sync-from-vault.sh doesn't abort --commit on missing sources")
+  echo "  ✗ sync-from-vault.sh doesn't abort --commit when sources missing"
+fi
+
 # --- Phase 14: sync-from-vault and sync-to-vault GUIDES arrays match --------
 # Codex red-team C2: sync-to-vault.sh shipped with only 1 of 8 guide
 # mappings, so contributor PRs editing any other guide would silently fail

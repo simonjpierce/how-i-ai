@@ -6,10 +6,25 @@
 # After copying into the repo for the first time: chmod +x sync/sync-from-vault.sh
 #
 # Usage:
-#   ./sync/sync-from-vault.sh              # dry run — stages, shows diff, no changes
-#   ./sync/sync-from-vault.sh --commit     # applies changes, commits, pushes
+#   ./sync/sync-from-vault.sh                          # dry run — stages, shows diff, no changes
+#   ./sync/sync-from-vault.sh --commit                 # applies changes, commits, pushes
+#   ./sync/sync-from-vault.sh --commit --allow-missing # commit even if some mapped sources are missing
+#                                                      # (use ONLY when intentionally pruning — otherwise
+#                                                      # sync would silently delete repo content)
 
 set -euo pipefail
+
+# --- Flag parsing ---
+
+COMMIT_MODE=false
+ALLOW_MISSING=false
+for arg in "$@"; do
+  case "$arg" in
+    --commit) COMMIT_MODE=true ;;
+    --allow-missing) ALLOW_MISSING=true ;;
+    *) echo "Unknown flag: $arg" >&2; exit 2 ;;
+  esac
+done
 
 # --- Configuration ---
 
@@ -110,6 +125,8 @@ sanitise() {
   rm -f "$file.bak"
 }
 
+missing_sources=()
+
 copy_and_sanitise() {
   local source="$1"
   local target="$2"
@@ -117,6 +134,7 @@ copy_and_sanitise() {
 
   if [[ ! -e "$source" ]]; then
     echo "  SKIP: source missing — $source" >&2
+    missing_sources+=("$source -> $target")
     return 1
   fi
 
@@ -177,6 +195,33 @@ fi
 
 credential_scan
 
+# Missing-source check — mappings whose local source doesn't exist. Distinct
+# from orphans: an orphan is a repo file without a mapping; a missing source
+# is a mapping where the local canonical file has gone missing. On --commit,
+# missing sources cause the staged dir to be incomplete, which propagates as
+# silent deletion of the corresponding repo content under `rm -rf` + cp.
+# Codex red-team C10: block --commit unless caller passes --allow-missing.
+echo ""
+echo "--- Missing-source check ---"
+if [[ ${#missing_sources[@]} -eq 0 ]]; then
+  echo "  All mapped sources present locally."
+else
+  echo "  ${#missing_sources[@]} mapped source(s) are MISSING locally:"
+  for entry in "${missing_sources[@]}"; do
+    echo "    - $entry"
+  done
+  echo ""
+  echo "  These are mappings in this script whose source path doesn't exist on"
+  echo "  your machine. On --commit, the corresponding repo paths would be"
+  echo "  deleted by the rm -rf + cp step (because the stage is incomplete)."
+  echo ""
+  echo "  If this is intentional pruning (you removed a skill/guide from your"
+  echo "  vault and want to remove it from the repo too), re-run with both"
+  echo "  --commit and --allow-missing."
+  echo "  If this is unintentional (e.g. accidental delete, sync glitch),"
+  echo "  restore the missing source first, then re-run."
+fi
+
 # Pre-flight: warn about orphans — files in the repo's target dirs that have no
 # mapping in this script. On --commit, these are deleted by the `rm -rf <dir>`
 # step before re-copy. This catches the case where someone wrote directly to
@@ -217,7 +262,15 @@ done
 
 # --- Commit ---
 
-if [[ "${1:-}" == "--commit" ]]; then
+if [[ "$COMMIT_MODE" == "true" ]]; then
+  if [[ ${#missing_sources[@]} -gt 0 && "$ALLOW_MISSING" != "true" ]]; then
+    echo ""
+    echo "ABORT: --commit blocked because ${#missing_sources[@]} mapped source(s) are missing locally."
+    echo "  See the Missing-source check above for the list."
+    echo "  Either restore the missing sources, or re-run with --allow-missing"
+    echo "  to acknowledge the pruning is intentional."
+    exit 1
+  fi
   echo ""
   echo "--- Applying changes ---"
   for dir in skills guides templates; do
