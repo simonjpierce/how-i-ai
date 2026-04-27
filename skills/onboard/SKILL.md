@@ -244,17 +244,11 @@ cp ~/.claude/templates/starter-claude-config/memory_examples/*.md.example \
 
 These ship as templates the user can adopt later — when they encounter a real piece of feedback that fits one of the patterns (email voice, tool quirks), they edit the example, drop the `.example` suffix, and add a one-line pointer in the MEMORY.md "Tier 2" section.
 
-**6f. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session, then populate the `tools` block:
+**6f. Defer config.json and kickoff to after the domain pass.** Do not write `config.json` or `Getting Started.md` here. Both depend on decisions made in step 7 (whether the user opted into domain folders, which domains were created, what prefix style was chosen). Hold the values you'd write — `tools.task_manager` from Q7 mapping, `tools.codex_available` / `tools.gemini_available` from `command -v` probes — in working memory and combine with step 7's outcomes during step 8.
 
-- `tools.task_manager` → string from Q7 mapping (`things3`, `todoist`, `apple_reminders`, `vault_todo`) or `null` if the user wasn't sure or skipped. Quote the value if non-null; write `null` (no quotes) if null. If the user named an unsupported task manager (Asana, Linear, etc.), write `vault_todo` so /todo has a working fallback.
-- `tools.codex_available` → run `command -v codex >/dev/null 2>&1` — write `true` if exit 0, else `false`.
-- `tools.gemini_available` → run `command -v gemini >/dev/null 2>&1 && [ -f "$HOME/.gemini/oauth_creds.json" ]` — write `true` only if the CLI is installed AND the user has logged in (no creds file = unauthenticated, so skills should treat as unavailable).
+**6g. Defer kickoff `Getting Started.md` to after the domain pass** (see step 8). The kickoff includes a `Folder-level CLAUDE.md exists for: {{DOMAIN_LIST}}` line that can't be filled correctly until step 7 has run. Hold the kickoff template content in working memory.
 
-Write the result to `$HOME/.claude/projects/<project-key>/config.json`.
-
-After writing, validate with `python3 -c 'import json; json.load(open("..."))'` — if parsing fails, print the offending line, fix, and rewrite. Skills downstream depend on this file being valid JSON.
-
-**6g. Kickoff `Getting Started.md`.** Generate a personalised note. Approximate template:
+The kickoff template (referenced by step 8):
 
 ```markdown
 # Getting Started — your first vault note
@@ -335,13 +329,7 @@ There's a follow-up note in your INBOX dated {{DATE_PLUS_14}}:
 no urgency before.
 ```
 
-Substitute placeholders (including `{{DATE_PLUS_14}}` = today + 14 days, ISO format). Write to `<vault>/INBOX/Getting Started.md`.
-
-Open it in Obsidian:
-
-```bash
-open "obsidian://open?vault=<url-encoded-vault-name>&file=INBOX%2FGetting%20Started"
-```
+(Substitution and write happen in step 8b after the domain pass — do not write here.)
 
 ### 7. Opt-in domain pass
 
@@ -375,7 +363,39 @@ Ask whether to use a numbered prefix (`01_<NAME>`) or unnumbered. Default sugges
 
 Write to `<vault>/<DOMAIN_FOLDER>/CLAUDE.md`.
 
-### 8. Write the two-week follow-up note
+### 8. Finalise config.json and kickoff (using step 7's actual outcomes)
+
+This step exists because `config.json` and `Getting Started.md` both depend on decisions made during step 7 (domain pass). Writing them in step 6 would have meant guessing — see C13 in the third-pass red-team for the failure mode.
+
+**8a. Per-vault `config.json`.** Read `~/.claude/templates/starter-claude-config/config.json.template`. Substitute all placeholders with values from this session. The fields that depend on step 7's outcome:
+
+- `domains` array — one entry per domain folder actually created during step 7. If the user opted out (option 3) or the domain pass was skipped (fewer than 2 domains in Q2), write `"domains": []` and remove the placeholder block per the template's `_domains_comment`. Otherwise emit one entry per chosen folder, populating `folder_name`, `display_name`, and `claude_md_path` from the per-domain drill.
+- `features.domain_folders_opted_in` — `true` only if at least one domain folder was created in step 7; `false` otherwise.
+- `features.numbered_folder_prefixes` — `true` if step 7 used numbered prefixes (`01_<NAME>`), `false` if unnumbered.
+
+The fields that don't depend on step 7 (already held in working memory from step 6f's deferred work):
+
+- `tools.task_manager` → string from Q7 mapping (`things3`, `todoist`, `apple_reminders`, `vault_todo`) or `null` if the user wasn't sure or skipped. Quote the value if non-null; write `null` (no quotes) if null. If the user named an unsupported task manager (Asana, Linear, etc.), write `vault_todo` so /todo has a working fallback.
+- `tools.codex_available` → `true` if `command -v codex >/dev/null 2>&1`, else `false`.
+- `tools.gemini_available` → `true` only if `command -v gemini` AND `~/.gemini/oauth_creds.json` exists.
+- `user.name` → from Q1 (extracted clear name).
+- `user.role` → from Q1 (the full description / role line).
+- `features.is_simon` → always `false` for newcomer installs.
+
+Write the result to `$HOME/.claude/projects/<project-key>/config.json`. After writing, validate with `python3 -c 'import json; json.load(open("..."))'` — if parsing fails, print the offending line, fix, and rewrite. Skills downstream depend on this file being valid JSON.
+
+**8b. Kickoff `Getting Started.md`.** Take the template held from step 6g, substitute placeholders including:
+
+- `{{DOMAIN_LIST}}` → comma-separated list of folders created in step 7. If zero folders were created, replace the entire bullet with: `- Folder-level CLAUDE.md: none created during onboarding (root vault only — you can add domains later by saying "set up a folder for X" to Claude).`
+- `{{DATE_PLUS_14}}` → today + 14 days, ISO format.
+
+Write to `<vault>/INBOX/Getting Started.md`, then open it in Obsidian:
+
+```bash
+open "obsidian://open?vault=<url-encoded-vault-name>&file=INBOX%2FGetting%20Started"
+```
+
+### 9. Write the two-week follow-up note
 
 Compute `{{DATE_PLUS_14}}` (today + 14 days, ISO format). Write to `<vault>/INBOX/Onboarding follow-up — {{DATE_PLUS_14}}.md`:
 
@@ -413,7 +433,7 @@ to your archive folder. The system doesn't watch for it.
 
 Substitute placeholders. This is a static dated note, not a scheduled automation — the user encounters it whenever they next browse INBOX. The kickoff `Getting Started.md` references it explicitly so they know it's there.
 
-### 9. Confirm and close
+### 10. Confirm and close
 
 Brief summary:
 

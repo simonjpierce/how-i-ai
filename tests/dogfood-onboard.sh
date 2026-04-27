@@ -199,10 +199,12 @@ fi
 substitute_to "$FAKE_HOME/.claude/templates/starter-claude-config/MEMORY.md" "$PROJECT_DIR/memory/MEMORY.md"
 cp "$FAKE_HOME/.claude/templates/starter-claude-config/memory_examples/"*.md.example "$PROJECT_DIR/memory/"
 
-# 6f. Per-vault config.json
+# 8a. Per-vault config.json (deferred from step 6 to step 8 so it can reflect
+# the user's actual domain-pass outcomes — see Codex C13 / commit fixing it)
 substitute_to "$FAKE_HOME/.claude/templates/starter-claude-config/config.json.template" "$PROJECT_DIR/config.json"
 
-# 6g. Kickoff Getting Started.md (inlined from /onboard skill)
+# 8b. Kickoff Getting Started.md (deferred from step 6 to step 8 — same reason
+# as 8a; kickoff includes domain-list which depends on step 7 outcomes)
 cat > "$FAKE_VAULT/INBOX/Getting Started.md" <<KICKOFF
 # Getting Started — your first vault note
 
@@ -222,7 +224,7 @@ Quit Claude Code (Cmd-Q), reopen, and choose \`$FAKE_VAULT\` as the project. The
 The two-week follow-up note: \`INBOX/Onboarding follow-up — $DATE_PLUS_14.md\`.
 KICKOFF
 
-# 8. Two-week follow-up note
+# 9. Two-week follow-up note
 cat > "$FAKE_VAULT/INBOX/Onboarding follow-up — $DATE_PLUS_14.md" <<FOLLOWUP
 # Onboarding follow-up — $DATE_PLUS_14
 
@@ -465,6 +467,42 @@ for skill in onboard document session-start update review-friction refresh-skill
     echo "  ✓ /$skill: no hardcoded Simon identity"
   fi
 done
+
+# --- Phase 13: /onboard config.json + kickoff written AFTER domain pass -----
+# Codex red-team C13: previously /onboard step 6f wrote config.json before
+# step 7's domain-pass decisions, leaving stale domain_folders_opted_in /
+# domains state. Now step 6 explicitly defers, and a new step 8 writes both
+# config and kickoff using step 7's actual outcomes. Catch any future
+# regression by checking the SKILL.md structure.
+echo ""
+echo "Phase 13 — /onboard defers config.json + kickoff to after domain pass"
+ONBOARD_SKILL="$REPO_ROOT/skills/onboard/SKILL.md"
+# Step 6f and 6g should both contain the word "defer" / "Defer" or "after" near the heading.
+if grep -E "^\*\*6f\." "$ONBOARD_SKILL" | grep -qE "[Dd]efer|after the domain"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ step 6f explicitly defers config.json to after domain pass"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("step 6f does not defer config.json")
+  echo "  ✗ step 6f does not signal deferral — config may still write before step 7"
+fi
+if grep -E "^\*\*6g\." "$ONBOARD_SKILL" | grep -qE "[Dd]efer|after the domain"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ step 6g explicitly defers kickoff to after domain pass"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("step 6g does not defer kickoff")
+  echo "  ✗ step 6g does not signal deferral — kickoff may still write before step 7"
+fi
+# Step 8 should exist and reference config.json + kickoff finalisation.
+if grep -qE "^### 8\..*[Ff]inalise.*config" "$ONBOARD_SKILL"; then
+  PASS=$((PASS + 1))
+  echo "  ✓ step 8 exists and finalises config + kickoff post-domain-pass"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("step 8 missing or doesn't finalise config")
+  echo "  ✗ step 8 missing or wrong heading"
+fi
 
 # --- Phase 11: /onboard hands the user off to relaunch Code in the vault -----
 # After /onboard, the user's Claude Code session is still pointed at the
