@@ -156,6 +156,8 @@ Number-replies-OK except where genuinely free-form.
 
 **Q5 (optional).** *"Paste a paragraph or two of writing you've done recently — email, blog post, anything — so I can match your voice. Skip if nothing's handy."*
 
+If the user says "skip", "no", "I don't have one", "later", or anything indicating they don't want to share a sample right now, accept it and move straight to Q6 — don't push back, don't re-ask, don't suggest they find one. The voice-sample distillation just gets omitted from `{{ADDITIONAL_PREFERENCES}}`; Q6's free-text input fills that placeholder alone, which is fine. The user can refine voice later by reading any voice reference into a session, or by `/document` capturing tone-correction signal over time.
+
 **Q6.** *"Anything specific about how you work, who you work with, or context I should keep in mind that the questions above missed?"*
 
 **Q7.** *"What other tools do you use day-to-day that we should know about? I'm especially interested in: where do your TODOs live (Things, Todoist, Apple Reminders, a notebook, nowhere yet)? Anything else worth mentioning — calendars, AI tools, writing apps — feel free to ramble."*
@@ -294,24 +296,10 @@ If you skip this, Claude won't read your CLAUDE.md files and the system
 behaves like vanilla Claude Code — no memory, no behavioural defaults,
 no folder context. So: do it now.
 
-## Day 1 — try this concretely
+## While you're here — two desktop-app tweaks
 
-You told me the most pressing thing on your plate this week, so here's a
-specific anchor for your first session with the system:
-
-{{DAY_1_TASK}}
-
-That's the whole loop. Notes live in Obsidian, you ask Claude, Claude reads
-the same notes you do — plus all the context from your CLAUDE.md cascade.
-
-If the suggestion above doesn't land or your priorities shifted: open
-Obsidian, drop one note about anything you're thinking about into the
-relevant folder, and ask Claude something simple about it ("summarise
-this", "what would I need to do next"). The loop is the same regardless
-of what you point it at.
-
-**Optimal desktop-app setup.** Two one-time tweaks make day-to-day use
-much smoother:
+Two one-time settings that make day-to-day use much smoother. Apply now
+before you quit Claude Code:
 
 1. **Switch to Auto mode.** Look at the bottom-left of the prompt area —
    a small badge cycles between "default" / "Accept edits" / "Auto mode"
@@ -327,6 +315,23 @@ much smoother:
    instructions — release to stop, then send. Don't structure what you
    say; ramble. Claude sorts through tangents and asks follow-ups when
    needed.
+
+## Day 1 — try this concretely (after the relaunch)
+
+Once you've quit Claude Code, reopened it against your vault, and run
+`/session-start`, here's a specific anchor for your first real session
+with the system based on what you told me is most pressing this week:
+
+{{DAY_1_TASK}}
+
+That's the whole loop. Notes live in Obsidian, you ask Claude, Claude reads
+the same notes you do — plus all the context from your CLAUDE.md cascade.
+
+If the suggestion above doesn't land or your priorities shifted: open
+Obsidian, drop one note about anything you're thinking about into the
+relevant folder, and ask Claude something simple about it ("summarise
+this", "what would I need to do next"). The loop is the same regardless
+of what you point it at.
 
 ## The two skills worth knowing
 
