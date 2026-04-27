@@ -80,13 +80,13 @@ If the value matches one of the branches below (`things3`, `todoist`, `apple_rem
 #### 5a. `things3` (macOS, Things 3 installed)
 
 ```bash
-/opt/homebrew/bin/python3 "$HOME/.claude/skills/todo/things3_helper.py" "TITLE" "NOTES"
+python3 "$HOME/.claude/skills/todo/things3_helper.py" "TITLE" "NOTES"
 ```
 
 Use double quotes around each argument. Escape any literal double quotes inside the title or notes as `\"`. For multi-line notes, use a heredoc:
 
 ```bash
-/opt/homebrew/bin/python3 "$HOME/.claude/skills/todo/things3_helper.py" "Task title" "$(cat <<'NOTES'
+python3 "$HOME/.claude/skills/todo/things3_helper.py" "Task title" "$(cat <<'NOTES'
 Context line 1
 Context line 2
 

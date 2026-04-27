@@ -2,7 +2,7 @@
 
 ## Filename
 
-`01_LIFE OS/REVIEW QUEUE/RESEARCH/Research — {Topic}.md`
+`<vault>/RESEARCH/Research — {Topic}.md` (resolve `<vault>` from the `vault.path` in the active per-vault `config.json`).
 
 Topic is a short descriptive phrase (e.g. "Whale Shark Tourism Economics", "Photo-ID Recapture Methods").
 

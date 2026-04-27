@@ -32,7 +32,7 @@ Don't try to fake the install — the user needs to be in Claude Code.
 
 ## Step 1 — clone the repo and run the bootstrap
 
-The repo ships a single bootstrap script that installs the v0 starter skills (canonical list in `sync/bootstrap.sh` STARTER_SKILLS — currently `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`, `/todo`, `/science-paper`, `/research`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`.
+The repo ships a single bootstrap script that installs the v0 starter skills (canonical list in `sync/bootstrap.sh` STARTER_SKILLS — currently `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`, `/todo`, `/science-paper`, `/research`, `/verify-citations`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`.
 
 First, pre-flight check the user's environment:
 
