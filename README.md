@@ -49,6 +49,40 @@ mmf-claude-code/
 └── sync/               The script Simon uses to mirror his vault's skills and templates into this repo
 ```
 
+## Available skills
+
+Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs nine of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"*). You don't need to memorise slash-command names; plain-English requests work too.
+
+### Core onboarding & workflow
+
+- **`/onboard`** ★ — first-run setup: discovery interview, personalised CLAUDE.md cascade, starter logs, kickoff note. Run once per machine.
+- **`/session-start`** ★ — orient at the start of a session: reads recent handoff, surfaces stale friction, checks open threads.
+- **`/document`** ★ — end-of-session handover: records what was done so the next session picks up cleanly.
+- **`/update`** ★ — bring all docs current: scans related process docs, project notes, skills, CLAUDE.md files.
+- **`/refresh-skills`** ★ — pull contributor improvements from this repo into your local `~/.claude/`, walking through any conflicts.
+- **`/review-friction`** ★ — walk through `[OPEN]` Friction Log entries one at a time, marking each resolved/deferred/skip.
+
+### Writing & research
+
+- **`/research`** ★ — three-model deep research (Claude + Codex + Gemini), claim verification, formal report. *Optional: Codex CLI + Gemini CLI logged in. Without them, runs Claude-only.*
+- **`/science-paper`** ★ — lab-notebook discipline during analysis sessions; manuscript drafting from a completed notebook.
+- **`/todo`** ★ — add a task to your task manager (Things 3, Todoist, Apple Reminders, Asana, Linear, or a vault `TODO.md`). Routes based on the choice you made during `/onboard`.
+- **`/polish`** — grammar and style checks via LanguageTool + Vale, then apply fixes. *Requires LanguageTool + Vale installed locally.*
+- **`/verify-citations`** — verify scientific citations against Semantic Scholar, CrossRef, OpenAlex. *Requires Python 3 + the `requests` library.*
+
+### Ingestion
+
+- **`/transcribe`** — transcribe audio or format raw transcripts; runs whisper-cli with speaker labels and topic sections. *Requires whisper-cli; speaker diarization needs pyannote.*
+- **`/pdf-to-markdown`** — convert a PDF into clean markdown for Obsidian. *Requires `marker_single` (preferred) or `pdftotext` + `pandoc` as fallback.*
+
+### Independent review
+
+- **`/red-team`** — three-model independent critical review of an important document. *Optional: Codex + Gemini CLIs for second/third opinions; without them, runs as a Claude-subagent-only review.*
+
+### MMF-only
+
+- **`/mmf-brand`** — apply Marine Megafauna Foundation brand identity (colours, typography, logos, layout) to MMF-facing artifacts. Most useful if you produce MMF materials.
+
 ## The stack
 
 **Required:**
