@@ -29,12 +29,30 @@ PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
 CONFIG_FILE="$PROJECT_DIR/config.json"
 MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
 
-# Read is_simon feature flag. Defaults to false. Gates Simon-personal
-# behaviours below — GitHub repo creation under simonjpierce/<name> and
-# the claude-code-config auto-commit + push.
+# Read is_simon feature flag. is_simon is a MACHINE property, not a per-vault
+# property — Simon's machine has it `true`; newcomers' machines have it `false`
+# (the starter template default). pwd-derived PROJECT_KEY can drift mid-session
+# (e.g. cwd moves to ~/repos/<repo> from the vault), missing the actual config.
+# Fix: try pwd-derived first, then fall back to a union scan of all configs
+# under ~/.claude/projects/. If ANY known vault config has is_simon=true, this
+# is Simon's machine. Newcomer machines union to false. Confirmed 2026-04-27:
+# /update run from inside ~/repos/mmf-claude-code returned is_simon=false on
+# Simon's machine because pwd-derived path didn't match the vault project dir.
 IS_SIMON=false
 if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
   IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
+fi
+if [ "$IS_SIMON" = "false" ] && command -v python3 >/dev/null 2>&1; then
+  IS_SIMON=$(python3 -c '
+import json, glob, os
+for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
+    try:
+        if json.load(open(p)).get("features", {}).get("is_simon", False):
+            print("true"); raise SystemExit
+    except SystemExit: raise
+    except Exception: pass
+print("false")
+' 2>/dev/null || echo false)
 fi
 echo "is_simon=$IS_SIMON"
 

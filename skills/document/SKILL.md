@@ -30,14 +30,28 @@ PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
 CONFIG_FILE="$PROJECT_DIR/config.json"
 MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
 
-# Read the is_simon feature flag from config.json. Defaults to false if
-# missing. This gates Simon-personal behaviours below — Things 3 task
-# offers, Daily Log housekeeping writes, voice-reference reads, and the
-# claude-code-config auto-commit. New users do not have these tools or
-# repos, so running them yields no-ops or errors.
+# Read is_simon feature flag. is_simon is a MACHINE property, not a per-vault
+# property. pwd can drift mid-session (e.g. cwd in ~/repos/<repo> rather than
+# the vault), so try pwd-derived first then fall back to a union scan across
+# all known project configs. If ANY config has is_simon=true, this is Simon's
+# machine. Newcomer machines union to false. Confirmed 2026-04-27: /update
+# from inside ~/repos/mmf-claude-code returned is_simon=false on Simon's
+# machine because pwd-derived path missed the vault project dir.
 IS_SIMON=false
 if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
   IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
+fi
+if [ "$IS_SIMON" = "false" ] && command -v python3 >/dev/null 2>&1; then
+  IS_SIMON=$(python3 -c '
+import json, glob, os
+for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
+    try:
+        if json.load(open(p)).get("features", {}).get("is_simon", False):
+            print("true"); raise SystemExit
+    except SystemExit: raise
+    except Exception: pass
+print("false")
+' 2>/dev/null || echo false)
 fi
 echo "is_simon=$IS_SIMON"
 
