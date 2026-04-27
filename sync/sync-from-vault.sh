@@ -71,8 +71,13 @@ SKILLS=(
 )
 
 GUIDES=(
-  # Add mappings as process docs are adapted into guides.
+  # WARNING: sync-from-vault is destructive on its target dirs (skills/, guides/,
+  # templates/). On --commit it does `rm -rf <dir>` and re-copies from staged
+  # mappings — so any file in those dirs WITHOUT a mapping here gets deleted.
+  # Workflow: write the canonical doc in the vault first, add the mapping here,
+  # THEN sync. Don't write directly to repo/guides/ — it'll be wiped on next sync.
   "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
+  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Inviting Collaborators to mmf-claude-code.md::guides/inviting-collaborators.md"
 )
 
 TEMPLATES=(
