@@ -314,9 +314,68 @@ else
   echo "  ✗ tools block missing keys or wrong types"
 fi
 
-# --- Phase 7: kickoff promises align with what was installed -----------------
+# --- Phase 7: numbered-path leak check on bundled skills ---------------------
+# H4 fix from third-pass /red-team (2026-04-27): bundled skills must not
+# hardcode Simon's numbered folder prefixes (01_LIFE OS/, 02_MARINE MEGAFAUNA/,
+# etc.) without a guard. Every occurrence of a numbered-prefix path on a line
+# in /document, /update, or /session-start must include EITHER an explicit
+# "Simon" qualifier OR cascade-resolution vocabulary (<vault>, <logs>,
+# newcomer, starter, cascade, fallback). Unguarded literals leak Simon's
+# vault layout into newcomer skill behaviour and the first /document silently
+# misses logs. Phase 8 fails the dogfood if any unguarded leak appears.
 echo ""
-echo "Phase 7 — kickoff Getting Started.md promises align with installed skills"
+echo "Phase 7 — bundled skills don't leak Simon-numbered paths to newcomers"
+for skill in document update session-start; do
+  skill_file="$FAKE_HOME/.claude/skills/$skill/SKILL.md"
+  if [[ ! -f "$skill_file" ]]; then
+    FAIL=$((FAIL + 1))
+    FAILURES+=("$skill SKILL.md not installed (can't check)")
+    echo "  ✗ $skill: SKILL.md not installed"
+    continue
+  fi
+  total=$(grep -cE '\b0[1-6]_[A-Z]' "$skill_file" || echo 0)
+  if [[ "$total" -eq 0 ]]; then
+    PASS=$((PASS + 1))
+    echo "  ✓ $skill: 0 numbered-path references (clean)"
+    continue
+  fi
+  unguarded=$(grep -nE '\b0[1-6]_[A-Z]' "$skill_file" \
+    | grep -ivE '[Ss]imon|SIMON-ONLY|<vault>|<logs>|newcomer|starter|cascade|fallback|illustrative|example' \
+    || true)
+  if [[ -z "$unguarded" ]]; then
+    PASS=$((PASS + 1))
+    echo "  ✓ $skill: $total numbered-path references, all guarded"
+  else
+    unguarded_count=$(printf '%s\n' "$unguarded" | wc -l | tr -d ' ')
+    FAIL=$((FAIL + 1))
+    FAILURES+=("$skill leaks $unguarded_count unguarded numbered-path reference(s)")
+    echo "  ✗ $skill: $unguarded_count unguarded numbered-path references:"
+    printf '%s\n' "$unguarded" | sed 's/^/    /'
+  fi
+done
+
+# --- Phase 8: sync-from-vault.sh and sync-to-vault.sh SKILLS arrays match ----
+# H3 fix from third-pass /red-team (2026-04-27): /refresh-skills orchestrates
+# over sync-to-vault.sh, so any skill present in sync-from-vault.sh's SKILLS
+# array must also be in sync-to-vault.sh's. Otherwise upstream contributor
+# improvements never flow to the affected skills on user machines.
+echo ""
+echo "Phase 8 — sync-from-vault and sync-to-vault SKILLS arrays match"
+SYNC_FROM=$(grep -oE 'skills/[a-z-]+' "$REPO_ROOT/sync/sync-from-vault.sh" | sort -u)
+SYNC_TO=$(grep -oE 'skills/[a-z-]+' "$REPO_ROOT/sync/sync-to-vault.sh" | sort -u)
+if [[ "$SYNC_FROM" == "$SYNC_TO" ]]; then
+  PASS=$((PASS + 1))
+  echo "  ✓ SKILLS arrays match in both sync scripts ($(echo "$SYNC_FROM" | wc -l | tr -d ' ') skills)"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("SKILLS array drift between sync-from-vault.sh and sync-to-vault.sh")
+  echo "  ✗ SKILLS array drift between sync scripts:"
+  diff <(echo "$SYNC_FROM") <(echo "$SYNC_TO") | sed 's/^/    /'
+fi
+
+# --- Phase 9: kickoff promises align with what was installed -----------------
+echo ""
+echo "Phase 9 — kickoff Getting Started.md promises align with installed skills"
 KICKOFF_FILE="$FAKE_VAULT/INBOX/Getting Started.md"
 for skill in onboard document session-start update review-friction refresh-skills todo science-paper research; do
   if grep -q "/${skill}\b" "$KICKOFF_FILE"; then

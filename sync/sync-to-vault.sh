@@ -51,6 +51,10 @@ SKILLS=(
   "skills/review-friction::$CLAUDE_CONFIG/skills/review-friction"
   "skills/session-start::$CLAUDE_CONFIG/skills/session-start"
   "skills/refresh-skills::$CLAUDE_CONFIG/skills/refresh-skills"
+  "skills/polish::$CLAUDE_CONFIG/skills/polish"
+  "skills/todo::$CLAUDE_CONFIG/skills/todo"
+  "skills/science-paper::$CLAUDE_CONFIG/skills/science-paper"
+  "skills/research::$CLAUDE_CONFIG/skills/research"
 )
 
 TEMPLATES=(
