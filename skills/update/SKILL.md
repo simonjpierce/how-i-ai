@@ -64,9 +64,9 @@ echo "MEMORY.md: $LINES lines, $BYTES bytes (caps: 200 / 25600)"
 
 The `IS_SIMON` value above gates two Simon-personal sub-steps in step 9 (Code backup check) — they're flagged with `(SIMON-ONLY)` markers. If `IS_SIMON=false` (the default for newcomer installs), commit locally only and do NOT create new GitHub repos or push to `simonjpierce/claude-code-config`.
 
-If `$LINES > 150` or `$BYTES > 20000`, warn Simon: "MEMORY.md approaching loader cap — any new rules added this session should go in Tier 2 leaves (`memory/feedback_*.md`), not Tier 1 inline." See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
+If `$LINES > 150` or `$BYTES > 20000`, warn the user: "MEMORY.md approaching loader cap — any new rules added this session should go in Tier 2 leaves (`memory/feedback_*.md`), not Tier 1 inline." See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
 
-**Do not offer to /schedule a compression sweep.** Compression is ALREADY owned by two existing mechanisms: the nightly self-improvement loop (`self_improve.py`) and `/document` step 13 ("Distil to MEMORY.md"). /update only WARNS — it does not compress, and it does not need to invent new automation. If the warning fires repeatedly across sessions, that's a signal those existing mechanisms aren't keeping up; surface that observation to Simon rather than offering a duplicate /schedule.
+**Do not offer to /schedule a compression sweep.** Compression is ALREADY owned by two existing mechanisms: the nightly self-improvement loop (`self_improve.py`) and `/document` step 13 ("Distil to MEMORY.md"). /update only WARNS — it does not compress, and it does not need to invent new automation. If the warning fires repeatedly across sessions, that's a signal those existing mechanisms aren't keeping up; surface that observation to the user rather than offering a duplicate /schedule.
 
 If within budget, proceed silently — no need to report the numbers unless asked.
 
@@ -118,7 +118,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Removing references to deleted/archived content
    - Updating "Last updated" dates
 
-   **Review** (pause for Simon) — content changes that involve judgement:
+   **Review** (pause for the user) — content changes that involve judgement:
    - Rewriting descriptions or explanations
    - Removing content (even if it seems outdated)
    - Changing scope, priorities, or strategic framing
@@ -127,12 +127,12 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Anything where reasonable people might disagree on the right update
 
    **Audience first, then in-doubt.** Before classifying as Review, ask: who is this document for?
-   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in the user's `<logs>/Processes/` folder, **`Current Projects.md` and IDEA.md** — both are read by `/session-start` and written by `/document` + nightly automation) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't sit down and read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
-   - **Simon-facing documents** (project notes inside domain folders, role notes, voice references, external comms, manuscripts, daily notes, anything destined for delivery to a third party) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
+   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in the user's `<logs>/Processes/` folder, **`Current Projects.md` and IDEA.md** — both are read by `/session-start` and written by `/document` + nightly automation) — these are MY records, not the user's review surfaces. Append/update autonomously even for content changes. The user doesn't sit down and read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes the user's attention.
+   - **User-facing documents** (project notes inside domain folders, role notes, voice references, external comms, manuscripts, daily notes, anything destined for delivery to a third party) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
 
-   The trap to avoid: classifying Decision Log / Friction Log / Current Projects entries as "review" because the work is substantive. Substantive ≠ Simon's-judgement-needed. If the audience is future Claude sessions or `/session-start`, just write the entry. Confirmed 2026-04-26: classified a Current Projects line-89 update as Review and surfaced it for approval; Simon's correction — *"why are you asking permission to edit 'current projects' anyway? It's for you."*
+   The trap to avoid: classifying Decision Log / Friction Log / Current Projects entries as "review" because the work is substantive. Substantive ≠ the-user's-judgement-needed. If the audience is future Claude sessions or `/session-start`, just write the entry. Confirmed 2026-04-26: classified a Current Projects line-89 update as Review and surfaced it for approval; Simon's correction — *"why are you asking permission to edit 'current projects' anyway? It's for you."* (Historical anchor — kept verbatim because it explains the rule's origin.)
 
-5. **Present the hit list**. Show Simon a compact summary:
+5. **Present the hit list**. Show the user a compact summary:
 
    ```
    ## Documents to update
@@ -162,7 +162,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - The proposed change
    - Why the change is needed
 
-   Wait for Simon's approval, modification, or rejection before proceeding to the next item. Apply approved changes immediately.
+   Wait for the user's approval, modification, or rejection before proceeding to the next item. Apply approved changes immediately.
 
 8. **Cross-reference check**. After all updates are applied, do a quick sweep:
    - Did any update change a file path or heading that other docs link to?

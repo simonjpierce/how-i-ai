@@ -1,6 +1,6 @@
 ---
 name: science-paper
-description: Structure scientific analysis sessions with lab notebook discipline, and draft manuscripts from completed notebooks. Two modes — "lab notebook" (activate at session start for interactive analysis, enforces update-after-each-step gate) and "manuscript" (draft a paper from a completed analysis note). Use when Simon says "/science-paper", "lab notebook mode", "start the lab notebook", "draft a manuscript", "write the paper", or when beginning any data analysis session that will produce publishable results. Also trigger when Simon asks to "activate" or "get running" the science-paper approach.
+description: Structure scientific analysis sessions with lab notebook discipline, and draft manuscripts from completed notebooks. Two modes — "lab notebook" (activate at session start for interactive analysis, enforces update-after-each-step gate) and "manuscript" (draft a paper from a completed analysis note). Use when the user says "/science-paper", "lab notebook mode", "start the lab notebook", "draft a manuscript", "write the paper", or when beginning any data analysis session that will produce publishable results. Also trigger when the user asks to "activate" or "get running" the science-paper approach.
 ---
 
 Scientific analysis and writing skill. Two modes: **lab notebook** (interactive analysis sessions) and **manuscript** (paper drafting from completed notebooks).
@@ -96,7 +96,7 @@ Activate at the start of an interactive analysis session. The analysis note is t
 
 8. **Register with /update.** The `/update` skill reads the Artifacts table to find associated documents. By listing everything in Artifacts, `/update` will automatically check, maintain, and push code changes. No additional configuration needed — the Artifacts table is the contract.
 
-9. **Announce the gate.** Confirm to Simon: "Project folder, lab notebook, manuscript, GitHub repo, and Google Drive folder set up. Lab notebook gate active — I'll update the analysis note after each step before proceeding."
+9. **Announce the gate.** Confirm to the user: "Project folder, lab notebook, manuscript, GitHub repo, and Google Drive folder set up. Lab notebook gate active — I'll update the analysis note after each step before proceeding."
 
 7b. **Create `sync_figures.sh`** in the repo root. This script copies all figures from the repo `outputs/` to the vault and Google Drive in one command:
 
@@ -193,13 +193,13 @@ Draft a scientific paper from a completed analysis note. The manuscript is a **d
 3. **Code repository** — to verify what the code actually does vs. what the notebook says
 4. **Red-team report** — if available, to preemptively address reviewer concerns
 
-### Confirm scope with Simon
+### Confirm scope with the user
 
 Before writing, confirm:
 - Target journal and format
 - Author list and order
 - Which results to include (the notebook may contain more than the paper needs)
-- Any specific framing or narrative Simon wants
+- Any specific framing or narrative the user wants
 
 ### Writing order
 
@@ -288,4 +288,4 @@ After completing either mode, briefly assess:
 - **Lab notebook mode:** Was the gate followed consistently? Were any results produced without being documented? Was the Artifacts table maintained?
 - **Manuscript mode:** Does every Result have a Method? Were any common mistakes (list above) present in the draft? Did the code verification step catch any discrepancies?
 
-Flag issues found to Simon.
+Flag issues found to the user.

@@ -6,7 +6,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 
 Perform an end-of-session handover. Review the full conversation and write updates to the vault.
 
-**Proactive invocation**: Do not wait for Simon to ask. Invoke this skill when a substantial task is complete, the session is naturally winding down, or Simon signals goodbye/thanks. This is a safety net — continuous mid-session documentation (Decision Log, Friction Log entries written as work happens) is the primary mechanism. This skill catches anything that fell through the cracks.
+**Proactive invocation**: Do not wait for the user to ask. Invoke this skill when a substantial task is complete, the session is naturally winding down, or the user signals goodbye/thanks. This is a safety net — continuous mid-session documentation (Decision Log, Friction Log entries written as work happens) is the primary mechanism. This skill catches anything that fell through the cracks.
 
 
 ## When something goes wrong
@@ -113,19 +113,19 @@ If within budget, proceed silently — no need to report the numbers.
 
    **8a. Tool failure patterns**: Read `~/.claude/session-errors.jsonl` (if it exists and is non-empty). Group entries by tool name. Flag patterns: same tool failing 3+ times, or any MCP/tool hard failure. For each pattern, draft a Friction Log entry (root cause if identifiable, workaround used, systemic fix needed).
 
-   **8b. Verbal corrections**: Scan the conversation transcript for moments where Simon corrected the approach — patterns like "no don't", "stop", "that's wrong", "not what I asked", "I said", "why did you", "that's not right", "use X instead", "I told you", pushback on tool/method choices. Also look for repeated failed attempts at the same operation (Claude trying something, it failing, trying again with the same approach).
+   **8b. Verbal corrections**: Scan the conversation transcript for moments where the user corrected the approach — patterns like "no don't", "stop", "that's wrong", "not what I asked", "I said", "why did you", "that's not right", "use X instead", "I told you", pushback on tool/method choices. Also look for repeated failed attempts at the same operation (Claude trying something, it failing, trying again with the same approach).
 
    **8c. Classify each finding**:
    - **Friction log entry** — the tool, skill, or process is broken and needs a systemic fix (e.g., "MCP times out", "skill uses wrong method"). Write to Friction Log.
    - **Feedback memory** — behavioural rule for future sessions (e.g., "don't use MCP for Things 3", "always confirm before sending emails"). Write to auto-memory.
    - **Already captured** — was logged mid-session or matches an existing friction/memory entry. Skip.
-   - **Ambiguous** — present to Simon and ask which category fits.
+   - **Ambiguous** — present to the user and ask which category fits.
 
    **8d. Clear the error log** after processing: `rm ~/.claude/session-errors.jsonl` (the previous session's archive at `session-errors-prev.jsonl` is kept for reference).
 
-   **8e. Instruction divergence scan**: Review the conversation for moments where Simon gave an explicit tool, method, or approach instruction (e.g. "use Paperpile", "via the browser extension", "step by step", "Chrome not Brave", "do it with X"), and check whether the immediately following Claude actions honoured that instruction. Also flag any apology-without-behaviour-change pattern ("sorry", "you're right" followed by the same behaviour recurring).
+   **8e. Instruction divergence scan**: Review the conversation for moments where the user gave an explicit tool, method, or approach instruction (e.g. "use Paperpile", "via the browser extension", "step by step", "Chrome not Brave", "do it with X"), and check whether the immediately following Claude actions honoured that instruction. Also flag any apology-without-behaviour-change pattern ("sorry", "you're right" followed by the same behaviour recurring).
 
-   - If any divergences are found, include them in the handoff entry as a `## Instruction divergence` subsection. Format each as: `> "quoted instruction from Simon"` followed by a bullet `- Diverged by: [what I did instead and when]`. This gives the next session explicit signal about where the pattern recurred.
+   - If any divergences are found, include them in the handoff entry as a `## Instruction divergence` subsection. Format each as: `> "quoted instruction from the user"` followed by a bullet `- Diverged by: [what I did instead and when]`. This gives the next session explicit signal about where the pattern recurred.
    - If no divergences, do NOT include the subsection (signal: zero divergence is the desired state).
    - Divergence findings are ALSO relevant to step 8c classification: a divergence that matches an existing feedback memory means the rule wasn't followed (friction log entry, not new memory); a divergence on a novel trigger may warrant a new behavioural rule. Classify by frequency: **always-on → Tier 1 inline** in MEMORY.md's Feedback & instructions — Tier 1 section; **context-triggered (specific activity/domain) → new or existing Tier 2 leaf** (`memory/feedback_*.md`) with an explicit READ trigger in MEMORY.md's Tier 2 index. See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the convention.
 
@@ -133,7 +133,7 @@ If within budget, proceed silently — no need to report the numbers.
 
    - If any drafts were produced without a declared + read voice guide, include them in the handoff entry under a `## Voice reference gaps` subsection. Format: `- Drafted [type] without reading [applicable guide]`. Name the specific voice file that should have been consulted.
    - If the voice guide was correctly declared and read, don't include the subsection (zero is the desired state).
-   - If Simon corrected the tone of any draft this session (voice calibration feedback), that's a stronger signal — log to Friction Log per step 8c classification, not just the handoff subsection.
+   - If the user corrected the tone of any draft this session (voice calibration feedback), that's a stronger signal — log to Friction Log per step 8c classification, not just the handoff subsection.
 
    For trivial sessions with no errors, corrections, divergences, or writing drafts, skip this step entirely.
 
@@ -151,7 +151,7 @@ If within budget, proceed silently — no need to report the numbers.
     - If no Artifacts section, search: project notes in the user's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/`; newcomer: whatever folders were created during `/onboard`'s domain pass); folder CLAUDE.md files for domains touched; role notes if role-relevant work was done; Scheduled Automations if any automation changed.
     - For each candidate, read and check: is anything **stale**, **missing**, or **inconsistent** with this session's work? Skip docs already updated in step 9.
     - **Auto-update** mechanical changes (paths, statuses, cross-refs, dates) without asking.
-    - **Flag for review** any content-level changes (rewrites, removals, scope changes) — present these to Simon in step 16's report rather than blocking the handover.
+    - **Flag for review** any content-level changes (rewrites, removals, scope changes) — present these to the user in step 16's report rather than blocking the handover.
     - If the session was trivial (quick question, single-file edit), skip this step.
 
 11. **Update Current Projects**: Read the Current Projects file — try `<vault>/01_LIFE OS/Current Projects.md` first (Simon), then `<vault>/Current Projects.md` (newcomer). Skip this step if neither exists (the starter vault doesn't ship one). Based on the session analysis (step 4), make targeted edits:
