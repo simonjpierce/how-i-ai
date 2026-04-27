@@ -32,10 +32,22 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 if [[ -z "${VAULT_PATH:-}" ]]; then
   for cfg in "$HOME/.claude/projects"/*/config.json; do
     [[ -f "$cfg" ]] || continue
-    candidate=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("vault",{}).get("path","").strip())' "$cfg" 2>/dev/null || echo "")
-    if [[ -n "$candidate" ]]; then
+    # One python3 call returns both fields tab-separated. Two-call version was
+    # flagged in red-team Step 8 ecosystem review (efficiency #1) — single call
+    # also avoids the partial-write race between two json.load() calls.
+    IFS=$'\t' read -r candidate candidate_aiwf < <(python3 -c '
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    v = d.get("vault", {}).get("path", "").strip()
+    a = d.get("folders", {}).get("ai_workflow", "AI_WORKFLOW").strip() or "AI_WORKFLOW"
+    print(f"{v}\t{a}")
+except Exception:
+    print("\tAI_WORKFLOW")
+' "$cfg" 2>/dev/null) || true
+    if [[ -n "${candidate:-}" ]]; then
       VAULT_PATH="$candidate"
-      AI_WORKFLOW_DIR=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("folders",{}).get("ai_workflow","AI_WORKFLOW").strip())' "$cfg" 2>/dev/null || echo "AI_WORKFLOW")
+      AI_WORKFLOW_DIR="$candidate_aiwf"
       break
     fi
   done

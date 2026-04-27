@@ -261,7 +261,6 @@ echo ""
 echo "Phase 5 — no unsubstituted {{PLACEHOLDER}} in generated files"
 LEAKED=$(grep -lP '\{\{[A-Z_]+\}\}' \
   "$FAKE_VAULT/CLAUDE.md" \
-  "$PROJECT_DIR/MEMORY.md" 2>/dev/null \
   "$PROJECT_DIR/memory/MEMORY.md" \
   "$PROJECT_DIR/config.json" 2>/dev/null || true)
 if [[ -z "$LEAKED" ]]; then
@@ -365,7 +364,7 @@ for skill in document update session-start; do
     echo "  ✗ $skill: SKILL.md not installed"
     continue
   fi
-  total=$(grep -cE '\b0[1-6]_[A-Z]' "$skill_file" || echo 0)
+  total=$(grep -cE '\b0[1-6]_[A-Z]' "$skill_file" 2>/dev/null) || total=0
   if [[ "$total" -eq 0 ]]; then
     PASS=$((PASS + 1))
     echo "  ✓ $skill: 0 numbered-path references (clean)"
@@ -557,8 +556,7 @@ fi
 echo ""
 echo "Phase 11 — /onboard tells user to relaunch Code against the vault"
 ONBOARD_FILE="$REPO_ROOT/skills/onboard/SKILL.md"
-KICKOFF_TEMPLATE="$REPO_ROOT/skills/onboard/SKILL.md"  # template lives inline in step 6g
-relaunch_count=$(grep -cE "Quit Claude Code|quit Claude Code" "$ONBOARD_FILE" 2>/dev/null || echo 0)
+relaunch_count=$(grep -cE "Quit Claude Code|quit Claude Code" "$ONBOARD_FILE" 2>/dev/null) || relaunch_count=0
 if [[ $relaunch_count -ge 2 ]]; then
   PASS=$((PASS + 1))
   echo "  ✓ /onboard mentions 'Quit Claude Code' $relaunch_count times (terminal close + kickoff)"
