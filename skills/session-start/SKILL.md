@@ -48,10 +48,10 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 
 8. **Present an orientation summary** — output a brief block (max 10 lines) covering:
    - What the last session worked on and its status
-   - Any stale friction entries from step 5 — numbered, with a "/review-friction?" prompt
    - Any prior decisions or known friction relevant to the stated task
    - Any automation-health flag from step 7 (if triggered)
    - End with: "Ready to start." or a specific question if something needs clarification.
+   - **P.S. (last line, only if step 5 found stale entries):** *"P.S. there are N older items in your Friction Log — quick review with `/review-friction` when you have a moment."* (Numbered list omitted from the summary itself; the user opens `/review-friction` to see them. The P.S. position keeps the surface visible without front-loading it as a chore at the start of working time.)
 
 ## Guidelines
 - Keep the summary concise. This is a quick orientation, not a report.
