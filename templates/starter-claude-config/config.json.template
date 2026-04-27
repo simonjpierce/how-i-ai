@@ -30,6 +30,12 @@
     }
   ],
 
+  "_user_comment": "User identity captured during /onboard Q1 (substituted from {{USER_NAME}} and {{USER_BIO}} the same way they're written into vault root CLAUDE.md). Used by skills like /research to give external research models tone/audience context without leaking the user's full vault. Skills that consume this MUST handle empty strings gracefully — /research omits the author-context line entirely when name or role is blank rather than sending external models a malformed prompt.",
+  "user": {
+    "name": "{{USER_NAME}}",
+    "role": "{{USER_BIO}}"
+  },
+
   "_tools_comment": "Tool integrations discovered during /onboard Q7. Empty/null values mean the tool isn't available — skills check for these and degrade gracefully (e.g. /research skips its Codex pass when codex_available is false; /todo falls back to writing to vault TODO.md when task_manager is null or unrecognised). task_manager values: 'things3', 'todoist', 'apple_reminders', 'vault_todo', or null. Other task managers (Asana, Linear, Notion, etc.) aren't routed natively yet — set 'vault_todo' for now and ask Claude to add a branch if you'd like first-class routing.",
   "tools": {
     "task_manager": null,

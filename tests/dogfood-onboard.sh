@@ -318,6 +318,32 @@ else
   echo "  ✗ tools block missing keys or wrong types"
 fi
 
+# user block — populated by /onboard from Q1 (USER_NAME + USER_BIO). /research
+# reads name+role from here to inject author context into external-model
+# prompts. Empty strings allowed (causes /research to omit the line entirely);
+# missing keys not allowed.
+if python3 - <<PYEOF 2>/dev/null
+import json, sys
+c = json.load(open("$PROJECT_DIR/config.json"))
+u = c.get("user", {})
+ok = (
+    isinstance(u, dict)
+    and "name" in u
+    and "role" in u
+    and isinstance(u["name"], str)
+    and isinstance(u["role"], str)
+)
+sys.exit(0 if ok else 1)
+PYEOF
+then
+  PASS=$((PASS + 1))
+  echo "  ✓ user block present with name + role (used by /research for author context)"
+else
+  FAIL=$((FAIL + 1))
+  FAILURES+=("user block missing or malformed in starter config.json")
+  echo "  ✗ user block missing keys (name, role) or wrong types"
+fi
+
 # --- Phase 7: numbered-path leak check on bundled skills ---------------------
 # H4 fix from third-pass /red-team (2026-04-27): bundled skills must not
 # hardcode Simon's numbered folder prefixes (01_LIFE OS/, 02_MARINE MEGAFAUNA/,
@@ -414,6 +440,29 @@ for skill in onboard document session-start update review-friction refresh-skill
   else
     PASS=$((PASS + 1))
     echo "  ✓ /$skill: no unbundled ~/bin/* references"
+  fi
+done
+
+# --- Phase 12: no hardcoded "Dr. Simon J Pierce" identity in starter skills --
+# Codex red-team C7: /research's external-model prompt template hardcoded
+# Simon's full identity ("Dr. Simon J Pierce — marine biologist, ED of MMF").
+# When auto-installed for collaborators, this leaked into Codex/Gemini prompts
+# and biased their research toward Simon's field. Now parameterised via
+# config.user.{name,role}. Catch any future regression in any starter skill.
+echo ""
+echo "Phase 12 — no hardcoded Simon identity in starter skills + references"
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research verify-citations; do
+  skill_dir="$REPO_ROOT/skills/$skill"
+  [[ -d "$skill_dir" ]] || continue
+  bad=$(grep -rnE 'Dr\. Simon J Pierce' "$skill_dir" 2>/dev/null | grep -v 'SIMON-ONLY' || true)
+  if [[ -n "$bad" ]]; then
+    FAIL=$((FAIL + 1))
+    FAILURES+=("/$skill hardcodes 'Dr. Simon J Pierce' identity")
+    echo "  ✗ /$skill hardcodes Simon identity:"
+    echo "$bad" | sed 's/^/      /'
+  else
+    PASS=$((PASS + 1))
+    echo "  ✓ /$skill: no hardcoded Simon identity"
   fi
 done
 

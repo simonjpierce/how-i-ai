@@ -124,7 +124,7 @@ Print: `[0/9] Pre-flight complete — tools loaded, Codex {available/unavailable
 
 1. **Research question** — restate. "Is this the right framing?"
 2. **Scope boundaries** — time range, geographic focus, sector, species. Propose defaults.
-3. **Audience** — who reads this? **Critical: if the audience is not Simon, the entire report framing must be tailored to them.** Ask: who will read this, what do they already know, what decisions will this inform? This governs tone, assumed knowledge, currency, what sections to include/exclude, and what context is helpful vs. noise.
+3. **Audience** — who reads this? **Critical: if the audience is anyone other than the user themselves, the entire report framing must be tailored to that audience.** Ask: who will read this, what do they already know, what decisions will this inform? This governs tone, assumed knowledge, currency, what sections to include/exclude, and what context is helpful vs. noise.
 4. **Sub-questions** — present 3–5. "These are the threads I'd research — anything to add or remove?" Last checkpoint before autonomous execution.
 
 Skip where obvious from context. Use **multi-perspective pre-questioning** (Stanford STORM): before generating sub-questions, consider what angles different domain experts would bring.
@@ -135,7 +135,26 @@ Read `references/domain-routing.md`. Detect domain, note source guidance for Pha
 
 ### External model prompts — generate and deliver to clipboard
 
-Generate **one unified prompt** for Simon to paste across all three external platforms (Claude Desktop Research, ChatGPT Deep Research, Gemini). One prompt, three independent passes — this is faster and produces comparable results to tailored prompts.
+Generate **one unified prompt** for the user to paste across all three external platforms (Claude Desktop Research, ChatGPT Deep Research, Gemini). One prompt, three independent passes — this is faster and produces comparable results to tailored prompts.
+
+**Author context — read from `config.json`, do NOT hardcode.** External research models work better when they know who's asking (a domain expert vs. a layperson), but baking a fixed identity into the prompt template causes drift — Codex notably latches onto identity context and researches the *person's field* instead of the actual topic (v1 run regression). Construct the author-context line at runtime:
+
+```bash
+PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
+CONFIG="$HOME/.claude/projects/$PROJECT_KEY/config.json"
+if [ -f "$CONFIG" ]; then
+  USER_NAME=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("user",{}).get("name","").strip())' "$CONFIG" 2>/dev/null || echo "")
+  USER_ROLE=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("user",{}).get("role","").strip())' "$CONFIG" 2>/dev/null || echo "")
+fi
+```
+
+If both `USER_NAME` and `USER_ROLE` are non-empty, substitute the line:
+
+```
+Author context (for tone/audience calibration only — do NOT research this person's field): <USER_NAME> — <USER_ROLE>.
+```
+
+into the prompt template's `{{AUTHOR_CONTEXT_LINE}}` placeholder. If either is empty (newcomer who skipped Q1, or pre-`user` config), substitute the empty string — the prompt works fine without author context, and an absent line is strictly safer than a wrong one.
 
 **Prompt design:**
 
@@ -367,7 +386,7 @@ Merge and deduplicate sources across all three models' workers.
 Read `references/report-template.md`. Write the report following that structure.
 
 **Synthesis principles** (in priority order):
-1. **Write for the audience, not Simon or the audit trail.** If the audience is external (e.g., field researchers, funders, collaborators), the report must be a standalone document they can use without vault context. Remove: internal methodology notes, model attribution ("[CONFIRMED by Codex]"), references to "the previous briefing note", partner recommendations the audience would find patronising (e.g., telling NZ cetacean researchers to "contact University of Otago"), and cost/funding framing if not requested. Use the audience's local currency. Include only context they need, not context Simon needed during research.
+1. **Write for the audience, not the user or the audit trail.** If the audience is external (e.g., field researchers, funders, collaborators), the report must be a standalone document they can use without vault context. Remove: internal methodology notes, model attribution ("[CONFIRMED by Codex]"), references to "the previous briefing note", partner recommendations the audience would find patronising, and cost/funding framing if not requested. Use the audience's local currency. Include only context they needed during research, not context the user needed during research.
 2. **Claim-level attribution** — every finding traces to a specific source via the claim registries. But attribution goes in the References section, not inline as "[HIGH CONFIDENCE — confirmed by X, Y, Z]".
 3. **Source tiering** — per `references/domain-routing.md`.
 4. **Surface conflicts explicitly** — present both positions when sources disagree.
@@ -518,7 +537,7 @@ Write output to `/tmp/research/voice_review.md`.
 
 ### 6c: Apply voice edits
 
-Apply all edits that improve voice matching without changing factual content. This is autonomous — don't ask Simon to approve individual voice edits. The goal is to deliver prose that sounds like the author wrote it.
+Apply all edits that improve voice matching without changing factual content. This is autonomous — don't ask the user to approve individual voice edits. The goal is to deliver prose that sounds like the author wrote it.
 
 Print: `[6/9] Voice matched — {N} edits applied`
 

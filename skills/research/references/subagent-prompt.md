@@ -89,7 +89,7 @@ claim text | source URL | source type | publication date if known | confidence |
 
 **Output your research as a single structured document.** Do not edit files or take actions — just write your findings as plain text, organised by sub-question, with claim registries after each section.
 
-Author context (for tone/audience calibration only — do NOT research this person's field): Dr. Simon J Pierce — marine biologist, Executive Director of the Marine Megafauna Foundation. Based in New Zealand.
+{{AUTHOR_CONTEXT_LINE}}
 
 ---
 
