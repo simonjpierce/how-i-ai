@@ -40,7 +40,7 @@ Claude reads the skill, follows its steps (convert audio to wav, run whisper, fo
 
 - **Claude narrates what it's doing.** This is useful — if it's about to do something you don't want, interrupt with Ctrl-C and correct it. Nothing is permanent until Claude has run it.
 - **Dependencies may be missing.** The `/transcribe` skill needs `ffmpeg` and `whisper-cpp` (both via Homebrew). If Claude says "command not found" for either, install them (`brew install ffmpeg whisper-cpp`) and re-run.
-- **Output goes where the skill says.** For `/transcribe`, check `00_INBOX/TRANSCRIPTS/` in your vault after the run.
+- **Output goes where the skill says.** For `/transcribe`, check the inbox folder configured in your vault — the skill prints its output path to the chat when it finishes.
 
 ## When the output is wrong
 

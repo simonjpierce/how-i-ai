@@ -53,5 +53,5 @@ The repo ships a starter set of skills. You probably don't want all of them — 
 You're through the onboarding sequence. From here:
 
 - `skills/` — individual `SKILL.md` files to browse.
-- `guides/` — deeper setup notes (currently `ghostty-setup.md`; more to come).
+- `guides/` — deeper setup notes and field-agnostic process guides (Ghostty setup, AI-assisted scientific analysis / writing, literature intake, pre-submission manuscript review, research workflow, inviting collaborators).
 - `CONTRIBUTING.md` — the workflow for submitting your own changes.
