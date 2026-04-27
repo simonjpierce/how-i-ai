@@ -1,4 +1,4 @@
- # Contributing
+# Contributing
 
 This repo improves when the people using it contribute back. If a skill is missing, a guide is out of date, or you've built something the rest of us would find useful — open a PR.
 

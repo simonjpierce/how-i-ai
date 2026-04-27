@@ -17,6 +17,13 @@
 
 set -euo pipefail
 
+# Platform check — currently macOS-only.
+if [ "$(uname)" != "Darwin" ]; then
+  echo "Error: bootstrap.sh is currently macOS-only." >&2
+  echo "Windows and Linux support is on the v1 roadmap. If you want to run this anyway, ping Simon for a manual install." >&2
+  exit 1
+fi
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CLAUDE_CONFIG="$HOME/.claude"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"

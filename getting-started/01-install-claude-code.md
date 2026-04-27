@@ -9,7 +9,7 @@ Claude Code has two interfaces: a **desktop app** (graphical, friendlier to star
 ## Prerequisites
 
 - **macOS.** The team is on macOS and the guides in this repo assume that. Both interfaces support Windows too (Linux: CLI only — you're on your own).
-- **An Anthropic account on a paid plan.** Ask Simon before buying a personal subscription — MMF has an organisation plan he can add you to. Claude Code requires Pro, Max, Team, or Enterprise.
+- **A paid Claude plan.** Pro ($20/month) is enough for everything in this guide. The higher tiers (Max, Team, Enterprise) work too. Ask Simon before subscribing personally — MMF has an org plan he can add you to.
 
 ## Option A — Desktop app
 

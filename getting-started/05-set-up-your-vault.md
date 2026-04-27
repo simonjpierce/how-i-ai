@@ -10,9 +10,19 @@ When a user pastes a prompt asking you to walk them through setting up `mmf-clau
 
 ## What `/onboard` does
 
-`/onboard` is the bridge skill that takes a user from "nothing installed" to "working Claude system." It runs a short discovery interview (5–7 questions, ~10–15 minutes), then writes a personalised CLAUDE.md cascade, starter MEMORY.md, log files, kickoff note, and config.json into the user's vault. It optionally walks through per-domain folder setup and schedules a follow-up routine in 2 weeks for the nightly self-improvement loop.
+`/onboard` is the bridge skill that takes a user from "nothing installed" to "working Claude system." It runs a short discovery interview (~6 questions, ~10–15 minutes; a few more if the user wants domain folders), then writes a personalised CLAUDE.md cascade, starter MEMORY.md, log files, kickoff note, and config.json into the user's vault. It optionally walks through per-domain folder setup and writes a two-week follow-up note in the user's INBOX for the nightly self-improvement loop conversation.
 
-## Pre-flight: confirm filesystem access
+## Pre-flight: platform + filesystem access
+
+This setup is currently macOS-only. Check before any other work:
+
+```bash
+[ "$(uname)" = "Darwin" ] || { echo "Setup is currently macOS-only. Halting."; exit 1; }
+```
+
+If non-Darwin, halt and tell the user: *"This setup flow is currently macOS-only — Windows and Linux support is on the v1 roadmap. Ping Simon for a manual install if needed."*
+
+
 
 Before installing anything, confirm you can write to the user's filesystem. If you're running in **Claude Chat** (claude.ai web) rather than **Claude Code**, you cannot write files — stop now and instruct the user:
 
@@ -22,7 +32,7 @@ Don't try to fake the install — the user needs to be in Claude Code.
 
 ## Step 1 — clone the repo and run the bootstrap
 
-The repo ships a single bootstrap script that installs the v0 starter skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`.
+The repo ships a single bootstrap script that installs the v0 starter skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`) and templates (`starter-claude-config`, `starter-vault`) into `~/.claude/`.
 
 First, pre-flight check the user's environment:
 
@@ -42,22 +52,26 @@ if [ -d ~/.claude/repos/mmf-claude-code ]; then
 else
   git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git ~/.claude/repos/mmf-claude-code
 fi
-bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh --yes
+# Use --yes only on first run (no existing skills to preserve). Re-runs default
+# to interactive so a returning user's local edits aren't silently replaced.
+if [ -d ~/.claude/skills/onboard ]; then
+  bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh
+else
+  bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh --yes
+fi
 ```
 
 If the `git clone` fails with `fatal: repository not found`, the user doesn't have access — the repo is private. Tell them: *"Looks like you need GitHub access to the `marinemegafauna/mmf-claude-code` repo. The simplest path is `gh auth login` if you have the GitHub CLI installed (or run `brew install gh` first), then I'll re-run the clone. If you don't have a GitHub account at all, ask Simon to add your account."* Don't proceed without the clone.
 
-(`--yes` runs the bootstrap non-interactively — it backs up any existing local edits to `*.bak-<timestamp>` directories and replaces with repo content. If the user has been making local edits to skills they want to keep, they can run without `--yes` later for the interactive prompt-on-diff path.)
-
-If the `git clone` fails with `fatal: repository not found`, the user doesn't have access — the repo is private. Tell them: *"Looks like you need GitHub access to the `marinemegafauna/mmf-claude-code` repo. Run `gh auth login` first (or ask Simon to add your GitHub username), then I'll re-run the clone."* Don't proceed without the clone.
-
-The bootstrap script is re-run safe: identical sources skip, differing sources save a timestamped `.bak` backup and prompt before overwriting (interactive). It prints what it installs and ends with a "restart Claude Code" instruction.
+The bootstrap script is re-run safe: identical sources skip, differing sources save a timestamped `.bak` backup and (in interactive mode) prompt before overwriting. It prints what it installs and ends with a "restart Claude Code" instruction.
 
 ## Step 2 — restart Claude Code
 
 Newly added skills aren't discovered until Claude Code restarts. Tell the user:
 
-> *"I've installed the starter skills. Quit Claude Code and reopen it (or restart the desktop app), then come back and say 'continue' so I can run `/onboard`."*
+> *"I've installed the starter skills. To finish, restart Claude Code: in the desktop app choose Claude → Quit (Cmd-Q), then reopen it from your Applications folder. The Code tab will reopen on the same folder you started in. Click into the chat input and type `/onboard` — that picks up where we left off."*
+
+If the user can't find the previous conversation, that's fine — `/onboard` is self-contained and starts a fresh interview.
 
 ## Step 3 — invoke `/onboard`
 
