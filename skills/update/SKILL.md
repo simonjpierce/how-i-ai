@@ -82,19 +82,19 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    **If an Artifacts section exists but seems incomplete** (e.g., the session created files not listed), update the Artifacts table first, then use the updated list.
 
-3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories:
+3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: try the starter-vault convention first (`<vault>/AI_WORKFLOW/CLAUDE/...`), fall back to Simon's numbering (`<vault>/05_AI WORKFLOW/CLAUDE/...`); take the first that exists.
 
    | Category | Where to look | What to check |
    |----------|--------------|---------------|
-   | Process docs | `05_AI WORKFLOW/CLAUDE/Processes/` | Grep for seed keywords |
-   | Skills | `05_AI WORKFLOW/CLAUDE/Skills/*/SKILL.md` | Grep for seed keywords |
-   | Project notes | `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/` | QMD lex query or Grep |
+   | Process docs | `<logs>/Processes/` (Simon: `05_AI WORKFLOW/CLAUDE/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`) | Grep for seed keywords |
+   | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
+   | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |
-   | Role notes | `01_LIFE OS/Roles/` | If role-relevant work was done |
+   | Role notes | Roles folder if it exists (Simon: `01_LIFE OS/Roles/`; newcomer: skip silently if not present) | If role-relevant work was done |
    | Working files | Paths from conversation context | Files actively being developed |
-   | Scheduled Automations | `05_AI WORKFLOW/CLAUDE/Processes/Scheduled Automations.md` | If any automation was changed |
+   | Scheduled Automations | `<logs>/Processes/Scheduled Automations.md` if it exists (Simon's vault has one; newcomer's may not) | If any automation was changed |
    | MEMORY.md | Auto-memory index | If a remembered fact was invalidated |
-   | Current Projects | `01_LIFE OS/Current Projects.md` | If project status changed |
+   | Current Projects | Current Projects file if it exists (Simon: `01_LIFE OS/Current Projects.md`; newcomer: `<vault>/Current Projects.md` or absent) | If project status changed |
 
    Use parallel searches (Grep/Glob/QMD) to build the candidate list quickly. Include files from the conversation that were edited but might have upstream/downstream docs.
 
@@ -127,7 +127,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Anything where reasonable people might disagree on the right update
 
    **Audience first, then in-doubt.** Before classifying as Review, ask: who is this document for?
-   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in `05_AI WORKFLOW/CLAUDE/Processes/`, **`Current Projects.md` and IDEA.md** — both are read by `/session-start` and written by `/document` + nightly automation) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't sit down and read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
+   - **Claude's working memory** (Decision Log, Friction Log, Self-Improvement Changelog, Workhorse Feedback Log, Session Handoff Log, MEMORY.md leaves, process docs in the user's `<logs>/Processes/` folder, **`Current Projects.md` and IDEA.md** — both are read by `/session-start` and written by `/document` + nightly automation) — these are MY records, not Simon's review surfaces. Append/update autonomously even for content changes. Simon doesn't sit down and read these to decide things; they exist so future Claude sessions have context. Surfacing them as "review" wastes Simon's attention.
    - **Simon-facing documents** (project notes inside domain folders, role notes, voice references, external comms, manuscripts, daily notes, anything destined for delivery to a third party) — apply the in-doubt-classify-as-Review rule. The cost of asking is low; the cost of an unwanted content change is high.
 
    The trap to avoid: classifying Decision Log / Friction Log / Current Projects entries as "review" because the work is substantive. Substantive ≠ Simon's-judgement-needed. If the audience is future Claude sessions or `/session-start`, just write the entry. Confirmed 2026-04-26: classified a Current Projects line-89 update as Review and surfaced it for approval; Simon's correction — *"why are you asking permission to edit 'current projects' anyway? It's for you."*

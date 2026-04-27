@@ -40,11 +40,11 @@ When a step in this skill fails or needs a workaround, update this skill file wi
    - Process docs in `<logs>/Processes/` if a relevant workflow exists
    - Skip this step if the user hasn't stated a task yet.
 
-7. **Check automation health (optional)** — run each check ONLY if its directory exists. Skip silently if the directory is missing — that means the user doesn't run that automation, not that something's broken.
+7. **(SIMON-ONLY) Check automation health (optional)** — run each check ONLY if its directory exists. Skip silently if the directory is missing — that means the user doesn't run that automation, not that something's broken. Newcomer vaults don't ship these automations or directories; the directory-existence gate means newcomers see nothing for this step.
    - **Weekly review:** `ls -lt "01_LIFE OS/REVIEW QUEUE/Weekly Reviews/" | head -3` — flag if newest file >10 days old.
    - **Nightly workhorse:** `ls -lt "01_LIFE OS/REVIEW QUEUE/NIGHTLY WORKHORSE/" | head -3` — flag if newest file >3 days old.
    - **Self-improvement loop:** `ls -lt "01_LIFE OS/REVIEW QUEUE/IMPROVEMENTS/" | head -3` — flag if newest file >3 days old.
-   - These are vault-specific automations. Absence of the directory means the user doesn't run them; absence is silent, not an error.
+   - These are Simon-vault-specific automations using `01_LIFE OS/REVIEW QUEUE/` paths. Absence of the directory means the user doesn't run them; absence is silent, not an error. Future automations can be added here using the same dir-existence-gated pattern.
 
 8. **Present an orientation summary** — output a brief block (max 10 lines) covering:
    - What the last session worked on and its status
