@@ -51,7 +51,7 @@ mmf-claude-code/
 
 ## Available skills
 
-Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs ten of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"*). You don't need to memorise slash-command names; plain-English requests work too.
+Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs ten of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"* — Claude will check the dependencies, brew-install anything missing, and copy the skill). You don't need to memorise slash-command names; plain-English requests work too.
 
 ### Core onboarding & workflow
 
