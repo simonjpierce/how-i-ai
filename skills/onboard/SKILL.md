@@ -311,7 +311,7 @@ The other skills surface when they're useful — Claude will mention them
 in context. You don't need to learn them in advance.
 
 - **Workflow:** `/update`, `/review-friction`, `/refresh-skills`
-- **Tasks & writing:** `/todo`, `/science-paper`, `/research`
+- **Tasks & writing:** `/todo`, `/science-paper`, `/research`, `/verify-citations`
 
 ## Two-week check-in
 
@@ -408,7 +408,7 @@ Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
 Logs: ready at AI_WORKFLOW/CLAUDE/
-Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research
+Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research, /verify-citations
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
 Your kickoff note is open in Obsidian — start there.

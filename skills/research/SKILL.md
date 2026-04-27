@@ -432,11 +432,7 @@ After integrating findings from Phase 5b reference comparisons and/or external m
 
 **When to run:** Always, if Phase 5b or external model comparisons introduced new references. Skip only if the draft used exclusively pipeline-sourced references with no external enrichment. Also run when the research output is scientific in nature (literature reviews, species assessments, conservation analyses) — even pipeline-sourced citations can have errors.
 
-**Step 1 — Automated API check:** If the report has a References section, run:
-```bash
-python3 ~/bin/verify_citations.py "/tmp/research/{topic}_report.md" -o /tmp/research/{topic}_citation_report.md
-```
-This queries Semantic Scholar, CrossRef, and OpenAlex to verify each reference exists with correct metadata. Takes ~1s per reference.
+**Step 1 — Automated API check:** If the report has a References section, invoke the bundled `/verify-citations` skill against the report path. The skill queries Semantic Scholar, CrossRef, and OpenAlex to verify each reference exists with correct metadata. Takes ~1s per reference. The skill writes its report to `/tmp/research/{topic}_citation_report.md` (or wherever it advertises in its output).
 
 **Step 2 — Manual verification of flagged items:** For any NOT_FOUND or PARTIAL_MATCH results from the script, plus any references the script couldn't parse, WebSearch to confirm: (a) the paper exists, (b) author names are correct, (c) journal/year/volume match, (d) the claimed finding actually appears in that paper.
 
