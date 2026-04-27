@@ -147,7 +147,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - ...
 
    ### Already current (no changes needed)
-   - `CLAUDE.md` (02_MARINE MEGAFAUNA) — checked, nothing stale
+   - `CLAUDE.md` (illustrative domain folder, e.g. Simon's `02_MARINE MEGAFAUNA`) — checked, nothing stale
    - ...
    ```
 

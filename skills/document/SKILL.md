@@ -75,7 +75,7 @@ If within budget, proceed silently — no need to report the numbers.
    - `<vault>/AI_WORKFLOW/CLAUDE/` (starter-vault convention)
    - `<vault>/05_AI WORKFLOW/CLAUDE/` (Simon's vault numbering)
 
-   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_AI WORKFLOW/` or any other numbered prefix in subagent prompts or substeps — pass the resolved path through. If neither folder exists, this isn't a CLAUDE-managed vault — flag and stop.
+   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_AI WORKFLOW/` (Simon's prefix) or any other numbered prefix in subagent prompts or substeps — pass the resolved path through. If neither folder exists, this isn't a CLAUDE-managed vault — flag and stop.
 
    Read the three current logs to understand their format and latest entries: `Session Handoff Log.md`, `Friction Log.md`, `Decision Log.md` (each inside the logs folder).
 
