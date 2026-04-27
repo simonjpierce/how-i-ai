@@ -390,6 +390,29 @@ for skill in onboard document session-start update review-friction refresh-skill
   fi
 done
 
+# --- Phase 10: bundled skills don't reference unbundled ~/bin/* dependencies --
+# Auto-installed skills that call `~/bin/*.py` or similar will break for
+# newcomers because those scripts only exist on Simon's machine. Catches the
+# /verify-citations regression Codex flagged in the third red-team pass.
+echo ""
+echo "Phase 10 — bundled skills don't reference unbundled ~/bin/* dependencies"
+for skill in onboard document session-start update review-friction refresh-skills todo science-paper research verify-citations; do
+  skill_file="$REPO_ROOT/skills/$skill/SKILL.md"
+  [[ -f "$skill_file" ]] || continue
+  # Match `~/bin/foo` or `$HOME/bin/foo` — reject any reference unless prefixed
+  # with `(SIMON-ONLY)` on the same line.
+  bad=$(grep -nE '(~|\$HOME)/bin/' "$skill_file" | grep -v 'SIMON-ONLY' || true)
+  if [[ -n "$bad" ]]; then
+    FAIL=$((FAIL + 1))
+    FAILURES+=("/$skill references unbundled ~/bin/* dependency: $bad")
+    echo "  ✗ /$skill references unbundled ~/bin/*"
+    echo "$bad" | sed 's/^/      /'
+  else
+    PASS=$((PASS + 1))
+    echo "  ✓ /$skill: no unbundled ~/bin/* references"
+  fi
+done
+
 # --- Summary ------------------------------------------------------------------
 echo ""
 echo "================================================================"

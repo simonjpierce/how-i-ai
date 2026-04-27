@@ -25,8 +25,10 @@ Read the file and confirm it has a References/Bibliography section.
 
 ### 2. Run the verification script
 
+The verifier is bundled with this skill at `$HOME/.claude/skills/verify-citations/verify_citations.py` (only requires Python 3 + `requests` — both installed by `/onboard` pre-flight).
+
 ```bash
-python3 ~/bin/verify_citations.py "MANUSCRIPT_PATH" -o /tmp/citation-report.md
+python3 "$HOME/.claude/skills/verify-citations/verify_citations.py" "MANUSCRIPT_PATH" -o /tmp/citation-report.md
 ```
 
 The script queries three APIs per reference (Semantic Scholar, CrossRef, OpenAlex) with ~1s between queries. For a 30-reference paper, expect ~60-90 seconds total.
@@ -58,7 +60,7 @@ Give the user a concise summary:
 - List each problem reference with the specific issue and recommended fix
 - If DOIs were found for references that lack them, offer to patch them automatically:
   ```bash
-  python3 ~/bin/verify_citations.py "MANUSCRIPT_PATH" --patch-dois
+  python3 "$HOME/.claude/skills/verify-citations/verify_citations.py" "MANUSCRIPT_PATH" --patch-dois
   ```
   This rewrites the manuscript in-place, inserting DOIs where the API found them. Show Simon a diff of the changes before confirming.
 
