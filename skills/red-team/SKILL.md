@@ -4,9 +4,15 @@ description: Red-team an important document — independent critical review usin
 allowed-tools: Read, Write, Edit, Glob, Grep, Agent, AskUserQuestion, Bash, WebSearch, WebFetch, mcp__claude_ai_Gmail__gmail_search_messages, mcp__claude_ai_Gmail__gmail_read_message, mcp__claude_ai_Gmail__gmail_read_thread, mcp__claude_ai_Slack__slack_search_public_and_private, mcp__claude_ai_Slack__slack_read_thread
 ---
 
-Red-team an important document. Takes a file path as `$ARGUMENTS`. Accepts optional `--quick` flag to run subagent review only (Steps 0–5), skipping external model opinions and ecosystem review. Use `--quick` for mandatory spec reviews where the full pipeline would be disproportionate.
+Red-team an important document. Takes a file path as `$ARGUMENTS`.
 
-The review methodology (criteria, lenses, output format, examples) lives in `references/review-method.md`. Read it before constructing the subagent prompt. The Codex and Gemini opinions deliberately use different, open-ended approaches — see Steps 6–7. Three models (Claude structured + Codex open-ended + Gemini open-ended) with maximum independence.
+**Default flow is sequential** (Opus subagent → Gemini → Codex, with apply-passes between each reviewer). Each reviewer evaluates the post-prior-fix document so regressions introduced by earlier fixes get caught — Codex is last because it benefits most from the cascade. Validated 2026-04-28 in the v0 onboarding round (Codex's load-bearing C1 finding only existed because the subagent's H1 fix had already been applied; would have been routed-through-and-missed in parallel-then-synthesise).
+
+Optional flags:
+- `--quick` — subagent review only (Steps 0–5), skip external model opinions and ecosystem review. Use when the full pipeline would be disproportionate.
+- `--parallel` — opt out of sequential mode. Run Codex + Gemini simultaneously against the post-subagent state, then reconcile via Step 7's three-way comparison. Use for routine reviews of stable documents (quick blog post, doc tone check, no associated code) where cascade value is low and clock time matters.
+
+The review methodology (criteria, lenses, output format, examples) lives in `references/review-method.md`. Read it before constructing the subagent prompt. The external models deliberately use different, open-ended approaches — see Steps 6–7. Three models (Claude structured + Gemini open-ended + Codex open-ended) with maximum independence.
 
 For documents with associated implementations (specs, process docs, automation docs), the skill automatically extends into an **ecosystem review** (Step 8) — checking cross-document consistency, code quality, spec-code alignment, and runtime verification. This runs without prompting when relevant assets are detected.
 
@@ -173,29 +179,37 @@ Default to applying all recommended changes (issues + enhancements). Walk the us
 
 Preserve the author's voice and style. Write in NZ/UK English. Improve the content without rewriting the personality out of it.
 
-### 6. Independent model reviews (Codex + Gemini)
+### 6. Independent model reviews (Gemini → Codex, sequential by default)
 
-After subagent improvements have been applied, run two independent reviews via Codex CLI and Gemini CLI. Both review the **post-fix document** — they should catch issues the subagent missed or introduced, not re-find already-fixed problems. Proceed directly — do not ask for permission.
+After subagent improvements have been applied, run two independent external reviews. **Default mode is sequential**: Gemini first against the post-subagent state, walk findings + apply, then Codex against the post-Gemini state, walk findings + apply. This is the gold-standard path because **each reviewer evaluates the post-prior-fix document** — Codex catches regressions introduced by Gemini's fixes (and Gemini catches what was introduced by the subagent's fixes). Validated 2026-04-28 in the v0 onboarding system round: Codex's most consequential finding (C1 — `/verify-citations` shipped without its bundled script) only existed because the subagent's H1 fix had added the skill to STARTER_SKILLS; running all three reviewers in parallel would have routed C1 through a synthesiser that might have folded it into H1 and missed the bundling gap. Three-reviewer cascade is the load-bearing pattern, not parallel-then-synthesise.
+
+**Order rationale:** Subagent (Opus, structured rubric) → Gemini (open-ended fresh-eyes, second pass on subagent state) → Codex (deepest evaluator, traces actual code paths against post-all-prior-fixes state). Codex is last because it benefits most from the cascade — finds wiring bugs that only manifest after the document and its implementation have been edited.
+
+**Annotated findings file convention:** Each external reviewer's findings are written to `/tmp/red-team-{gemini,codex}-findings.md` and copied to the vault as `OUTPUTS/onboarding-review-{gemini,codex}-YYYY-MM-DD.md` with an annotation header tracking which findings were applied vs deferred. This makes the audit trail durable across sessions.
+
+**Opt-in `--parallel` mode:** For routine reviews of stable documents (quick blog post, doc tone check, no associated code) where cascade value is low and clock time matters more, the user can pass `--parallel` to run Codex + Gemini simultaneously and reconcile via Step 7's three-way comparison. Default stays sequential because the cost of missing a C1-class regression-of-a-fix is much higher than the extra clock time.
 
 If `--quick` was specified, skip this entire step.
 
-#### 6a. Build prompts
+Proceed directly — do not ask for permission.
 
-Read the **post-fix document** (after subagent edits in Step 5). Build two self-contained prompt files:
-- `/tmp/red-team-codex-prompt.md` — for Codex
-- `/tmp/red-team-gemini-prompt.md` — for Gemini
+#### 6a. Build the Gemini prompt (sequential mode)
 
-**Both prompts deliberately do NOT use `references/review-method.md`.** The subagent did the structured rubric review. The external models get open-ended prompts — different lenses catch different things. Each prompt should have its own framing to maximise independence (do not copy one prompt to create the other).
+In `--parallel` mode, jump to Step 6e and build both prompts up-front instead.
 
-Each prompt file must include:
+Read the **post-subagent-fix document** (after Step 5 edits). Build a self-contained prompt file at `/tmp/red-team-gemini-prompt.md`.
+
+**The prompt deliberately does NOT use `references/review-method.md`.** The subagent did the structured rubric review. Gemini gets an open-ended prompt — different lens catches different things.
+
+The prompt file must include:
 - The review instructions (framing block below)
-- The post-fix document text in full
+- The post-subagent-fix document text in full
 - Relevant context documents inline (folder CLAUDE.md, voice reference, etc.) so the reviewer has the same standards
 - Document type, intended audience, and any domain conventions
-- Author context: "Dr. Simon J Pierce — marine biologist, photographer, Executive Director of the Marine Megafauna Foundation. Based in New Zealand. Writes in NZ/UK English."
-- **Do NOT include the subagent's findings, the structured rubric, or the other model's prompt.** Independence means both approach and conclusions.
+- Author context: read `~/.claude/projects/<project-key>/config.json` for `user.name` + `user.role` and inject if both present; omit the line entirely if either is empty (per the same convention `/research` uses post-C7 fix). Do NOT hardcode a specific identity.
+- **Do NOT include the subagent's findings or the structured rubric.** Independence means both approach and conclusions.
 
-Use this framing at the top of each prompt file (vary wording slightly between the two):
+Use this framing at the top of the prompt file:
 
 > This document has already been through one round of structured critical review and revision. Focus on what's still wrong — issues the first reviewer missed, problems introduced during editing, and fresh perspectives.
 >
@@ -210,33 +224,59 @@ Use this framing at the top of each prompt file (vary wording slightly between t
 **Pre-flight check** before executing:
 - Is the document text complete (not truncated)?
 - Are all referenced context documents included in full?
-- Is the total prompt within each model's context window (~272k for Codex/gpt-5.4, ~1M for Gemini)?
-- **Codex context budget:** Codex uses its context reading the prompt AND exploring files via `exec`. A 130KB+ prompt with multiple code files will exhaust its context before it can write a review. For code-heavy reviews, summarise the code (key functions, line counts, architecture) rather than inlining the full source. Include only the 2–3 most critical files in full; reference others by path so Codex can read them selectively.
+- Is the total prompt within Gemini's context window (~1M)?
 - If anything was omitted or summarised, note it when presenting results.
 
-#### 6b. Execute both reviews
+#### 6b. Execute Gemini
 
-Run both in parallel (no dependency between them):
-
-**Codex:**
 ```bash
-codex exec --full-auto --sandbox read-only "Read /tmp/red-team-codex-prompt.md and follow the review instructions in it. Output your review as plain text."
+gemini -p "" --output-format text --yolo < /tmp/red-team-gemini-prompt.md 2>&1 | tee /tmp/red-team-gemini-findings.md
 ```
 
-**Gemini:**
-```bash
-gemini -p "" --output-format text --yolo < /tmp/red-team-gemini-prompt.md
-```
-
-**Timeout:** 600000ms (10 minutes) each. If a model times out, retry once. If it times out again, proceed without that model.
+**Timeout:** 600000ms (10 minutes). If Gemini times out, retry once. If it times out again, proceed without that reviewer (note the gap when applying findings).
 
 **Error handling:**
-- Codex auth errors → tell the user to run `codex login`
 - Gemini auth errors → tell the user to run `gemini` interactively to authenticate
-- Model not found → try fallback, then proceed without that model
-- Any other error → report the error, proceed without that model
+- Model not found → try fallback, then proceed without that reviewer
+- Any other error → report the error, proceed without that reviewer
 
-Capture the full output from each. These are the external reviews.
+Capture the full output. Copy the findings file to the vault as `<vault>/05_AI WORKFLOW/OUTPUTS/onboarding-review-gemini-YYYY-MM-DD.md` (or wherever the user keeps review outputs — read from the spec's Artifacts table if available).
+
+#### 6c. Walk user through Gemini findings + apply
+
+Present Gemini's findings to the user as a numbered list with one-line summaries + severity tags. Walk one at a time per the established interaction pattern (one item, recommended action, wait for user reply, advance). Apply each accepted fix immediately.
+
+After the walk completes, write an annotation header at the top of the saved findings file (`onboarding-review-gemini-YYYY-MM-DD.md`) listing which findings were applied vs deferred (with reason for deferrals). This is the durable audit trail.
+
+Now Codex evaluates the post-Gemini-fix state.
+
+#### 6d. Build the Codex prompt against post-Gemini state
+
+Read the **post-Gemini-fix document** (the document in its current state after 6c). Build the Codex prompt file at `/tmp/red-team-codex-prompt.md` with the same content rules as 6a (open-ended framing, full document text, context docs, neutral author identity from config), plus an explicit acknowledgement that Codex is the third reviewer in a sequential round:
+
+> This document has been through structured-rubric review (subagent) and open-ended review (Gemini), with fixes applied between each. You are the third reviewer — the deepest pass. Your job is to find what the first two missed, and especially to catch any regressions that earlier fixes introduced. Trace actual code paths and implementation details if there are any associated assets — surface-level claims that "X was fixed" should be verified against the actual files.
+>
+> Output your review as plain text only.
+
+#### 6e. Execute Codex
+
+```bash
+codex exec --full-auto --skip-git-repo-check "Read /tmp/red-team-codex-prompt.md and follow the review instructions exactly. Write findings incrementally to /tmp/red-team-codex-findings.md as you discover each one — do not batch."
+```
+
+**Timeout:** 600000ms (10 minutes). Same error handling as 6b.
+
+The "incremental write to findings file" instruction matters — Codex sometimes runs long, and incremental writes mean partial output is preserved if anything times out.
+
+#### 6f. Walk user through Codex findings + apply
+
+Same pattern as 6c: present Codex's findings as numbered list, walk one at a time, apply each accepted fix immediately, then write the annotation header on the saved findings file (`onboarding-review-codex-YYYY-MM-DD.md`).
+
+After 6f, the document has been through three reviewer passes with apply-passes between each. Step 7 (incorporate external feedback) is largely already done inline; it only adds value in `--parallel` mode where the three-way reconciliation hasn't happened yet.
+
+#### 6g. `--parallel` mode (opt-in fallback)
+
+If `--parallel` was specified: skip 6a–6f. Build both prompts up front per the original convention, run them simultaneously via the standard `codex exec` and `gemini -p` commands, capture both outputs, and proceed to Step 7's three-way reconciliation. The Codex prompt does NOT include the "third reviewer in a sequential round" framing — both reviewers operate against the post-subagent-fix state independently.
 
 #### 6c. Codex app fallback (for large or code-heavy reviews)
 
@@ -268,9 +308,13 @@ If all automated paths fail, fall back to the manual workflow:
 4. **Data safety reminder:** Consider whether the document contains sensitive information before pasting into an external model.
 5. Ask the user to paste the responses back when they have them.
 
-### 7. Incorporate external feedback
+### 7. Incorporate external feedback (parallel mode only)
 
-Whether feedback came from automated CLI calls (Step 6b), the Codex app (Step 6c), or pasted back by the user (Step 6d):
+**Sequential mode (default):** Step 7 is largely already done — each reviewer's findings have been walked through and applied inline at 6c and 6f. Skip ahead to Step 8 (ecosystem review). The only Step 7 work that may still apply: cross-reviewer pattern observations that didn't fit any individual finding (e.g. "all three reviewers flagged audience framing — that's a structural issue worth a Decision Log entry"). Brief — most synthesis happened inline.
+
+**Parallel mode (`--parallel`):** Run the full three-way reconciliation below, since neither external reviewer's findings have been applied yet.
+
+Whether feedback came from automated CLI calls (Step 6b/6e), the Codex app (Step 6c), or pasted back by the user (Step 6d):
 
 1. Present both reviews to the user in full — don't filter or soften them.
 
