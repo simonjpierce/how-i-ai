@@ -79,6 +79,8 @@ This system assumes you're running Claude Code in auto-approval mode — too man
 
 When a commit class sits on the boundary, flag and ask. The cost of asking is low.
 
+**About the `features.is_simon` flag.** The bundled `/document` and `/update` skills read a `features.is_simon` flag from your `~/.claude/projects/<project-key>/config.json` (default `false`). It gates Simon-personal behaviours — pushing to `simonjpierce/claude-code-config`, creating GitHub repos under `simonjpierce/`, writing to a Daily Log file the starter vault doesn't ship. If you ever see a skill try to push to a `simonjpierce/...` repo, check that flag — it should be `false` for everyone except Simon. Don't flip it to `true` unless you actually are Simon.
+
 ## Customisation principle
 
 Prefer context over constraints. Only override Claude's defaults where they've demonstrably failed. Before adding a rule, ask: *"If I deleted this line, would Claude do something wrong?"* If no, don't add it. Rules accumulate; each one earns its place by preventing a real, observed failure.

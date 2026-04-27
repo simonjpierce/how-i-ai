@@ -219,9 +219,7 @@ Copy from templates:
 
 Each is template content as-is — examples included to show shape; user deletes when adding their first real entry.
 
-**6d. Global `~/.claude/CLAUDE.md`.** If it doesn't already exist, copy from `~/.claude/templates/starter-claude-config/CLAUDE.md`. Substitute:
-
-- `{{VAULT_PROJECT_KEY}}` → Claude Code's per-vault project key. **Computed by replacing every non-alphanumeric character in the absolute vault path with a hyphen** (NOT URL-encoded — Claude Code uses dash-sanitisation). Bash: `PROJECT_KEY=$(echo "$VAULT_PATH" | sed 's|[^a-zA-Z0-9]|-|g')`. Example: `/Users/jane/Documents/My Vault` → `-Users-jane-Documents-My-Vault`.
+**6d. Global `~/.claude/CLAUDE.md`.** If it doesn't already exist, copy from `~/.claude/templates/starter-claude-config/CLAUDE.md` as-is. The global CLAUDE.md template has no per-install placeholders — its `## Vault path` section instructs Claude to compute the project key at runtime (every non-alphanumeric character in the vault path replaced by a hyphen — `/Users/jane/Documents/My Vault` → `-Users-jane-Documents-My-Vault`).
 
 If `~/.claude/CLAUDE.md` already exists with content the user didn't write this session: back it up to `~/.claude/CLAUDE.md.bak-<timestamp>` automatically, replace with the starter, then tell the user:
 
