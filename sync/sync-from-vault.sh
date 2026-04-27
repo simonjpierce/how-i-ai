@@ -123,6 +123,14 @@ sanitise() {
     -e "s|${CLAUDE_CONFIG}|\$CLAUDE_CONFIG|g" \
     "$file"
   rm -f "$file.bak"
+
+  # Convert Obsidian wikilinks to GitHub-renderable markdown so guides don't
+  # show literal [[brackets]] when newcomers click into them from the README.
+  # Shipped-guide refs become relative links; vault-only refs lose the
+  # brackets and stay as plain text. Helper is idempotent.
+  if [[ "$file" == *.md ]] && [[ -x "$REPO_ROOT/sync/sanitise_wikilinks.py" ]]; then
+    python3 "$REPO_ROOT/sync/sanitise_wikilinks.py" "$file"
+  fi
 }
 
 missing_sources=()

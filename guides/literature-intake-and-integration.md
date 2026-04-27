@@ -4,8 +4,8 @@ applies_to: literature
 status: draft
 last_updated: 2026-04-20
 supersedes:
-  - "[[Build-A-Continuous-Marine-Mammal-Literature-Ingestion — Exploration]]"
-  - "[[Living Reference Library — Design Concept]]"
+  - "Build-A-Continuous-Marine-Mammal-Literature-Ingestion — Exploration"
+  - "Living Reference Library — Design Concept"
 ---
 
 # Living Reference Library — Literature Intake & Integration
@@ -44,7 +44,7 @@ Layer 3: Integration    Per-paper triage → intake note → controlled update �
 
 ### 1a. Convert source chapters to vault .md
 
-Use the `/pdf-to-markdown` skill for all PDF conversions. For full tool chain and known issues, see [[Processes/PDF to Markdown — Conversion Skill|PDF to Markdown — Conversion Skill]].
+Use the `/pdf-to-markdown` skill for all PDF conversions. For full tool chain and known issues, see PDF to Markdown — Conversion Skill.
 
 - **Already .md** (whale shark book): verify formatting, add frontmatter with chapter metadata
 - **.docx sources** (sharks book): extract via **gws CLI** (primary) or pandoc, then diff against published PDF for editorial changes. Prefer gws CLI; fall back to Google Workspace MCP if gws is unavailable.
@@ -96,7 +96,7 @@ Access Paperpile via Chrome (paperpile.com), Google Drive (Paperpile folder), or
 > # PDF path: All Papers/{FIRST_LETTER}/{attachments[0].filename}
 > ```
 
-For the whale shark book, [[Voice Reference — Simon Pierce (Whale Shark Book)]] governs the writing style for any additions.
+For the whale shark book, Voice Reference — Simon Pierce (Whale Shark Book) governs the writing style for any additions.
 
 ### PDF access waterfall (for paywalled or locally-unavailable sources)
 
@@ -139,7 +139,7 @@ The Paperpile library on Google Drive also serves as the "what do we already kno
 
 ### 2a. Google Scholar alerts (secondary — surfaces candidates)
 
-Set up Google Scholar alerts for key species and topics. Forward alert emails to `simon+claude@marinemegafauna.org` (existing [[Processes/Gmail — Claude Review Pipeline|Claude Review pipeline]]). A weekly automation scans the inbox, matches papers against the routing index, and writes candidate papers to the literature inbox. Papers that pass triage should be added to Paperpile.
+Set up Google Scholar alerts for key species and topics. Forward alert emails to `simon+claude@marinemegafauna.org` (existing Claude Review pipeline). A weekly automation scans the inbox, matches papers against the routing index, and writes candidate papers to the literature inbox. Papers that pass triage should be added to Paperpile.
 
 ### 2b. API monitoring (future — Phase 3)
 
@@ -205,7 +205,7 @@ Fill in at minimum:
 - Why this paper matters
 - Key findings (author claims, not interpretation)
 - What's genuinely new
-- Relevance to existing chapters (with `[[wikilinks]]`)
+- Relevance to existing chapters (with `wikilinks`)
 
 Set frontmatter: `status: skimmed` or `status: extracted`
 
@@ -214,8 +214,8 @@ Do not synthesise yet.
 ### Step 3. Identify integration targets
 
 List which chapter files this paper may affect:
-- `[[Ch 07 — Movements]]` — new satellite tracking data
-- `[[Marine Mammals — Sperm Whale]]` — revised dive depth estimates
+- `Ch 07 — Movements` — new satellite tracking data
+- `Marine Mammals — Sperm Whale` — revised dive depth estimates
 
 If unsure, list candidates rather than guessing. The routing index helps here.
 
@@ -254,7 +254,7 @@ If unhappy: revert manually, or ask Claude to revise specific sections only.
 
 ### Step 6. Resolve or park uncertainty
 
-If conflicts exist between new and existing content, document them under a `## Conflicts / Needs review` section in the chapter. Follow the full workflow in [[Processes/Resolving Conflicts & TODOs in Synthesis Notes|Resolving Conflicts & TODOs in Synthesis Notes]].
+If conflicts exist between new and existing content, document them under a `## Conflicts / Needs review` section in the chapter. Follow the full workflow in Resolving Conflicts & TODOs in Synthesis Notes.
 
 If unresolved:
 - Leave `TODO/VERIFY` markers
@@ -350,12 +350,12 @@ Once the manual workflow is proven:
 
 ## Related files
 
-- [[Living Reference Library — Design Concept]] — original architecture concept (archived — superseded by this doc)
-- [[Build-A-Continuous-Marine-Mammal-Literature-Ingestion — Exploration]] — API monitoring exploration (archived — superseded by this doc)
-- [[Voice Reference — Simon Pierce (Whale Shark Book)]] — writing voice for whale shark chapters
-- [[Processes/Gmail — Claude Review Pipeline|Gmail — Claude Review Pipeline]] — Google Scholar alert ingestion path
-- [[Processes/PDF to Markdown — Conversion Skill|PDF to Markdown — Conversion Skill]] — tool chain and known issues for PDF conversion
-- [[Processes/Resolving Conflicts & TODOs in Synthesis Notes|Resolving Conflicts & TODOs in Synthesis Notes]] — conflict resolution workflow (referenced by Step 6)
+- Living Reference Library — Design Concept — original architecture concept (archived — superseded by this doc)
+- Build-A-Continuous-Marine-Mammal-Literature-Ingestion — Exploration — API monitoring exploration (archived — superseded by this doc)
+- Voice Reference — Simon Pierce (Whale Shark Book) — writing voice for whale shark chapters
+- Gmail — Claude Review Pipeline — Google Scholar alert ingestion path
+- PDF to Markdown — Conversion Skill — tool chain and known issues for PDF conversion
+- Resolving Conflicts & TODOs in Synthesis Notes — conflict resolution workflow (referenced by Step 6)
 - `/pdf-to-markdown` skill — primary tool for PDF-to-markdown conversion
 - `/project-intake` skill — for ingesting grants, reports, and other MMF documents into project notes (separate workflow; shares integration principles with this doc)
 

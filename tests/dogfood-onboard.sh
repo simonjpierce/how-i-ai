@@ -548,6 +548,31 @@ else
   echo "  ✗ step 8 missing or wrong heading"
 fi
 
+# --- Phase 17: shipped guides have no unrendered Obsidian wikilinks ---------
+# Guides authored in Simon's vault use [[wikilinks]] which render as literal
+# brackets on GitHub — newcomers clicking from the README's "What this gives
+# you" section would land on broken-looking content. sync-from-vault.sh's
+# sanitise() runs sanitise_wikilinks.py to convert these. Catch any
+# regressions where a guide ships with raw wikilinks.
+echo ""
+echo "Phase 17 — shipped guides have no unrendered Obsidian wikilinks"
+GUIDES_DIR="$REPO_ROOT/guides"
+if [[ -d "$GUIDES_DIR" ]]; then
+  for guide in "$GUIDES_DIR"/*.md; do
+    [[ -f "$guide" ]] || continue
+    bad=$(grep -nE '\[\[[^]]+\]\]' "$guide" 2>/dev/null || true)
+    if [[ -n "$bad" ]]; then
+      FAIL=$((FAIL + 1))
+      FAILURES+=("$(basename "$guide") has raw [[wikilinks]] — will render as broken brackets on GitHub")
+      echo "  ✗ $(basename "$guide") has raw wikilinks:"
+      echo "$bad" | head -3 | sed 's/^/      /'
+    else
+      PASS=$((PASS + 1))
+      echo "  ✓ $(basename "$guide"): no raw wikilinks"
+    fi
+  done
+fi
+
 # --- Phase 16: /onboard collects Q8 + builds Day-1 task block ---------------
 # Q8 ("most pressing thing this week") drives a personalised {{DAY_1_TASK}}
 # substitution in the kickoff, replacing the previous vague "drop a note,

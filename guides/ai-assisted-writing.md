@@ -5,9 +5,9 @@
 Status: active
 Owner: shared (MMF team)
 Last reviewed: 2026-03-26
-Consolidates: [[AI Workflow for Report Writing]], [[AI Workflow for Scientific Writing and Analysis]]
+Consolidates: AI Workflow for Report Writing, AI Workflow for Scientific Writing and Analysis
 
-> Practical workflows for using AI to write conservation reports, scientific manuscripts, and data analyses. For the detailed scientific writing process (manuscript structure, literature audits, citation quality, multi-platform research sweeps), see [[AI-Assisted Scientific Writing – Process Guide]].
+> Practical workflows for using AI to write conservation reports, scientific manuscripts, and data analyses. For the detailed scientific writing process (manuscript structure, literature audits, citation quality, multi-platform research sweeps), see [AI-Assisted Scientific Writing – Process Guide](./ai-assisted-scientific-writing.md).
 
 ---
 
@@ -307,7 +307,7 @@ Before finalising, run `/polish` on the document. This combines three automated 
 
 The skill triages findings into Fix / Consider / Skip categories and asks for approval before applying changes. For scientific writing it's tolerant of passive voice and formal phrasing; for reports and web content it flags these more aggressively.
 
-This replaces the manual prompt approach — `/polish` covers the same AI writing tells (and more) with automated tooling. See [[Polish Skill — Setup and Usage]] for setup details on new machines.
+This replaces the manual prompt approach — `/polish` covers the same AI writing tells (and more) with automated tooling. See Polish Skill — Setup and Usage for setup details on new machines.
 
 Reference: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
 
@@ -463,12 +463,12 @@ Claude can generate PowerPoint files:
 ---
 
 ## Related Notes
-- [[AI-Assisted Scientific Writing – Process Guide]] — detailed scientific manuscript workflow (structure, citations, multi-platform research, voice reference)
-- [[AI-Assisted Scientific Review Writing – Best Practices Guide]] — detailed review paper workflow
-- [[Guide to Effective AI Prompting]]
-- [[Research Workflow]] — vault + web research for topic briefs (not writing)
-- [[Transcript to Article Pipeline]] — article pipeline from transcripts
-- [[Polish Skill — Setup and Usage]] — `/polish` setup and configuration
+- [AI-Assisted Scientific Writing – Process Guide](./ai-assisted-scientific-writing.md) — detailed scientific manuscript workflow (structure, citations, multi-platform research, voice reference)
+- AI-Assisted Scientific Review Writing – Best Practices Guide — detailed review paper workflow
+- Guide to Effective AI Prompting
+- [Research Workflow](./research-workflow.md) — vault + web research for topic briefs (not writing)
+- Transcript to Article Pipeline — article pipeline from transcripts
+- Polish Skill — Setup and Usage — `/polish` setup and configuration
 
 ---
 
