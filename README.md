@@ -16,13 +16,7 @@ You don't need to read this repo to use it. Three steps:
    Walk me through setting up the system at github.com/marinemegafauna/mmf-claude-code on my machine. I'm new to all of this — please hand-hold me through it, asking me one question at a time.
    ```
 
-Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. If you'd rather dictate than type, macOS's built-in dictation works (press Fn twice in any text field). ChatGPT's voice mode is also good if you have a Plus account.
-
-## Who this is for
-
-The MMF science team and close collaborators — the people working with Simon on research, writing, and operations who use (or want to use) Claude Code in that work.
-
-This is **not** a public resource. The content references MMF projects, funders, and internal workflows, and assumes you have context from working with Simon.
+Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. Dictation strongly recommended over typing (macOS: press Fn twice in any text field; or ChatGPT voice mode with Plus). Ramble is fine — unstructured monologues, tangents, contradictions are all welcome. Claude will sort through what you said and ask follow-ups if anything's unclear.
 
 ## Already using Claude Code?
 
@@ -32,6 +26,12 @@ If you have an existing setup and want to browse rather than reinstall:
 - **Browse skills** — [`skills/`](./skills/). Each `SKILL.md` has a one-line description. Two-command install: see [`getting-started/04-adopting-skills.md`](./getting-started/04-adopting-skills.md).
 - **Deeper workflow docs** — [`guides/`](./guides/).
 - **Contribute** — [`CONTRIBUTING.md`](./CONTRIBUTING.md). Small improvements welcome; large changes best discussed first.
+
+## Who this is for
+
+The MMF science team and close collaborators — the people working with Simon on research, writing, and operations who use (or want to use) Claude Code in that work.
+
+This is **not** a public resource. The content references MMF projects, funders, and internal workflows, and assumes you have context from working with Simon.
 
 If you want to read the architecture before/instead of running `/onboard`:
 
