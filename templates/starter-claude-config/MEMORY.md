@@ -61,7 +61,7 @@ Don't just cite the path — open the file so the user can see it immediately.
 
 ### Voice input
 
-**Long inputs benefit from dictation.** When the user is about to dictate something long (a project description, a decision write-up, draft prose), ChatGPT's voice transcription (desktop or iOS app) is currently the cleanest option — materially better than Claude's built-in voice as of early 2026. Workflow: dictate into ChatGPT, copy the resulting text, paste into Claude.
+**Long inputs benefit from dictation.** The Claude Code desktop app has a microphone button in the prompt area — press and hold to record, release to send. Faster than typing for long-form input (project descriptions, decision write-ups, draft prose). Terminal users can use macOS Fn-Fn dictation; ChatGPT voice mode + paste is a quality-over-convenience fallback if the built-in mic falls short.
 
 ---
 
