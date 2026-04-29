@@ -231,7 +231,7 @@ All with `intent` parameter. Use `minScore: 0.5`. Deduplicate. Read top 15–20 
 
 ### 2b: Graph expansion
 
-For top 10 results, extract `[[wikilinks]]` and follow:
+For top 10 results, extract `wikilinks` and follow:
 - Read each linked file, score relevance
 - If relevant, follow its links too (max 2 hops)
 - Track visited files (cycle detection)
@@ -598,7 +598,7 @@ This catches errors introduced by multi-pass enrichment (pipeline + external mod
 
 ### Wikilink validation
 
-If the output uses `[[wikilinks]]` (e.g., book chapters with cross-references):
+If the output uses `wikilinks` (e.g., book chapters with cross-references):
 
 1. Grep for all `[[` links in the file
 2. For each target, verify the file exists in the vault via Glob
@@ -962,3 +962,61 @@ The report was initially written for Simon (internal vault context, model attrib
 - External models consistently find papers the pipeline misses. This is expected and is why multi-pass is valuable.
 - Author name hallucination remains a persistent subagent failure mode (3 instances in v3, not yet quantified in v4).
 - The single biggest synthesis failure is **writing for the wrong audience** — this run is the clearest example. Audience-aware synthesis is now explicitly addressed in Phase 4.
+
+
+# Lessons from v5 run (2026-04-29)
+
+Topic: Communications strategy benchmark for ~$1M conservation NGO. Audience: Simon (input to v1.0 of MMF comms strategy doc).
+
+**Single-model run.** Codex and Gemini CLIs unavailable on host (config flagged both `false`). Pipeline degraded cleanly to Claude + 5 parallel Opus subagents + WebSearch/WebFetch. Confirmed degradation note in methodology section reads cleanly. For best-practice synthesis questions (vs empirical scientific claims) the cross-model triangulation matters less; this is a defensible single-model run mode.
+
+**Vault scan was unusually rich.** The vault already contained three prior external-research outputs (Claude/ChatGPT/Gemini) on the same topic, plus domain-expert briefings. The right move was to **scope subagents to the gaps prior research didn't cover** rather than re-running broad searches. This is a pattern: when the vault already has substantial prior research, the new web-research pass should be gap-focused, not broad-coverage. Worth adding to Phase 2 guidance: "if vault scan surfaces ≥2 prior research outputs on the same topic, narrow Phase 3 subagent briefs to gap-fill rather than full coverage."
+
+**Tool failures observed (4):**
+
+1. **`mcp__qmd__query` in subagent context** rejected `searches` array as "not an array", suggesting a JSON serialisation issue when QMD is called from a subagent rather than the parent. Worked around by going direct to web search. **Recommendation:** add to subagent prompt template: "if QMD fails with array validation error, fall back to direct WebSearch rather than retrying — this is a known pattern."
+
+2. **WebFetch 403 on M+R Benchmarks** — three URLs blocked. Workaround: secondary summaries (NonprofitPro, MR Lab announcements, third-party syntheses). **Recommendation:** add to skill: "for authoritative-source 403s, try the org's blog / press-release page or third-party summary before declaring unreachable."
+
+3. **WebFetch returning binary PDF content** — NPMG 2025 PDF unextractable via WebFetch. **Recommendation:** add fallback to skill — use the bundled `pdf-to-markdown` skill or `curl <URL> | pdftotext - -` when the URL ends in `.pdf`. Don't retry WebFetch on the same PDF.
+
+4. **`security_reminder_hook` false positive on URL substring** (SQ3) — hook blocked Write of `sources_03.md` because a vendor URL contained the literal Python-serialisation keyword as a bare substring (no word-boundary or code-context check). This is a hookify rule false positive, not a /research issue, but worth flagging to the rule maintainer: tighten the hook to require word-boundary + co-occurring Python signal (`import`, `.load(`, `.dump(`, `.pkl`).
+
+**Sub-question scoping pattern that worked:** five subagents on five clearly delineated gaps, each with a one-page brief that explicitly named what *not* to research (the broad-coverage stuff already in the vault). Sub-question-level outputs were tight (500–1500 words each) and converged into synthesis cleanly.
+
+**Verification was light-touch and effective.** Five claims spot-checked via WebSearch (founder transition case, named comparator org, AI-bottleneck thinker, key benchmark report exists, single-source download number). All five returned positive verification within a single round of searches. The "single-source figure flagged for verification" pattern (Sharktivity 1.2M downloads) successfully promoted from Medium to High confidence after primary-source check.
+
+**No voice match (Phase 6) — correct call.** No voice reference applies for "research report → Simon"; internal-audience strategic-doc style is the natural fit. Phase 6 should default-skip when audience is the user themselves and no specific voice reference matches.
+
+**No polish (Phase 7) — judgement call.** The report was high-quality after synthesis and the audience was Simon directly. Skipping /polish for an internal-audience research report is defensible. Should add to skill: "Phase 7 is recommended for any external-audience report; for internal-audience reports to the user themselves, judgement-skip is acceptable if the synthesis pass produced clean output."
+
+
+# Lessons from v6 run (2026-04-29)
+
+Topic: Fundraising strategy benchmark for ~$1M conservation NGO. Audience: Simon (input to v1.0 of MMF fundraising strategy doc). Single-model run (same as v5 — Codex + Gemini CLIs unavailable). Same gap-focused-subagents pattern as v5. Five sub-questions, ~780-word notes each.
+
+**Mid-run reframe by user.** After SQ3 returned (and SQ1/SQ2 partially complete, SQ4/SQ5 still running), the user pushed back on the v0.1 strategy framing — *"you might be over-indexing a little bit about me ... focus less on just Simon as a barrier and things and more on what MMF should be doing."* The /research run continued because 4 of 5 subagents were already organisation-focused; the user's redirect mainly affected (a) the SQ1 framing in synthesis (TOC frame demoted from central to one operational input among several) and (b) the v0.1 → v1.0 strategy rewrite plan. **Lesson: when the user redirects mid-run, don't cancel running subagents; reframe in synthesis (Phase 4) instead.** The subagent outputs are raw evidence; the report's organising frame is editable.
+
+**Vault scan revealed an entire layer of prior MMF-organisational fundraising material** that the parent /research run had not fully surfaced before launching subagents — specifically the 28 April board meeting minutes (which contained the *board's own articulated direction* on unrestricted/restricted funds: "the fundraising strategy must reflect this"), the 29 April operational report (with the Strategic Plan §7-aligned structural picture), the 1 April board fundraising brief (specific board-member opportunities), and the 22 April Steffen ESG/shipping transcript. This material was found while subagents were still running, by reading meeting transcripts and minutes that QMD did not score highly enough to surface in the initial search.
+
+**Lesson for Phase 2:** when the topic is organisational strategy at a specific entity, **explicitly Glob/find for recent meeting transcripts, board minutes, and board-prep documents** in addition to QMD search. The signal-to-noise ratio of QMD on board-level documents is poor because they're full of routine items; meeting transcripts often contain the highest-value organisational context per word but don't score well on topic-specific queries. Add to Phase 2a guidance: "for org-strategy topics, parallel `find` search for recent meeting transcripts (last 60 days) and board minutes alongside QMD."
+
+**Tool failures observed (recurring patterns from prior runs, plus new ones):**
+
+1. **WebFetch 403 / Cloudflare-protected nonprofit-sector domains.** Recurring across SQ1, SQ4, SQ5: joangarry.com, councilofnonprofits.org, candid.org, successfulnonprofits.com, ssrn.com, informs.org, ResearchGate. Mitigation: WebSearch-summary fallback works. **Recommendation:** add a known-block list to the skill so subagents don't waste cycles retrying. Initial list: `joangarry.com`, `councilofnonprofits.org`, `candid.org`, `successfulnonprofits.com`, `ssrn.com`, `informs.org`, `researchgate.net`, `m-rstrategic.com` — for these, use WebSearch and don't retry WebFetch.
+
+2. **WebFetch 404 on Veritus Group URLs (slug changes).** Different slug between time of indexing and time of fetch. **Recommendation:** on Veritus 404, retry by article *title* via WebSearch rather than retrying the URL.
+
+3. **WebFetch ECONNREFUSED on `blog.glasspockets.org`.** Site appears down or refusing. Same WebSearch-summary fallback. **Recommendation:** add to known-block list with a note that the site has been intermittently unavailable through 2026-Q2.
+
+4. **PDF binary-content failure on WebFetch** — recurring from v5. Already noted; add fallback to bundled `pdf-to-markdown` skill is the documented pattern.
+
+**Sub-question scoping pattern continues to work.** Five gap-focused subagents, ~780-word notes each, claims registries with 10–14 numbered claims, sources files. Same pattern as v5 — cleanly converging into synthesis.
+
+**Verification skipped (Phase 5 light-touch).** For an internal-audience strategic doc with claims sourced from pre-existing claim registries and converging across multiple sources, the spot-check verification value is low. The highest-leverage findings (timeline compression risk; Director-last hiring sequence; DAF activation as cheapest unrestricted lever) all had multiple corroborating sources within the subagent outputs themselves. v5 lessons predicted this; v6 confirms.
+
+**Voice match (Phase 6) skipped — same logic as v5.** Internal-audience strategic doc to user; no voice reference applies.
+
+**Polish (Phase 7) skipped — same logic as v5.** Internal-audience research report; synthesis pass produced clean output.
+
+**Pattern stabilising across v5 + v6 runs:** for "input to v1.0 of strategic doc" research, the workflow is now: deep vault scan (incl. board minutes + meeting transcripts via `find`) → 5 gap-focused parallel Opus subagents → synthesis with audience-aware framing → skip Phase 5/6/7 → deliver to vault → no /todo (user is at keyboard). Total context cost per run: ~80k tokens per subagent + ~50k synthesis. Quality high without external triangulation.

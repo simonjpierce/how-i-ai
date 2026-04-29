@@ -38,7 +38,34 @@ This is a different failure mode from the OMIN/Pomene case: there, the right ref
 
 **Mitigation #2 — author-side (this skill):** NEVER hallucinate surnames or full names in the `--context` string passed to `correct_transcript.py`. The LLM treats `--context` as ground truth. In the 2026-04-24 meeting I passed `"AIS website project for Stefan Pieterse"` — I invented the surname "Pieterse" entirely. This biased the LLM away from flagging `Stefan → Steffen` because my context claimed Stefan was the right referent. **Rule: use only first names actually spoken in the transcript, and only surnames that appear verbatim in the transcript or in your pre-existing knowledge of the session. When unsure, use just the first name or omit the person altogether.**
 
+**Same failure observed 2026-04-29 (Brisbane post-board voice memo).** Whisper rendered "Mark Mark Erdmann" (duplicate Mark; Mark Erdmann is in the PROMPT). Actual referent was **Mark Hackney** (MMF board chair) — the speaker was discussing MMF *board updates* as a format reference. I passed `"Mark Erdmann (marine biologist regular updates reference)"` in `--context`, again inventing the framing. The corrector matched the existing "Mark Erdmann" token to the existing roster entry under context I had biased. **Both Mark Hackney and Mark Erdmann are first-name homophones in the roster** — same Stefan/Steffen pattern, different surnames. Author-side rule is now even tighter: when the transcript contains a *first name only* that has multiple roster matches, do NOT include any surname in `--context` even if you "think" you know — let the LLM see the ambiguity. Better still, omit the person entirely from `--context` and rely on roster context tags. The right thing for the Brisbane memo would have been `--context "Brisbane solo voice memo after MMF board meeting; topics: board pack workflow, comms/fundraising strategy"` — no person names at all in that string for the comms-pipeline section.
+
 **Mitigation #3 — review pattern:** during Step 3b-iii review, for every *proper-name* high-confidence correction AND every *proper-name* non-correction (i.e. a first name that matched a roster entry exactly), cross-reference the meeting-topic context against the roster entry's `context` field. If the topic doesn't match (e.g. a `Stefan` reference in an AIS/shipping context flags the roster's Stefan Bach as a Qatar oil contact), treat as ambiguous and surface for review.
+
+### Roster YAML failure on corrector load — quote multi-clause `context:` values
+
+Observed twice in one corrector run on 2026-04-29 (MMF board meeting). Symptom: `correct_transcript.py` exits 1 immediately with `yaml.scanner.ScannerError: mapping values are not allowed here` pointing at a `context:` value containing `: ` (colon-space). Root cause: any unquoted `context:` value with a colon in the prose parses as a nested mapping. The roster header has a "YAML gotcha" note that warns against this; even with the warning, it's an easy slip.
+
+**Recurring sources of the failure:**
+1. **Author error** — adding a `context:` value with a `disambiguate by context: ...` or `NOTE: ...` clause without wrapping in quotes.
+2. **Linter / auto-modification** — when an entry's role changes (e.g. `Mark Hackney → Board Chair`), an auto-process appears to inject disambiguation language into related entries (e.g. `Mark Erdmann`'s context now reads `... NOT Mark Hackney (Board Chair) — disambiguate by topic: ...`). The auto-modification doesn't validate YAML.
+
+**Pre-flight validator (use when corrector fails YAML):** parse each `## <Section>` fenced YAML block independently with `yaml.safe_load`, plus regex-scan all unquoted `context:` lines for the `: ` substring. The two violations on 2026-04-29 were caught instantly. Inline pattern:
+
+```python
+import re, yaml
+text = open(ROSTER).read()
+for name, body in re.findall(r"^## ([A-Za-z]+)\s*$.*?```yaml\s*\n(.*?)\n```", text, re.DOTALL | re.MULTILINE):
+    try: yaml.safe_load(body); print(f"{name}: OK")
+    except Exception as e: print(f"{name}: FAIL", e)
+for ln, line in enumerate(text.splitlines(), 1):
+    m = re.match(r"^(\s+)context:\s+(.+)$", line)
+    if m and not m.group(2).startswith('"') and ": " in m.group(2): print(f"L{ln}: {line[:160]}")
+```
+
+**Fix:** wrap the offending value in double quotes (`context: "..."`). Don't try to thread the needle by rephrasing prose to avoid `: ` — the cost of quotes is zero.
+
+**Author-side rule for THIS skill when adding to the roster:** any `context:` value containing more than one clause (period, em-dash, colon) → wrap in double quotes by default.
 
 
 ## Steps
@@ -281,11 +308,14 @@ If the transcript is MMF-related (team meeting, funder call, partner call, board
 **Locate the next-quarter draft slide-deck file:**
 
 ```bash
-ACCUM_DIR="$VAULT_PATH/02_MARINE MEGAFAUNA/MMF BOARD MEETINGS"
+ACCUM_DIR="$VAULT_PATH/02_MARINE MEGAFAUNA/MMF BOARD"
 ACCUM_FILE=$(grep -l "^status: accumulating" "$ACCUM_DIR"/*"Slide Deck Content"*.md 2>/dev/null | head -1)
 ```
 
-If `ACCUM_FILE` is empty, no accumulating draft exists yet — flag this in the post-run summary (`board-deck-accumulation: no draft found at <ACCUM_DIR>`) and skip the append. Don't auto-create the skeleton; that's Simon's call at the start of each quarter.
+If `ACCUM_FILE` is empty, no accumulating draft exists yet. Behaviour depends on whether the transcript is itself an MMF Board Meeting (filename or meeting name contains "MMF Board Meeting"):
+
+- **If the transcribed meeting IS an MMF Board Meeting** — surface this as an explicit prompt in Step 7's confirmation summary (not a silent flag). Format: `Board-deck accumulation: no accumulating draft for the next quarter — want me to seed the skeleton now? The board meeting just concluded is the natural quarter-rollover moment. Reply 'seed' to create it (you'll need to give me the next meeting date), or 'skip' to handle later.` This converts a recurring post-meeting TODO ("create next-quarter accumulating draft skeleton") into a clear in-flow prompt. Still don't auto-create — Simon's call on the next-meeting date and the regional/holding-bin structure remains a deliberate gate. Just lower the cost of forgetting. Confirmed need 2026-04-29 (boardmeeting-29apr-transcribe): the prior session's What's-next had "create next-quarter skeleton" as item 4 and it had still not happened by post-meeting transcription time.
+- **If the transcribed meeting is any other MMF context** (Moz HODs, Full Circle progress, expedition planning, etc.) — silent flag remains correct. `Board-deck accumulation: no draft found at <ACCUM_DIR>` in the post-run summary, skip the append, no prompt. The "Simon's call at quarter start" rule applies here.
 
 **Trigger phrase categories.** See the workflow doc § *Trigger phrase reference* table. Project lifecycle / funding / outputs / people / partnerships-governance / risk-regulatory.
 

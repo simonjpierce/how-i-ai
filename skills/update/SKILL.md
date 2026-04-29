@@ -39,22 +39,30 @@ MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
 # /update run from inside ~/repos/mmf-claude-code returned is_simon=false on
 # Simon's machine because pwd-derived path didn't match the vault project dir.
 IS_SIMON=false
+RESOLVED_PROJECT_DIR=""
 if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
   IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
+  [ "$IS_SIMON" = "true" ] && RESOLVED_PROJECT_DIR="$PROJECT_DIR"
 fi
-if [ "$IS_SIMON" = "false" ] && command -v python3 >/dev/null 2>&1; then
-  IS_SIMON=$(python3 -c '
+# Union scan: if pwd-derived lookup didn't find an is_simon=true config (e.g. cwd
+# is a subfolder of the vault, or in ~/repos/<x>), scan all project configs and
+# also resolve PROJECT_DIR from the matched config so MEMORY_FILE points to a
+# real file. Confirmed 2026-04-29: pwd was a vault subfolder, union scan found
+# is_simon=true but MEMORY.md path stayed pwd-derived and missed the file.
+if [ -z "$RESOLVED_PROJECT_DIR" ] && command -v python3 >/dev/null 2>&1; then
+  read IS_SIMON RESOLVED_PROJECT_DIR <<< $(python3 -c '
 import json, glob, os
 for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
     try:
         if json.load(open(p)).get("features", {}).get("is_simon", False):
-            print("true"); raise SystemExit
+            print("true", os.path.dirname(p)); raise SystemExit
     except SystemExit: raise
     except Exception: pass
-print("false")
-' 2>/dev/null || echo false)
+print("false", "")
+' 2>/dev/null || echo "false ")
 fi
 echo "is_simon=$IS_SIMON"
+[ -n "$RESOLVED_PROJECT_DIR" ] && MEMORY_FILE="$RESOLVED_PROJECT_DIR/memory/MEMORY.md"
 
 [ -f "$MEMORY_FILE" ] || { echo "MEMORY.md not found at $MEMORY_FILE — skipping pre-flight"; }
 LINES=$([ -f "$MEMORY_FILE" ] && wc -l < "$MEMORY_FILE" || echo 0)
@@ -156,6 +164,9 @@ If within budget, proceed silently — no need to report the numbers unless aske
 ### Phase 3 — Execute
 
 6. **Apply auto-updates**. Use Edit for targeted changes. For documents that need multiple changes, read the full file first to avoid conflicts. If a document needs more than ~5 edits, consider whether a rewrite is cleaner (but still use Edit, not Write, to preserve surrounding content).
+   - **Re-read before each Edit when concurrent editing is active.** If the user flags or signals they've been editing a file directly during the session (e.g., "I've been editing text directly", or a system-reminder shows linter/user modifications), Edit will fail with `File has been modified since read` even on small targeted changes. Recovery: re-read the relevant range immediately before each Edit, then retry. Confirmed 2026-04-28 — this fired three times during a single board-prep /update pass while Simon was editing the deck source markdown in Obsidian in parallel; each retry succeeded after a fresh Read. Pattern: when in doubt, Read just before Edit on any file the user might be touching concurrently.
+   - **Atomic Python fallback when re-read-then-Edit thrashes.** If `File has been modified since read` fires on 3+ consecutive Read→Edit attempts within a minute, the file is being touched faster than the Edit tool's freshness check can keep up — typical cause is iCloud sync or Obsidian indexing churning the mtime even when no human is actively editing. Fall back to an atomic Python write via Bash: read current text with `Path(...).read_text()`, do `.replace(old, new)` in memory (assert the old string is present first to catch drift), and `Path(...).write_text(text)`. This bypasses the mtime check and applies the edit in a single filesystem operation. Only use as a last resort — Edit is preferable because it surfaces concurrent changes; the atomic fallback silently overwrites whatever changed between read and write. Confirmed 2026-04-28 on the same deck source after Simon-editing had stopped but iCloud sync was still flagging the file modified.
+   - **Same fallback applies when the file is too large to Read.** When a target file exceeds the Read tool's ~25k-token cap (e.g. `Current Projects.md` after several months of session-handoff appends), Edit refuses to run because there's no satisfying prior-Read of the full file. Read-with-offset/limit can sometimes satisfy the prior-read requirement *if* the text anchor sits within the readable range, but for a giant single-paragraph document where the anchor's position is unknown, atomic Python is cleaner. Same `assert old in text` guard before `.replace()` to catch drift; verify uniqueness with `grep -c` first or `text.count(new) == 1` after. Confirmed 2026-04-29 on Current Projects during /update — anchor uniqueness verified via grep, replacement applied via `Path.read_text() / .replace() / .write_text()` with the standard guards.
 
 7. **Handle review items**. Present each review item one at a time with:
    - The current text (relevant excerpt)

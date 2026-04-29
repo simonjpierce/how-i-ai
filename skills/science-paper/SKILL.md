@@ -43,7 +43,7 @@ Activate at the start of an interactive analysis session. The analysis note is t
    status: In progress
    dataset: source description
    source_paper: "citation if applicable"
-   manuscript: "[[Manuscript Draft — Topic]]"
+   manuscript: "Manuscript Draft — Topic"
    ---
 
    # Analysis title
@@ -65,12 +65,12 @@ Activate at the start of an interactive analysis session. The analysis note is t
    status: Not started
    journal: TBD
    authors: TBD
-   lab_notebook: "[[Analysis — Topic]]"
+   lab_notebook: "Analysis — Topic"
    ---
 
    # Manuscript title
 
-   Drafting happens after the lab notebook is complete. See [[Analysis — ...]].
+   Drafting happens after the lab notebook is complete. See Analysis — ....
    ```
 
 4. **Create a code repo for the analysis.** Any analysis code gets its own version-controlled repo. Pre-flight `gh` (GitHub CLI) availability before deciding which path to take:
@@ -111,7 +111,7 @@ Activate at the start of an interactive analysis session. The analysis note is t
    ```
    <vault-project-folder>/figures/
    ```
-   When analysis produces plots, save them here (PDF + PNG). They can then be embedded in the lab notebook using `![[figures/plot_name.png]]` for inline preview while reading the notebook in Obsidian. Also copy to the Google Drive folder for external sharing if you set one up.
+   When analysis produces plots, save them here (PDF + PNG). They can then be embedded in the lab notebook using `!figures/plot_name.png` for inline preview while reading the notebook in Obsidian. Also copy to the Google Drive folder for external sharing if you set one up.
 
 7. **Add all files to the Artifacts table** — lab notebook, manuscript, GitHub repo, Google Drive folder, vault figures folder, source data paths, reference papers.
 
@@ -172,7 +172,7 @@ R scripts save plots to the repo `outputs/` directory as usual. Then:
 
 This converts PDFs to PNGs (200 DPI, via `pdftoppm`) for Obsidian inline display, copies existing PNGs/SVGs directly, and syncs PDFs to Google Drive. Run it after any analysis step that produces plots, or as part of `/update`. Requires `pdftoppm` (from poppler: `brew install poppler`).
 
-After syncing, embed in the lab notebook at the relevant analysis step: `![[figures/plot_name.png]]`
+After syncing, embed in the lab notebook at the relevant analysis step: `!figures/plot_name.png`
 
 ### The gate (hard rule)
 

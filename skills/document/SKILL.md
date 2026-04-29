@@ -241,18 +241,22 @@ If within budget, proceed silently — no need to report the numbers.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.
    - **Friction Log**: Move entries marked ✓ to the `## Resolved` section. Compress to one-line summaries.
 
-14b. **(SIMON-ONLY)** **Consider syncing `~/.claude/` changes to a contributor repo (if applicable)**: Skip this step entirely if `IS_SIMON=false` — newcomer users don't have the `claude-code-config` repo and shouldn't be offered to push there. If `IS_SIMON=true`: this session modified files in `~/.claude/skills/`, `~/.claude/templates/`, or `~/.claude/CLAUDE.md`, check whether the user has a contributor-side repo configured for syncing those changes outward. Detection: look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/` or wherever the user keeps their git checkouts. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`.
+14b. **(SIMON-ONLY)** **Sync `~/.claude/` changes to the contributor repo (default-on)**: Skip this step entirely if `IS_SIMON=false` — newcomer users don't have the `mmf-claude-code` contributor repo and shouldn't be pushed to. If `IS_SIMON=true`:
 
-If found, surface as a single offer in step 17:
+   **Default behaviour: run the sync as part of /document's session-end work.** Simon's design choice (2026-04-29 evening): the trigger's job is "is the work stable enough to ship?", not "is the change broadly relevant?" — that latter question is the sync script's job (the script filters Simon-personal files; the trigger doesn't need to). Asking every session whether to sync produces the same answer almost every time, so default-on respects that.
 
-> *"This session modified N skills/templates that are tracked by the `mmf-claude-code` sync. Want me to commit to `claude-code-config` and run the sync to push them upstream?"*
+   **Opt-out:** if `$ARGUMENTS` contains `--no-sync` (or the user invoked `/document --no-sync`), skip this step and note in the step 17 report that sync was deferred per the user's flag. Use this when a particular skill change isn't ready to ship — e.g. WIP, experimental, or Simon wants to refine before pushing.
 
-Numbered options:
-1. Yes — commit and sync now
-2. Just commit to `~/.claude/` (defer the sync)
-3. Skip — handle later
+   **Detection:** look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/`. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`. If no sync script found, skip silently — the user isn't a contributor and this step doesn't apply. **Do not** invent a sync target or push to a repo the user hasn't established a sync flow with.
 
-If no sync script found, skip silently — the user isn't a contributor and this step doesn't apply. **Do not** invent a sync target or push to a repo the user hasn't established a sync flow with.
+   **Sync flow when default-on:**
+   1. Check `git status` in `~/.claude/` — confirm any session-modified skills/templates/CLAUDE.md are committed (per the pre-authorised commit class for `~/.claude/` infrastructure).
+   2. Run the sync script: `cd ~/repos/mmf-claude-code && ./sync/sync-from-vault.sh` (or wherever the canonical path is). The script reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), and stages changes in the contributor repo.
+   3. Inspect the resulting `git status` / `git diff --stat` in `~/repos/mmf-claude-code/`. If the sync produced no changes (e.g. session only touched Simon-personal files that the filter excludes), report that in step 17 and stop.
+   4. If changes were produced, commit them with a descriptive message naming the session's skill/template additions, and push to `marinemegafauna/mmf-claude-code@main` (or whatever the contributor repo is set up as).
+   5. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), the resulting commit hash, and the push confirmation. If sync produced nothing, say so explicitly.
+
+   **Failure mode handling:** if the sync script errors (filter breaks, file conflict, push rejected), do NOT roll back — surface the error in step 17 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
 
 15. **Flag completed notes for archiving**: If any vault notes worked on this session are now complete (plans executed, audits finished, process docs promoted to skills), note them for archival to the user's archive folder (Simon: `06_ARCHIVE/`; newcomer vaults don't ship one by default — flag for the user to create one or skip). Move them if Simon has given standing approval, or list them for confirmation.
 

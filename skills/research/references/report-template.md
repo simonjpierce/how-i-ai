@@ -69,7 +69,7 @@ If the vault briefing was summarised due to size (>10,000 words), note which sub
 Where Claude and Codex disagreed and how the synthesis resolved it.
 
 ### Vault Context
-What was already known from the Obsidian vault before web research. Key vault files referenced, with [[wikilinks]].
+What was already known from the Obsidian vault before web research. Key vault files referenced, with wikilinks.
 
 ### Claim Verification Log
 
