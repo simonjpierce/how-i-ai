@@ -208,7 +208,37 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
 - **Small scope** (1–3 docs): Do everything inline, no subagents needed.
 - **Medium scope** (4–8 docs): Use parallel reads but update sequentially.
-- **Large scope** (9+ docs): Spawn sonnet subagents for parallel scanning in Phase 1, then update sequentially in Phase 3.
+- **Large scope** (9+ docs): Dispatch parallel Codex (gpt-5.5, xhigh) calls for per-doc scanning in Phase 1 — see "Large-scope parallel Codex dispatch" below. Update sequentially in Phase 3. If Codex is unavailable, fall back to parallel Sonnet subagents.
+
+
+## Large-scope parallel Codex dispatch (Phase 1 step 4)
+
+For 9+ doc scope, dispatch the per-doc scan via parallel Codex CLI calls instead of Sonnet subagents — xhigh reasoning produces stronger drift detection per doc, and the work runs off Anthropic quota.
+
+1. **Pre-flight**: `codex --version`. If it errors (CLI missing or broken), fall back to parallel Sonnet subagents (the prior behaviour) — no other change to /update.
+
+2. **Per-doc prompts**: for each doc, write a tight scan prompt to `/tmp/update_scan_<n>.md`. Each prompt:
+   - Names the target doc path
+   - Embeds the four drift criteria from step 4 (stale / missing / inconsistent / broken_xref)
+   - Embeds relevant session context (files edited, decisions made, seeds)
+   - Demands JSON output: `{"doc": "...", "needs_update": <bool>, "drift_findings": [{"category": "...", "location": "...", "issue": "...", "proposed_fix": "..."}]}`
+
+3. **Dispatch in batches of 5 concurrent Codex calls** via background Bash:
+
+   ```bash
+   codex exec --full-auto --skip-git-repo-check --sandbox read-only \
+     "Read /tmp/update_scan_<n>.md and follow the instructions exactly. Output ONLY the JSON object."
+   ```
+
+   - Use `run_in_background=true` per Bash call; spawn up to 5 in parallel in a single message
+   - Wait for the batch via BashOutput before starting the next
+   - xhigh effort comes from `~/.codex/config.toml` — do NOT pass `-m` or `--effort`
+
+4. **Aggregate** the JSON outputs into the candidate list, then proceed to Phase 2 classification.
+
+**Cap at 5 concurrent**: prevents OpenAI rate-limit hits with 9+ simultaneous Codex calls and keeps local resource use reasonable. Tune up if rate limits aren't actually being hit.
+
+**Sonnet fallback within a batch**: if more than 2 Codex calls in one batch error out, switch the remaining docs to parallel Sonnet subagents. Don't let Codex flakiness break /update.
 
 
 ## Guidelines

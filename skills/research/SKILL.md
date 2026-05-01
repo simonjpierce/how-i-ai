@@ -99,8 +99,9 @@ Run these in parallel:
 
 5. **Codex pre-flight (only if `CODEX_FLAG=true`)**:
    ```bash
-   which codex && echo "Reply with OK" | codex exec -m "gpt-5.4" --full-auto --sandbox danger-full-access - 2>&1
+   which codex && echo "Reply with OK" | codex exec --full-auto --sandbox danger-full-access - 2>&1
    ```
+   Uses the global default model (`gpt-5.5-fast` per `~/.codex/config.toml`) — fast tier is fine for a smoke check; the deep synthesis step in 3b uses pro.
 
    | Result | Action |
    |--------|--------|
@@ -324,12 +325,14 @@ Read `references/subagent-prompt.md` for the Codex prompt template. Build prompt
 
 Launch in background:
 ```bash
-codex exec -m "gpt-5.4" --full-auto --sandbox danger-full-access - < /tmp/research/codex_prompt.md 2>&1 | tee /tmp/research/codex_findings.md
+codex exec -c model="gpt-5.5-pro" --full-auto --sandbox danger-full-access - < /tmp/research/codex_prompt.md 2>&1 | tee /tmp/research/codex_findings.md
 ```
+
+**Model:** `gpt-5.5-pro` (overrides global `gpt-5.5-fast` default). Deep research synthesis benefits from extra inference compute per query — the run is one-shot per /research invocation, latency tolerable.
 
 Timeout: 600000ms.
 
-Fallback chain: `gpt-5.4` → `o3` → retry once → alert user.
+Fallback chain: `gpt-5.5-pro` → `gpt-5.5-fast` → retry once → alert user.
 
 ### 3c: Gemini CLI (simultaneous, only if `GEMINI_ACTIVE=true`)
 
