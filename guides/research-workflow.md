@@ -186,6 +186,11 @@ Detect the query domain and prioritise sources accordingly:
 
 ### Review notes
 
+**2026-05-02 — Codex CLI current contract**:
+- Current Codex CLI default is bare `gpt-5.5` with `xhigh` reasoning from `~/.codex/config.toml`; do not pass `gpt-5.5-pro`, `gpt-5.5-fast`, or older `gpt-5.4` overrides in `/research`.
+- Use file-reference prompts (`codex exec "...Read /tmp/research/codex_prompt.md..."`) rather than stdin piping. Older notes below mention stdin as a fix for the then-current CLI; that is historical only.
+- If Codex's configured model is unavailable, mark Codex inactive for that run and continue with available models, recording the degradation in the methodology. Do not try unverified fallback model slugs.
+
 **2026-03-13 — First use (strategic plan benchmarking)**:
 - 5 parallel subagents worked well. All completed within ~4 minutes.
 - Red-team found that 3 of 21 recommendations understated what MMF already does — important accuracy check.

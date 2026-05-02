@@ -261,10 +261,10 @@ Read the **post-Gemini-fix document** (the document in its current state after 6
 #### 6e. Execute Codex
 
 ```bash
-codex exec --full-auto --skip-git-repo-check -c model="gpt-5.5-pro" "Read /tmp/red-team-codex-prompt.md and follow the review instructions exactly. Write findings incrementally to /tmp/red-team-codex-findings.md as you discover each one — do not batch."
+codex exec --full-auto --skip-git-repo-check "Read /tmp/red-team-codex-prompt.md and follow the review instructions exactly. Write findings incrementally to /tmp/red-team-codex-findings.md as you discover each one — do not batch."
 ```
 
-**Model:** `gpt-5.5-pro` (overrides global `gpt-5.5-fast` default). Multi-doc critique with reconciliation across earlier review rounds — extra inference compute per query is warranted. xhigh reasoning still inherits from `~/.codex/config.toml`.
+**Model:** bare `gpt-5.5` from `~/.codex/config.toml` (the only Codex model accessible via CLI on a ChatGPT account — `-fast` and `-pro` variants return 400). xhigh reasoning also from config. Do not pass `-m` or `-c model=...`.
 
 **Timeout:** 600000ms (10 minutes). Same error handling as 6b.
 

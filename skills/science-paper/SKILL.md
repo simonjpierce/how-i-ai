@@ -176,13 +176,109 @@ After syncing, embed in the lab notebook at the relevant analysis step: `!figure
 
 ### The gate (hard rule)
 
-**Every analysis step must update the analysis note before proceeding to the next step.** This is non-negotiable. "Step" means any operation that produces a result: data cleaning, a statistical test, model fitting, a comparison, an interpretation.
+**Every analysis step must go through the joint two-model gate below before proceeding to the next step.** This is non-negotiable. "Step" means any operation that produces a result: data cleaning, a statistical test, model fitting, a comparison, an interpretation.
+
+Each step has four phases: (1) **joint method planning** with Codex *before* execution, (2) **execution**, (3) **numerical verification** with Codex *after* execution, then (4) the **notebook update**. The pre-step catches methodology errors (wrong test for the data, missing diagnostic, biased subset, ignored confound — things a numerical check can never see). The post-step catches execution/transcription errors (right test, wrong number copied to notebook). Both are needed; they catch different failure classes.
+
+#### 1. Pre-step — joint method planning with Codex
+
+Before writing any code or running any analysis for this step:
+
+a. **State the proposed approach explicitly.** Write a structured plan covering: *what you're doing*, *the method you'll use*, *why you picked that method*, *the assumptions you're making*, *what output you expect*.
+
+b. **Dispatch to Codex (bare `gpt-5.5`, xhigh from config) as an independent peer reviewer.** Write the prompt to `/tmp/sci-paper-method-review.md`:
+
+   ```
+   You are an independent statistical/methodological peer reviewer for a scientific analysis. The lead analyst (Claude Opus) is about to take the step described below. Read the prior notebook context and the proposed step, then:
+
+   1. INDEPENDENTLY propose a method for this step — what would YOU do given the same question and data? Don't anchor on Opus's choice; reason from scratch.
+   2. CRITIQUE Opus's proposal — what assumption is being made? What alternative method might be stronger? What prerequisite test or diagnostic is missing? What confound is being ignored?
+   3. VERDICT: ALIGNED (your method matches Opus's) | CAVEAT (Opus's method is acceptable but with the caveat that ...) | DIVERGENT (you would do something different — explain).
+
+   Cite the notebook section / data column / prior step that grounds your reasoning. No hand-waving — be specific.
+
+   ## Notebook context (prior steps)
+   <paste the relevant prior notebook sections>
+
+   ## Data structure
+   <paste data dictionary, head of the relevant data frame, or schema>
+
+   ## Proposed step
+   - What I'm doing: <...>
+   - Method: <...>
+   - Why this method: <...>
+   - Assumptions: <...>
+   - Expected output: <...>
+   ```
+
+   Dispatch:
+
+   ```bash
+   codex exec --full-auto --skip-git-repo-check \
+     "Read /tmp/sci-paper-method-review.md and follow the instructions exactly."
+   ```
+
+   - Model + reasoning effort come from `~/.codex/config.toml` (bare `gpt-5.5` + xhigh — the only model variant accessible via CLI on a ChatGPT account; `-fast`/`-pro` return 400). Do NOT pass `-m` or `-c model=...`.
+
+c. **Adjudicate based on Codex's verdict:**
+   - **ALIGNED** → proceed to phase 2 (execution).
+   - **CAVEAT** → present Codex's caveat to Simon. If trivial (e.g. report an additional diagnostic alongside), note in the notebook and proceed. If substantive (e.g. add a sensitivity analysis), pause for Simon's call.
+   - **DIVERGENT** → present BOTH methods to Simon with the trade-offs each model identified. Do **not** proceed unilaterally. Simon decides.
+
+d. **Sonnet/manual fallback**: if Codex CLI is unavailable or errors, spawn a Sonnet subagent with the same peer-review prompt. If Sonnet also fails, surface the methodological choice to Simon directly with the peer-review questions answered as best Opus can. Never skip the pre-step gate silently.
+
+#### 2. Execute the step
+
+Run the agreed-upon analysis. Save outputs to `outputs/` per the repository convention.
+
+#### 3. Post-step — numerical verification with Codex
+
+Before writing the notebook update:
+
+a. **State what numbers you are about to write** (sample sizes, p-values, effect sizes, parameter estimates, CIs, etc.).
+
+b. **Dispatch Codex (bare `gpt-5.5`, xhigh from config) as a numerical verifier.** Write the prompt to `/tmp/sci-paper-number-check.md`:
+
+   ```
+   You are verifying numerical claims for a scientific analysis. Below are numbers Claude Opus is about to write to the lab notebook. Verify each against the actual code output.
+
+   For each claim:
+   1. Locate the corresponding line(s) in the actual output file (path provided). Quote the output verbatim with file:line reference.
+   2. State whether the quoted output supports the claim Opus is making.
+   3. If you cannot find the source for a claim, return DISCREPANCY with reason.
+
+   **Bare assertions without verbatim output quotation are treated as FAILED verification.** Quote the actual output text — do not produce your own answer from scratch.
+
+   Verdict per claim: APPROVED | DISCREPANCY (with details).
+
+   Script: <path to script that produced the output>
+   Output file(s): <path(s) to output file(s) — console log, CSV, model summary, etc.>
+   Claims to verify:
+   - <claim 1, with the value Opus is about to write>
+   - <claim 2>
+   - ...
+   ```
+
+   Dispatch via the same `codex exec` syntax (no `-m` / `-c model=...` overrides).
+
+c. **Adjudicate**:
+   - **All APPROVED** → write the notebook update and proceed.
+   - **Any DISCREPANCY** → pause. Re-read the actual output yourself. If Codex misread the output, document why and proceed. If Opus's claim was wrong, fix the claim before writing the notebook.
+
+d. **Sonnet/manual fallback**: same as pre-step. Never skip the post-step gate silently.
+
+#### 4. Notebook update
 
 Each update includes:
+
 - **What was done** (method, parameters, script used)
 - **What was found** (numbers, tables, key statistics)
 - **What it means** (interpretation, implications for next steps)
 - **Outputs** (file paths for scripts, data files, plots)
+- **Method review** — one line on Codex's pre-step verdict: ALIGNED / CAVEAT (summary) / DIVERGENT (and how it was resolved)
+- **Verification** — one line confirming all numerical claims passed Codex's post-step check, or a note on any discrepancy and how it was resolved
+
+This makes the two-model collaboration auditable: a future reader (or peer reviewer) can see that both models signed off on each step's method and numbers.
 
 ### What belongs in the lab notebook vs. not
 

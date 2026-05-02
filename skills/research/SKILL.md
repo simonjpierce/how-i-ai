@@ -48,8 +48,8 @@ This skill ships ready-to-use but expects:
 
 ```
 claude_model: opus        # Agent tool model parameter
-codex_model: gpt-5.4      # Codex CLI default (don't override with -m)
-codex_fallback: o3         # If primary unavailable
+codex_model: gpt-5.5      # Codex CLI default (don't override with -m)
+codex_fallback: none       # If configured gpt-5.5 is unavailable, mark Codex inactive
 gemini_model: (default)    # Gemini CLI default model (don't override with -m)
 ```
 
@@ -99,9 +99,9 @@ Run these in parallel:
 
 5. **Codex pre-flight (only if `CODEX_FLAG=true`)**:
    ```bash
-   which codex && echo "Reply with OK" | codex exec --full-auto --sandbox danger-full-access - 2>&1
+   which codex && codex exec --full-auto --sandbox danger-full-access "Reply with OK" 2>&1
    ```
-   Uses the global default model (`gpt-5.5-fast` per `~/.codex/config.toml`) — fast tier is fine for a smoke check; the deep synthesis step in 3b uses pro.
+   Uses the global default model (bare `gpt-5.5` per `~/.codex/config.toml`) — only model variant accessible via CLI on a ChatGPT account.
 
    | Result | Action |
    |--------|--------|
@@ -325,14 +325,16 @@ Read `references/subagent-prompt.md` for the Codex prompt template. Build prompt
 
 Launch in background:
 ```bash
-codex exec -c model="gpt-5.5-pro" --full-auto --sandbox danger-full-access - < /tmp/research/codex_prompt.md 2>&1 | tee /tmp/research/codex_findings.md
+codex exec --full-auto --sandbox danger-full-access \
+  "Read /tmp/research/codex_prompt.md and follow the instructions exactly." \
+  2>&1 | tee /tmp/research/codex_findings.md
 ```
 
-**Model:** `gpt-5.5-pro` (overrides global `gpt-5.5-fast` default). Deep research synthesis benefits from extra inference compute per query — the run is one-shot per /research invocation, latency tolerable.
+**Model:** bare `gpt-5.5` from `~/.codex/config.toml` (only model variant accessible via CLI on a ChatGPT account — `-fast`/`-pro` return 400). xhigh reasoning from config. Do not pass `-m` or `-c model=...`.
 
 Timeout: 600000ms.
 
-Fallback chain: `gpt-5.5-pro` → `gpt-5.5-fast` → retry once → alert user.
+Fallback chain: if Codex errors, retry once → alert user.
 
 ### 3c: Gemini CLI (simultaneous, only if `GEMINI_ACTIVE=true`)
 
@@ -690,9 +692,9 @@ Print: `[9/9] Self-assessment complete`
 |---------|--------|
 | Not installed | Proceed without Codex. User decides if they want to install. |
 | Auth error | Pause. User runs `codex login`. |
-| Model unavailable | Try fallback (`o3`). If fails, alert user. |
+| Model unavailable | Mark `CODEX_ACTIVE=false`, continue with available models, and note the degradation in the methodology. |
 | Timeout (600s) | Retry once. If still times out, alert user. |
-| Empty/garbled output | Retry once with fallback model. If still fails, alert user. |
+| Empty/garbled output | Retry once with the configured default. If still fails, alert user. |
 | Off-topic output | Restart with strengthened prompt. Max 2 attempts. If both off-topic, alert user and proceed without Codex. |
 
 ## Gemini CLI
