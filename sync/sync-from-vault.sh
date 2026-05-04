@@ -45,7 +45,18 @@ trap 'rm -rf "$STAGE_DIR"' EXIT
 # ~/.claude/skills/, run sync-to-vault.sh --apply before this script so
 # those changes flow back to the canonical source before we push.
 cd "$REPO_ROOT"
-git pull origin main --quiet
+python3 - <<'PY'
+import subprocess
+import sys
+
+try:
+    subprocess.run(["git", "pull", "origin", "main", "--quiet"], check=True, timeout=30)
+except subprocess.TimeoutExpired:
+    print("ERROR: git pull origin main timed out after 30s; check network/auth and retry.", file=sys.stderr)
+    sys.exit(124)
+except subprocess.CalledProcessError as exc:
+    sys.exit(exc.returncode)
+PY
 
 # Pre-flight: warn if there are open PRs touching the same paths we're about
 # to overwrite. This catches the case where a contributor has work in flight
@@ -123,6 +134,24 @@ sanitise() {
     -e "s|${CLAUDE_CONFIG}|\$CLAUDE_CONFIG|g" \
     "$file"
   rm -f "$file.bak"
+
+  # Some guide/skill code blocks contain shell/Python snippets where the vault
+  # path's apostrophe is escaped as Simon\'s Vault. Plain sed replacement above
+  # only catches the literal path, so normalise that escaped variant too.
+  python3 - "$file" "$VAULT_PATH" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+vault_path = sys.argv[2]
+text = path.read_text()
+for escaped in (
+    vault_path.replace("'", "\\'"),
+    vault_path.replace("'", "\\\\'"),
+):
+    text = text.replace(escaped, "$VAULT_PATH")
+path.write_text(text)
+PY
 
   # Convert Obsidian wikilinks to GitHub-renderable markdown so guides don't
   # show literal [[brackets]] when newcomers click into them from the README.
