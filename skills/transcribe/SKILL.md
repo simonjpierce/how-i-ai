@@ -211,6 +211,26 @@ Dry-run first if you want to preview without modifying the file:
 
 **If you observe a new persistent misread** during review (e.g. Whisper consistently renders "Nakia" as "Naki" in Mozambique contexts), add it to that roster entry's `whisper_misreads` list in `Transcription Roster.md` so it's caught automatically next time. This is the roster-maintenance feedback loop.
 
+**After ANY edit to `Transcription Roster.md`**, validate YAML before continuing. Two reruns in the past 7 days were caused by unquoted colons in `context:` values (Stefan/Steffen disambiguation, Mark Hackney/Erdmann disambiguation). Run:
+
+```bash
+/opt/homebrew/bin/python3 -c "
+import re, yaml
+text = open('$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Transcription Roster.md').read()
+fail = False
+for name, body in re.findall(r'^## ([A-Za-z]+)\\s*\$.*?\`\`\`yaml\\s*\\n(.*?)\\n\`\`\`', text, re.DOTALL | re.MULTILINE):
+    try: yaml.safe_load(body)
+    except Exception as e: print(f'{name}: FAIL', e); fail = True
+for ln, line in enumerate(text.splitlines(), 1):
+    m = re.match(r'^(\\s+)context:\\s+(.+)\$', line)
+    if m and not m.group(2).startswith('\"') and ': ' in m.group(2):
+        print(f'L{ln}: unquoted colon-space in context — {line[:160]}'); fail = True
+print('OK' if not fail else 'FIX BEFORE CONTINUING')
+"
+```
+
+If anything fails, wrap the offending `context:` value in double quotes immediately. Do not continue with corrector runs until this passes.
+
 After the correction pass completes, continue to Step 4 (format the transcript). The correction log remains at the bottom of the file as an audit trail — don't strip it during formatting.
 
 ### 4. Format the transcript
