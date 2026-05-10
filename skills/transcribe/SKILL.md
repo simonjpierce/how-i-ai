@@ -82,6 +82,25 @@ Examine `$ARGUMENTS` to determine the input type:
 - **Other URL** → go to Step 1b
 - **Empty or missing** → ask the user for the file path or URL
 
+### 1c. Multiple files representing one continuous recording
+
+If the user passes multiple audio paths or signals that the recording is split across files ("5 files", "split across files", "continuous monologue across files", "all one conversation"), treat them as a single conversation rather than independent recordings:
+
+1. **Confirm file order** with the user. Filenames may not sort lexicographically — e.g. `Bris 10 May 1.m4a` ... `Bris 10 May 5.m4a` does, but if there are 10+ files `1, 2, 3, ..., 10` will break naive sort. Don't assume.
+2. **Transcribe sequentially, not in parallel.** whisper-cli competes for the same Apple Silicon GPU; parallel runs slow each other down. Cleanest pattern is a single background bash `for` loop:
+   ```bash
+   for n in 1 2 3 4 5; do
+     "/Users/simonjpierce/Music/Audio Hijack/transcribe.sh" "/path/to/Title ${n}.m4a"
+   done
+   ```
+   Run in background, monitor progress with `tail -f` over the output file scoped to start/finish markers.
+3. **Combine the raw `.md` outputs** into one canonical raw transcript at `00_INBOX/TRANSCRIPTS/YYYY-MM-DD — Title (Whisper raw).md` with `<!-- File N of M -->` comments between fragments and YAML frontmatter listing the source `.m4a` files in a `files: [...]` array.
+4. **Archive individual fragments.** Move each per-file `.md` + `.json` pair to `00_INBOX/TRANSCRIPTS/Archive/<descriptive-folder>/` so they don't clutter the inbox.
+5. **Run the corrector once on the combined raw** (Step 3b-iii). A single pass over the full conversation gives better contextual disambiguation than per-fragment passes — the corrector LLM sees the whole topic flow, including names introduced in one fragment and used in another.
+6. **Format as a single continuous note** with topic headings (Step 4) — do NOT preserve file-fragment boundaries in the formatted output. Speakers don't think in file boundaries, only in topics.
+
+Confirmed 2026-05-10: Brisbane Post-Sharks International monologue split across 5 files (`Bris 10 May 1.m4a` – `Bris 10 May 5.m4a`, ~27 MB total). Sequential transcription via `for` loop in background bash, single corrector pass on the combined raw, topic-organised formatted output.
+
 ### 1b. Solo or multi-speaker? (audio inputs only)
 
 Before transcription, ask the user: **"Solo recording or multi-speaker meeting?"**
