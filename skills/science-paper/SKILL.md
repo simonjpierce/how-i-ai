@@ -214,11 +214,14 @@ b. **Dispatch to Codex (bare `gpt-5.5`, xhigh from config) as an independent pee
    Dispatch:
 
    ```bash
-   codex exec --full-auto --skip-git-repo-check \
-     "Read /tmp/sci-paper-method-review.md and follow the instructions exactly."
+   codex exec --full-auto --skip-git-repo-check --sandbox read-only \
+     "Read /tmp/sci-paper-method-review.md and follow the instructions exactly." \
+     < /dev/null
    ```
 
    - Model + reasoning effort come from `~/.codex/config.toml` (bare `gpt-5.5` + xhigh — the only model variant accessible via CLI on a ChatGPT account; `-fast`/`-pro` return 400). Do NOT pass `-m` or `-c model=...`.
+   - `--sandbox read-only`: the method-review pass must not modify files; only reads notebook context + data dictionary.
+   - `< /dev/null`: mandatory in Codex v0.130.0 — prompt-as-positional-arg still tries to read stdin and hangs without an explicit close. See `memory/reference_codex_cli.md`.
 
 c. **Adjudicate based on Codex's verdict:**
    - **ALIGNED** → proceed to phase 2 (execution).
@@ -259,7 +262,7 @@ b. **Dispatch Codex (bare `gpt-5.5`, xhigh from config) as a numerical verifier.
    - ...
    ```
 
-   Dispatch via the same `codex exec` syntax (no `-m` / `-c model=...` overrides).
+   Dispatch via the same `codex exec` syntax (no `-m` / `-c model=...` overrides). Same flags: `--full-auto --skip-git-repo-check --sandbox read-only` + `< /dev/null` to close stdin.
 
 c. **Adjudicate**:
    - **All APPROVED** → write the notebook update and proceed.
@@ -385,9 +388,21 @@ These are patterns that produced reviewer-catchable errors in prior manuscripts:
   ```
   Adapt the search terms to the specific analysis. The goal is to catch copy-paste drift between the lab notebook (source of truth), the manuscript (derivative), and the code output (ground truth).
 
+- **Optional structural Codex review of the manuscript.** For manuscripts with substantive analysis claims (mixture models, survival, capture-recapture, anything Codex's source-line verification would catch), run `/codex-review <manuscript-path>` BEFORE `/red-team`. This dispatches a single-target Codex pass that verifies every claim in the manuscript against the lab notebook + scripts cited, returning structured drift/missing/miswired findings. Stronger than the grep-based number check above for catching cross-document logical drift (e.g. a Methods section describes a model variant the Results don't actually report, or a Results sentence cites a parameter that no script outputs). Per-step Codex gates above already cover individual analysis steps; `/codex-review` covers the manuscript-as-a-whole.
+
 **Reproducibility:**
 - Scripts reproduce all documented values from a cold start
 - Data files and analysis objects tracked in repo
+
+### Regression-test conventions (added 2026-05-11)
+
+When a fix REFACTORS an existing function by extracting a helper:
+
+- **Test at BOTH levels.** Unit tests on the helper catch its own logic; end-to-end tests on the wrapper catch its control flow around the helper (indentation, `continue`/`return` placement, branch reachability, orphan `else` clauses left over from the original structure). Helper-only tests can pass while the wrapper is silently broken.
+- **Failure history (2026-05-11):** `scan_proposal_decisions()` got 9 unit tests on its new `_extract_decision_section()` helper. All passed. Wrapper had a control-flow bug — structured-status parsing block unreachable after a `continue` — that misclassified every non-empty `## Decision` as `unreviewed` for hours until Codex's review of a different spec audited surrounding state and caught it. End-to-end tests on the wrapper would have caught the regression on the same `python3 run_regression_tests.py` pass that gave the green light to ship.
+- **Heuristic:** count call sites of the helper inside the wrapper. If > 0 (which is always for a freshly extracted helper), the wrapper needs at least one test fixture per branch that consumes the helper's output (typically: empty result, populated result, edge case). The wrapper test should NOT mock the helper — it should run end-to-end through both.
+
+This convention applies to any obsidian_reviews script with a helper+wrapper structure (`self_improve.py`, `nightly_workhorse.py`, `domain_expert_sweep.py`, etc.), not just /science-paper analyses.
 
 ### Post-draft
 

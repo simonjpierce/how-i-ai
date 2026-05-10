@@ -261,8 +261,10 @@ Read the **post-Gemini-fix document** (the document in its current state after 6
 #### 6e. Execute Codex
 
 ```bash
-codex exec --full-auto --skip-git-repo-check "Read /tmp/red-team-codex-prompt.md and follow the review instructions exactly. Write findings incrementally to /tmp/red-team-codex-findings.md as you discover each one — do not batch."
+codex exec --full-auto --skip-git-repo-check --sandbox read-only "Read /tmp/red-team-codex-prompt.md and follow the review instructions exactly. Write findings incrementally to /tmp/red-team-codex-findings.md as you discover each one — do not batch." < /dev/null
 ```
+
+`--sandbox read-only` enforces the guideline at the bottom of this skill (Codex must not modify files during review). `< /dev/null` closes stdin to prevent the v0.130.0 hang failure mode (see `memory/reference_codex_cli.md`).
 
 **Model:** bare `gpt-5.5` from `~/.codex/config.toml` (the only Codex model accessible via CLI on a ChatGPT account — `-fast` and `-pro` variants return 400). xhigh reasoning also from config. Do not pass `-m` or `-c model=...`.
 
@@ -369,6 +371,8 @@ If you can't determine which source is current, flag it for the user rather than
 #### 8b. Implementation review
 
 Run three parallel agents on the associated code detected in Step 1. Each agent gets the full code file(s) and the reviewed document as context.
+
+**Evidence rule:** Any claim that something is "not wired", "not consumed", "broken", "unused", or "missing" must cite the actual code path checked, not docs-only inference. For wiring claims, read both the writer and reader sides before treating it as a finding. If the code was not checked, label it as an unverified hypothesis.
 
 **Agent 1: Spec-code alignment (bidirectional)**
 - Does the code implement everything the document describes?

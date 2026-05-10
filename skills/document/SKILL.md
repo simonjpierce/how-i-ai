@@ -109,7 +109,21 @@ If within budget, proceed silently — no need to report the numbers.
 
 6. **Append to the Decision Log** if any non-obvious choices were made this session that haven't already been logged mid-session. Skip if none. For decisions that are provisional or context-dependent, add a `**Revisit by:** YYYY-MM-DD` line so future sessions know when to reassess.
 
-7. **Append to the Friction Log** if anything was harder than expected that hasn't already been logged mid-session. Skip if none. Also scan existing entries: prefix clearly-resolved entries with `✓` (e.g. `✓ Glob on ~ times out`) so they aren't re-reviewed in future sessions. Leave entries without a clear resolution unmarked.
+7. **Append to the Friction Log** if anything was harder than expected that hasn't already been logged mid-session. Skip if none.
+
+   **Canonical entry format (mandatory).** New entries MUST use the H2 status-tagged form so all consumers (`/session-start`, `/review-friction`, nightly `self_improve.py:scan_friction_log` + `age_friction_items`) can parse them:
+
+   ```markdown
+   ## [OPEN] YYYY-MM-DD: Short title (no markdown bold/italic in the heading)
+
+   Body paragraph(s) describing the friction, what was tried, what the workaround was, and what the systemic fix would be.
+   ```
+
+   Status tags: `[OPEN]` (active), `[STUCK]` (active but blocked — auto-promoted by `age_friction_items` after 3 days), `[RESOLVED]` (terminal — moved to `## Resolved` section), `[WONTFIX]` (terminal). Plain-prose entries (no `## ` prefix, or markdown-formatted titles like `[OPEN] **YYYY-MM-DD — title**`) are silently invisible to all parsers — confirmed by the 2026-05-11 friction-log-parser-mismatch fix Codex review.
+
+   **Insertion point:** new entries go at the top of the file (above other open entries), NOT inside the `## Resolved` section. The `## Resolved` heading is a section divider that splits open entries from the resolved archive.
+
+   **Resolved-marker scan (legacy):** Also scan existing entries: prefix clearly-resolved entries with `✓` (e.g. `✓ Glob on ~ times out`) so they aren't re-reviewed in future sessions. Or, more cleanly, retag the heading from `## [OPEN]` to `## [RESOLVED]` and move the entry under `## Resolved`. Leave entries without a clear resolution unmarked.
 
 8. **Session friction scan** — automated capture of tool failures and verbal corrections that weren't logged mid-session.
 
@@ -253,12 +267,12 @@ If within budget, proceed silently — no need to report the numbers.
 
    **Sync flow when default-on:**
    1. Check `git status` in `~/.claude/` — confirm any session-modified skills/templates/CLAUDE.md are committed (per the pre-authorised commit class for `~/.claude/` infrastructure).
-   2. Run the sync script: `cd ~/repos/mmf-claude-code && ./sync/sync-from-vault.sh` (or wherever the canonical path is). The script reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), and stages changes in the contributor repo.
-   3. Inspect the resulting `git status` / `git diff --stat` in `~/repos/mmf-claude-code/`. If the sync produced no changes (e.g. session only touched Simon-personal files that the filter excludes), report that in step 17 and stop.
-   4. If changes were produced, commit them with a descriptive message naming the session's skill/template additions, and push to `marinemegafauna/mmf-claude-code@main` (or whatever the contributor repo is set up as).
-   5. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), the resulting commit hash, and the push confirmation. If sync produced nothing, say so explicitly.
+   2. Run the sync script with the **`--commit` flag** so it actually applies, commits, and pushes (default behaviour without the flag is dry-run only): `cd ~/repos/mmf-claude-code && ./sync/sync-from-vault.sh --commit`. The script asserts the repo is on `main`, pulls latest, reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), stages mapped changes (skills/, guides/, templates/), and — when there are staged changes — commits with the message `sync: mirror from vault (<date>)` and pushes explicitly to `origin main`.
+   3. **Capture the script's output and report it in step 17.** The script prints either "No changes to commit." (when only Simon-personal files were touched), or "Committed and pushed to origin/main: sync: mirror from vault (<date>)" (when something synced). Don't run a second commit / push — the script owns that path.
+   4. **`--commit` aborts if mapped sources are missing locally.** Pass `--allow-missing` only when the user has explicitly OK'd pruning; otherwise an aborted sync usually means a recent vault rename/delete that needs investigating before pushing.
+   5. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), and the script's final line (commit message + push confirmation, or "No changes to commit."). If sync produced nothing, say so explicitly.
 
-   **Failure mode handling:** if the sync script errors (filter breaks, file conflict, push rejected), do NOT roll back — surface the error in step 17 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
+   **Failure mode handling:** if the sync script errors (branch assertion fails because repo is on a side branch, filter breaks, file conflict, push rejected, missing-source abort), do NOT roll back — surface the error in step 17 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
 
 15. **Flag completed notes for archiving**: If any vault notes worked on this session are now complete (plans executed, audits finished, process docs promoted to skills), note them for archival to the user's archive folder (Simon: `06_ARCHIVE/`; newcomer vaults don't ship one by default — flag for the user to create one or skip). Move them if Simon has given standing approval, or list them for confirmation.
 

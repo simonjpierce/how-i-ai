@@ -215,6 +215,8 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
 For 9+ doc scope, dispatch the per-doc scan via parallel Codex CLI calls instead of Sonnet subagents — xhigh reasoning produces stronger drift detection per doc, and the work runs off Anthropic quota.
 
+For single-target plan/spec verification (not bulk doc scanning), use the `/codex-review` skill instead — it wraps the same Codex pattern with prompt generation, schema-validated output, zero-byte/parse/schema guards, and durable persistence. `/update` only needs the parallel-dispatch pattern when sweeping 9+ existing docs for drift.
+
 1. **Pre-flight**: `codex --version`. If it errors (CLI missing or broken), fall back to parallel Sonnet subagents (the prior behaviour) — no other change to /update.
 
 2. **Per-doc prompts**: for each doc, write a tight scan prompt to `/tmp/update_scan_<n>.md`. Each prompt:
@@ -227,11 +229,14 @@ For 9+ doc scope, dispatch the per-doc scan via parallel Codex CLI calls instead
 
    ```bash
    codex exec --full-auto --skip-git-repo-check --sandbox read-only \
-     "Read /tmp/update_scan_<n>.md and follow the instructions exactly. Output ONLY the JSON object."
+     "Read /tmp/update_scan_<n>.md and follow the instructions exactly. Output ONLY the JSON object." \
+     < /dev/null
    ```
 
    - Use `run_in_background=true` per Bash call; spawn up to 5 in parallel in a single message
    - Wait for the batch via BashOutput before starting the next
+   - `--full-auto` is a hidden-but-accepted `codex exec` compatibility flag in Codex 0.130.0; `codex exec --help` does not list it, but `codex exec --full-auto --help` parses successfully. Do not replace this with `codex exec -a never` — `-a/--ask-for-approval` is a top-level interactive Codex option and `codex exec` rejects it.
+   - **`< /dev/null` is mandatory**: Codex v0.130.0 hangs reading stdin even when the prompt is passed as a positional arg. Without it, `output.json` ends up 0 bytes. See `memory/reference_codex_cli.md` "Prompt passing".
    - xhigh effort comes from `~/.codex/config.toml` — do NOT pass `-m` or `--effort`
 
 4. **Aggregate** the JSON outputs into the candidate list, then proceed to Phase 2 classification.
