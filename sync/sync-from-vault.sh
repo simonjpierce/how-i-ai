@@ -40,11 +40,24 @@ CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"
 STAGE_DIR="$(mktemp -d "/tmp/mmf-claude-code-stage.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
 
+# Branch safety: assert we're on main before doing any sync work. The script
+# pulls origin/main and pushes to origin (assumes main as upstream); running
+# from a side branch would either merge main into the side branch (bad) or
+# commit + push to the wrong branch. Added 2026-05-11 per the document-no-
+# commit-push fix Codex review.
+cd "$REPO_ROOT"
+current_branch=$(git branch --show-current)
+if [[ "$current_branch" != "main" ]]; then
+  echo "ABORT: sync-from-vault.sh must run on the 'main' branch." >&2
+  echo "  Current branch: $current_branch" >&2
+  echo "  Switch with: git checkout main" >&2
+  exit 2
+fi
+
 # Pull latest from the repo first so any merged PRs aren't overwritten by
 # our push. If a PR has merged that introduced changes NOT yet present in
 # ~/.claude/skills/, run sync-to-vault.sh --apply before this script so
 # those changes flow back to the canonical source before we push.
-cd "$REPO_ROOT"
 python3 - <<'PY'
 import subprocess
 import sys
@@ -332,8 +345,10 @@ if [[ "$COMMIT_MODE" == "true" ]]; then
   else
     commit_msg="sync: mirror from vault ($(date -u +%Y-%m-%d))"
     git commit -m "$commit_msg"
-    git push
-    echo "Committed and pushed: $commit_msg"
+    # Explicit `origin main` target — bare `git push` would push to whatever
+    # the upstream is, which under unusual repo state could differ.
+    git push origin HEAD:main
+    echo "Committed and pushed to origin/main: $commit_msg"
   fi
 else
   echo ""
