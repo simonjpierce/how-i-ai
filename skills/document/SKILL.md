@@ -219,7 +219,7 @@ If within budget, proceed silently — no need to report the numbers.
    Review the subagent's report and act on it:
    - **Apply now** items: make the changes directly.
    - **(SIMON-ONLY)** **Create TODO (Things 3)** items: if `IS_SIMON=true`, create Things 3 tasks with vault links and clear descriptions. If `IS_SIMON=false`, downgrade these items to "Note for next session" (next bullet).
-   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, and a named verification check. Claude picks these up on future sessions after the date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
+   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, a named verification check, AND a `[created: YYYY-MM-DD]` tag (today's date) so the F3 Daily Log lifecycle can age the entry out cleanly after the check action lands. Format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Claude picks these up on future sessions after the check-after date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
    - **Note for next session** items: add to the "What's next" section of the handoff entry (update step 5 entry if already written).
    - Report all items and actions taken to the user in step 18.
 
