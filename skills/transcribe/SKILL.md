@@ -361,6 +361,7 @@ If `ACCUM_FILE` is empty, no accumulating draft exists yet. Behaviour depends on
 **For each board-relevant item that fires:**
 - Apply the four-question test from `memory/feedback_board_content.md` *Headlines only* section (completed deliverable? would change a board decision? summarisable in one sentence with one number? would Simon mention it in a 30-second verbal update?). At least 2 of 4 should pass.
 - Identify the relevant holding-bin section in the draft (regional or cross-cutting heading).
+- **If no matching section exists** (e.g. transcript discusses a country/programme that isn't currently a board-deck section, like Oman or Thailand/Andaman Sea on 2026-05-11): do NOT autonomously create new region/cross-cutting sections — that's a deck-design decision for Simon. Instead, flag the item explicitly in the Step 7 summary under a "Board-deck candidates without a home" line, naming the item and the suggested new section. Simon decides whether to add the section at the curation step.
 - Append a draft paragraph in narrative-prose style per `memory/feedback_board_content.md` *Slide deck text density* section. US English. 2–4 sentences. Numbers embedded inline.
 - Tag with: `<!-- draft <YYYY-MM-DD> from transcript: <transcript filename> -->`
 - Don't ask Simon for confirmation per item — the append is autonomous. Weekly workhorse compile and Simon's prep-time review are the curation layers.

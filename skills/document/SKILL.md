@@ -106,6 +106,12 @@ If within budget, proceed silently — no need to report the numbers.
    - Follow-up on prior session's "What's next" (addressed / still open / dropped)
    - What the next session should do or read first
    - **(SIMON-ONLY)** **Offer Things 3 tasks for deferred items**: If `IS_SIMON=true`, for each actionable item in "What's next" that Simon needs to take or review (not "continue work on X" session context), ask whether he wants a `/todo` created for it. List the items and let him pick. Skip this entire bullet if `IS_SIMON=false` — non-Simon users may not have Things 3 installed.
+   - **Per-entry size check** (plumbing item #2, 2026-05-12). After writing the entry, count physical lines from the `## YYYY-MM-DD ...` heading to the next `---` divider (or end of file). If >80 lines:
+     1. Check whether the entry already carries `<!-- size_accepted: YYYY-MM-DD -->` — if yes, skip the marker append (Simon has accepted it as-is).
+     2. Otherwise append a single-line HTML comment immediately before the `---` divider:
+        `<!-- size_warning: N_lines, threshold=80, options=[trim,manual,accept] -->`
+     3. Do NOT append a visible warning block inside the entry — that consumes the same scarce `/session-start` read budget the limit is meant to protect (Codex finding 2026-05-11 under-reported gap #4).
+     4. The nightly `apply_handoff_log_lifecycle()` aggregates oversized entries into a single Daily Log "For review" entry listing them with options (trim / manual-trim / accept). Simon picks per entry from there.
 
 6. **Append to the Decision Log** if any non-obvious choices were made this session that haven't already been logged mid-session. Skip if none. For decisions that are provisional or context-dependent, add a `**Revisit by:** YYYY-MM-DD` line so future sessions know when to reassess.
 
@@ -247,13 +253,11 @@ If within budget, proceed silently — no need to report the numbers.
    - Skip this step if the session was trivial or nothing new was learned.
 
 14. **Log maintenance** — keep the active sections lean:
-   - **Session Handoff Log**: If >800 lines, archive entries >30 days old:
-     1. Determine archive file name: `Session Handoff Log - Archive YYYY-H#.md` (H1 = Jan–Jun, H2 = Jul–Dec)
-     2. Create the archive file if it doesn't exist (with a `# Session Handoff Log — Archive` header)
-     3. Move entries with dates >30 days old from the active log to the archive (append at top of archive, remove from active log)
-     4. **Expected state, not prescriptive:** after step 3, typically ~20 recent entries remain in the active log. This is *descriptive* — do NOT archive additional young (<30 days) entries to force the count down to 20. Young entries from sibling sessions (look for `<!-- session:slug -->` markers) must stay in the active log regardless of count, so concurrent-session handoff rollups keep working.
-     5. Report: "Archived N entries to [filename]"
-     This runs automatically when the threshold is hit — don't ask for permission.
+   - **Session Handoff Log** (plumbing item #2, 2026-05-12). Canonical archival lives in `self_improve.py:apply_handoff_log_lifecycle()` — runs unconditional, strict-date (≥30 days), idempotent in the nightly 03:30 cycle. The foreground bridge for /document is:
+     ```bash
+     python3 ~/bin/obsidian_reviews/self_improve.py --handoff-only
+     ```
+     Run this in step 14 so /document and the nightly converge on the same archival pass. If `IS_SIMON=false`, skip — newcomer machines don't have the obsidian_reviews script installed; the nightly automation owns archival.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.
    - **Friction Log**: Move entries marked ✓ to the `## Resolved` section. Compress to one-line summaries.
 
