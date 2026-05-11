@@ -114,6 +114,8 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    Skip documents that are already current — don't update for the sake of updating.
 
+   - **Don't assume actual file location = canonical when judging "path drift".** Before "fixing" a path that doesn't match where a file currently lives, check whether the path was intentionally forward-looking (folder being created later, deliberate canonical decision in a recent spec/Decision Log entry). A doc can correctly reference an EXECUTIVE DIRECTING/Newsletter Drafts/ path even when the only existing newsletter draft happens to sit at EXTERNAL COMMS/Newsletter Drafts/ — the EXTERNAL COMMS file is the historical artefact, the EXECUTIVE DIRECTING path is the canonical going-forward location. Specifically check: (a) when was the doc's path written? (b) is there a more recent spec or Decision Log entry choosing a canonical location? (c) does the cross-reference cascade SUPPORT the "stale" path being the real canonical (5+ live skills agreeing is signal, not noise)? Confirmed 2026-05-12 during the MMF newsletter /update — replaced EXECUTIVE DIRECTING/Newsletter Drafts/ → EXTERNAL COMMS/Newsletter Drafts/ in the pipeline doc because the actual March draft lives at EXTERNAL COMMS, then discovered 5 skills + L2 loop doc + the 2026-05-01 spec all canonical-reference EXECUTIVE DIRECTING, which was deliberately created on 2026-05-10. Reverted. The cross-reference grep IS the diagnostic — if a "fix" cascades to 5+ live files, the path was probably canonical and the file is the outlier.
+
 ### Phase 2 — Classify and present
 
 4. **Classify each update** into one of two categories:
