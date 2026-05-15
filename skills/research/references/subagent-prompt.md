@@ -18,10 +18,12 @@ Source priority: [domain-specific guidance from domain-routing.md]
 [2–3 sentence summary of the overall research question and what the vault scan found]
 
 **What we already know about your sub-question (from the Obsidian vault):**
-[vault briefing excerpt for THIS sub-question only]
+[vault briefing excerpt for THIS sub-question only — including the `## Curated subset (Paperpile mirror)` block listing Simon's curated prior literature relevant to this sub-question, when `paperpile_coverage: dense|sparse`]
 
 **Cross-cutting caveats:**
 [any contradictions, TODO/VERIFY markers, or gaps flagged during vault scan]
+
+**Curated literature signal (when `paperpile_coverage: dense`):** The papers listed in the `## Curated subset (Paperpile mirror)` block above are Simon's curated prior literature for this topic. Treat these as high-priority sources. Your job is to find gaps, conflicts, newer work that post-dates these, and non-library context — not to re-cover ground these already establish.
 
 Use the vault briefing as prior context, not ground truth. Build on it, but actively test key claims where recency or uncertainty matters. Do not avoid re-checking a point simply because it already appears in the vault. Every claim must cite a source URL. Flag contradictions with vault findings. Note confidence (High/Medium/Uncertain) for key claims.
 
@@ -70,6 +72,8 @@ RESEARCH TASK: [question]
 You are conducting deep web research on the question above. Your task is EXCLUSIVELY about this topic. Do not research the author's professional field unless it IS the topic.
 
 A local knowledge base has been searched and the findings are included below as "Vault Briefing." Build on this — focus your research on what the vault doesn't already cover, and flag anything that contradicts it.
+
+**Curated literature signal (when `paperpile_coverage: dense` appears in the briefing header):** The `## Curated subset (Paperpile mirror)` section at the top of the briefing lists papers Simon has curated as prior literature for this topic. Treat these as high-priority sources. Find gaps, conflicts, newer work that post-dates them, and non-library context — do not re-cover ground these already establish.
 
 Research question (restated): [question]
 

@@ -1,6 +1,6 @@
 ---
 name: research
-description: Deep autonomous research with vault scan, three-model web research (Claude + Codex + Gemini), claim verification, and formal report. Use when the user says "/research", "deep research on", "investigate this thoroughly", or needs a comprehensive research report they can walk away from. NOT for quick mid-task lookups — those are ad-hoc.
+description: Deep autonomous research with paperpile-mirror seed extraction (curated literature first via `qmd://paperpile/`), vault scan, three-model web research (Claude + Codex + Gemini), claim verification, and formal report. Use when the user says "/research", "deep research on", "investigate this thoroughly", or needs a comprehensive research report they can walk away from. NOT for quick mid-task lookups — those are ad-hoc.
 allowed-tools:
   - Read
   - Write
@@ -214,20 +214,54 @@ Then: "Starting deep research (Claude + Codex + Gemini). Typical runtime 15–30
 
 **Goal**: Surface everything in the vault that relates to the research question. The vault is a primary resource — be thorough.
 
+### 2a.0: Paperpile mirror first (curated literature)
+
+**Goal**: extract Simon's curated prior literature for this topic from the Paperpile mirror (`02_MARINE MEGAFAUNA/REFERENCE LIBRARY/Paperpile Library/`) BEFORE broad-vault discovery. The mirror is the high-trust source — papers Simon has deliberately added to his library.
+
+**Pre-flight — build-status gate.** Read `02_MARINE MEGAFAUNA/REFERENCE LIBRARY/Paperpile Library/_meta/build-status` (small JSON). If `status != "ready"` (mid-rebuild, error state, missing file), set `paperpile_coverage: unavailable`, SKIP this section entirely, and run §2a unchanged.
+
+**Steps:**
+
+1. **Paperpile-scoped QMD discovery.** Run 4–6 `mcp__qmd__query` calls against `collections: ["paperpile"]` only:
+   - Per sub-question: one `lex` + one `vec` (intent-tagged)
+   - Overall question: one `vec`
+   - 1–2 lateral framings if the sub-questions are narrow
+   - Apply the same QMD gotchas as §2a below — but generalise the vec0 fallback: **any vec/hyde failure** (vec0 module unavailable, `node-llama-cpp` Metal context creation errors, network) falls back to lex-only.
+
+2. **Seed-set extraction — paper notes ONLY.** Filter QMD hits with these guards (per /codex-review v5 MC1/UR1):
+   - Path must match `qmd://paperpile/papers/*.md` (drop `authors/`, `labels/`, `_meta/`).
+   - Frontmatter must have `type: paper` (defensive; the path filter is usually sufficient).
+   - Dedupe by `paperpile_pub_id` (or slug) across queries.
+   - QMD scores in the paperpile collection saturate ≥0.9 across both true paper hits and cross-reference proximity. **Do not use raw score as the coverage gate** — count distinct paper notes that survive filter + brief relevance check.
+   - Read the filtered top 10 in full via `mcp__qmd__get` (~5–7 KB per paper note).
+
+3. **Coverage threshold decision.**
+   - Threshold: **≥6 distinct paper notes survive the filter + relevance check**.
+   - **`dense`:** §2a still runs but at REDUCED scope (see §2a below). §2b graph expansion proceeds from the curated seed set. §3 external research still runs — independent quality check.
+   - **`sparse`:** §2a runs full broad-vault. The few in-library hits ARE still included as a "Curated subset" in the briefing.
+
+4. **One-hop in-library citation expansion — DEFERRED.** Parent spec §Use case 1 envisions following each seed's `## References in library` + `## Cited by in library` wikilinks one hop out. Those sections are currently placeholder text — `note_writer.write_paper_note` emits no actual citation wikilinks; `citation_graph_built` in paper-note frontmatter is `null` for all 8,808 records. **Document this gap in the briefing** ("In-library citation expansion: deferred until citation-graph rendering ships in note_writer.py — currently no `References in library` / `Cited by in library` wikilinks are populated") so downstream consumers know it's missing, not silently degraded.
+
+Print: `[2a.0] Paperpile mirror — {N} curated seeds (coverage: dense|sparse|unavailable)`
+
 ### 2a: Broad discovery
 
-Run 10–15 QMD queries across multiple framings. Batch into 3–4 `mcp__qmd__query` calls:
+Run 10–15 QMD queries across multiple framings (or 4–6 REDUCED queries if §2a.0 returned `dense` coverage — see Reduced-mode-in-dense-coverage note below). Batch into 3–4 `mcp__qmd__query` calls:
 
 - Per sub-question: one `lex` + one `vec` each
 - Overall question: one `vec` + one `hyde`
 - 2–3 lateral queries: synonyms, adjacent domains
 
-All with `intent` parameter. Use `minScore: 0.5`. Deduplicate. Read top 15–20 hits in full via `mcp__qmd__get` or `mcp__qmd__multi_get`. Do not abbreviate or excerpt — read the full documents.
+All with `intent` parameter. Use `minScore: 0.5`. Deduplicate. Read top 15–20 hits in full via `mcp__qmd__get` or `mcp__qmd__multi_get` (8–10 in reduced mode). Do not abbreviate or excerpt — read the full documents.
+
+**Path-dedupe against the Paperpile mirror.** §2a queries `obsidian` (the root vault collection), whose pattern `**/*.md` covers the Paperpile Library subtree — so a default broad search WILL return paperpile hits via `qmd://obsidian/02-marine-megafauna/reference-library/paperpile-library/...`. **Filter those out** — §2a.0 already handled the mirror; §2a's job is to surface NON-mirror content (project notes, manuscripts, transcripts, IDEAs, prior research outputs, daily notes, role notes). Match both the `qmd://obsidian/02-marine-megafauna/reference-library/paperpile-library/` slugified prefix and the literal path `02_MARINE MEGAFAUNA/REFERENCE LIBRARY/Paperpile Library/`.
+
+**Reduced mode in dense coverage.** When §2a.0 returned `dense`, run §2a at reduced scope: 4–6 broad-framing queries, read top 8–10 in full. The vault still has substantial non-mirror content that's worth surfacing (board minutes, meeting transcripts, project IDEAs); skipping §2a entirely would lose that.
 
 **QMD query gotchas** (from v1 run + operational experience):
 - Hyphenated terms (e.g. "photo-ID") are parsed as negation in `vec`/`hyde` queries. Use "photo identification" or "photo ID" instead.
 - `hyde` queries cannot be in the same batch as `vec`/`lex` queries that contain hyphens — run separately if needed.
-- **vec0 module intermittently unavailable**: `vec` and `hyde` queries may fail with "no such module: vec0" while `lex` queries work fine. If this occurs, fall back to `lex`-only QMD queries supplemented by Grep/Glob searches of likely vault folders. Do not block the pipeline on vec0 availability.
+- **vec0 module intermittently unavailable**, plus **other non-lex failures**: `vec` and `hyde` queries may fail with "no such module: vec0", `node-llama-cpp` Metal context creation errors, or network errors while `lex` queries work fine. If any vec/hyde batch errors for ANY reason, fall back to `lex`-only QMD queries supplemented by Grep/Glob searches of likely vault folders. Do not block the pipeline on vec0 or any vec/hyde-runtime availability.
 - If a batch fails, retry with simplified queries rather than debugging syntax.
 
 ### 2b: Graph expansion
@@ -250,21 +284,25 @@ cat > /tmp/research/vault_briefing.md << 'EOF'
 EOF
 ```
 
-Include:
-- Key findings by sub-question (with file refs)
-- Coverage assessment (what's covered vs. needs web research)
-- Contradictions/gaps (disagreements, TODO/VERIFY markers)
-- Key files list
+Include, in this order:
+
+1. **`paperpile_coverage: dense|sparse|unavailable`** — set by §2a.0 outcome.
+2. **`## Curated subset (Paperpile mirror)`** — list the seed-set paper notes from §2a.0 with brief annotations: title, year, key claim (1–2 sentences from the abstract), file ref. Appears BEFORE the per-sub-question key findings. If `paperpile_coverage: unavailable`, add a one-line note explaining why this section is empty.
+3. **`## Key findings by sub-question`** — per sub-question section. **For each sub-question, copy the relevant curated seeds into its own findings block** with file refs and key claims. The top-of-briefing section alone is not enough because Phase 3a Claude subagents see only sub-question excerpts; they need the curated seeds inline.
+4. **`## Coverage assessment`** — what's covered by in-library + vault + what needs web research.
+5. **`## Contradictions / gaps`** — disagreements, TODO/VERIFY markers, missing pieces.
+6. **`## In-library citation expansion: deferred`** — one-line note that one-hop expansion from seed papers' `## References in library` / `## Cited by in library` sections is not yet wired (placeholder text only; `citation_graph_built: null` across all paper notes). Surfaces the gap explicitly so downstream consumers don't assume coverage.
+7. **`## Key files list`** — full paths of all files read across §2a.0 + §2a + §2b.
 
 **Size guard**: If >10,000 words, summarise per sub-question. Note what was summarised — flag in Follow-up Questions.
 
 Print: `[2/9] Vault scan — {N} files found, briefing {N} words`
 
-### 2d: Communications scan (parallel with 2a–2c)
+### 2d: Communications scan (parallel with 2a.0–2c)
 
 **Goal**: Surface unpublished insights, decisions, and expert opinions from email and Slack correspondence. Colleagues often share field observations, preliminary data, and methodological opinions that never make it into published sources.
 
-Launch this as a background Agent (model: "opus") at the same time as 2a. The agent receives the research question, sub-questions, and scope boundaries from Phase 1.
+Launch this as a background Agent (model: "opus") at the start of Phase 2 — in parallel with §2a.0 (not blocked on it). The agent receives the research question, sub-questions, and scope boundaries from Phase 1. (Pre-v0.5.9 wording said "at the same time as 2a"; with 2a.0 inserted before 2a, launching at the same time as 2a would delay comms by the duration of 2a.0. Default: launch at the start of Phase 2.)
 
 **The comms scan agent should:**
 
@@ -303,10 +341,11 @@ Read `references/subagent-prompt.md`. Launch one subagent per sub-question (3–
 
 Each subagent gets:
 - Short global summary of the research brief
-- Vault briefing excerpt for its sub-question only (not full briefing)
+- Vault briefing excerpt for its sub-question only (not full briefing) — **including the curated seeds for this sub-question inlined per §2c step 3**
 - Relevant comms insights for its sub-question (from comms briefing, if available)
 - Cross-cutting caveats from vault scan
 - Year range, domain-specific source guidance
+- **Curated-seeds instruction (when `paperpile_coverage: dense`):** "The papers listed in the `## Curated subset (Paperpile mirror)` block in your excerpt are Simon's curated prior literature for this topic. Treat these as high-priority sources. Your job is to find gaps, conflicts, newer work that post-dates these, and non-library context — not to re-cover ground these already establish."
 
 Each produces (with standardised naming):
 1. Research note (500–800 words) → `/tmp/research/claude_{NN}_{slug}.md` (e.g. `claude_01_automation_gaps.md`)
