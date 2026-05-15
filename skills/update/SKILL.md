@@ -98,7 +98,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
    | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |
-   | Role notes | Roles folder if it exists (Simon: `01_LIFE OS/Roles/`; newcomer: skip silently if not present) | If role-relevant work was done |
+   | Role notes | Role notes (files with `type: role` frontmatter) — Simon: distributed across `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `04_PERSONAL/`, `05_AI WORKFLOW/`; newcomer: skip silently if not present | If role-relevant work was done |
    | Working files | Paths from conversation context | Files actively being developed |
    | Scheduled Automations | `<logs>/Processes/Scheduled Automations.md` if it exists (Simon's vault has one; newcomer's may not) | If any automation was changed |
    | MEMORY.md | Auto-memory index | If a remembered fact was invalidated |
