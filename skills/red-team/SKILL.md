@@ -1,6 +1,6 @@
 ---
 name: red-team
-description: Red-team an important document — independent critical review using a Claude subagent, then Codex + Gemini independent opinions. Three-model architecture (Claude structured review, Codex open-ended, Gemini open-ended). For specs and process docs, automatically reviews associated implementation. Only invoke when the user explicitly says "/red-team" or "red-team this". Do NOT trigger on generic "review this" or "critique this" — this is a heavy, multi-phase process.
+description: Red-team an important document — independent critical review using a Claude subagent, then Codex + Gemini independent opinions. Three-model architecture (Claude structured review, Codex open-ended, Gemini open-ended). For specs and process docs, automatically reviews associated implementation. Auto-assembles a Paperpile curated-literature pack for cited references when the document has a References section. Only invoke when the user explicitly says "/red-team" or "red-team this". Do NOT trigger on generic "review this" or "critique this" — this is a heavy, multi-phase process.
 allowed-tools: Read, Write, Edit, Glob, Grep, Agent, AskUserQuestion, Bash, WebSearch, WebFetch, mcp__claude_ai_Gmail__gmail_search_messages, mcp__claude_ai_Gmail__gmail_read_message, mcp__claude_ai_Gmail__gmail_read_thread, mcp__claude_ai_Slack__slack_search_public_and_private, mcp__claude_ai_Slack__slack_read_thread
 ---
 
@@ -9,8 +9,9 @@ Red-team an important document. Takes a file path as `$ARGUMENTS`.
 **Default flow is sequential** (Opus subagent → Gemini → Codex, with apply-passes between each reviewer). Each reviewer evaluates the post-prior-fix document so regressions introduced by earlier fixes get caught — Codex is last because it benefits most from the cascade. Validated 2026-04-28 in the v0 onboarding round (Codex's load-bearing C1 finding only existed because the subagent's H1 fix had already been applied; would have been routed-through-and-missed in parallel-then-synthesise).
 
 Optional flags:
-- `--quick` — subagent review only (Steps 0–5), skip external model opinions and ecosystem review. Use when the full pipeline would be disproportionate.
+- `--quick` — subagent review only (Steps 0–5), skip external model opinions and ecosystem review. Use when the full pipeline would be disproportionate. Step 1b (Paperpile pack) still runs in `--quick` so the subagent retains the curated evidence.
 - `--parallel` — opt out of sequential mode. Run Codex + Gemini simultaneously against the post-subagent state, then reconcile via Step 7's three-way comparison. Use for routine reviews of stable documents (quick blog post, doc tone check, no associated code) where cascade value is low and clock time matters.
+- `--no-paperpile-pack` — skip Step 1b entirely. Use as the rollback path if the curated literature pack causes regressions; the rest of the pipeline runs unchanged.
 
 The review methodology (criteria, lenses, output format, examples) lives in `references/review-method.md`. Read it before constructing the subagent prompt. The external models deliberately use different, open-ended approaches — see Steps 6–7. Three models (Claude structured + Gemini open-ended + Codex open-ended) with maximum independence.
 
@@ -95,7 +96,41 @@ Auto-include Exact and Strong matches. Present Weak matches in the scope estimat
 
 If detection finds nothing, Steps 8a–8c skip. Report this in the scope estimate so the user knows detection ran and found nothing (not that it failed silently).
 
-**Scope estimate**: After detection, briefly report the total review scope to the user: document word count, number of associated code files (with approximate line counts), number of related documents, and whether runtime verification applies. This lets the user gauge total review time before committing. For `--quick` mode, note that ecosystem review will be skipped.
+**Scope estimate**: After detection, briefly report the total review scope to the user: document word count, number of associated code files (with approximate line counts), number of related documents, and whether runtime verification applies. This lets the user gauge total review time before committing. For `--quick` mode, note that ecosystem review will be skipped. If Step 1b's Paperpile pack will run (i.e. the document has cited literature and `--no-paperpile-pack` was not passed), add a `paperpile_coverage` line — the count comes from the Step 1b print line once it has run.
+
+### 1b. Paperpile curated-literature pack
+
+**Goal:** for any document that cites published literature, assemble a pack of in-library abstracts and highlights from Simon's curated Paperpile mirror BEFORE the subagent and external reviewers see the document. Each pack-listed paper becomes source-of-truth evidence for the manuscript's representation of that citation. The pack is purely additive context — it never displaces Step 4b's identity-level citation audit or the external waterfall.
+
+**Skip rules** — pack assembly + reviewer injection are skipped if any of:
+- Document type from Step 1 is `process doc`, `spec`, or `internal note` (same skip as Step 4b — these don't cite published literature in a References/Bibliography section).
+- Document has no `## References` / `## Bibliography` / `## Works Cited` / `## Literature Cited` / `## Sources` / `## Citations` / `## Reference List` / `## Cited Works` heading AND no DOI-shaped strings (regex `(?i)\b10\.\d{4,9}/\S+`) in the body.
+- Paperpile mirror build-status gate fails: missing `_meta/build-status` file, JSON parse error, or `status != "ready"`. Print the skip line and continue — Steps 2 / 4b / 6 still run unchanged.
+- `--no-paperpile-pack` flag was passed.
+
+**Step:**
+
+```bash
+python3 ~/.claude/skills/red-team/scripts/paperpile_pack.py "DOCUMENT_PATH" -o /tmp/red-team-paperpile-pack.md
+```
+
+The script:
+1. Invokes `~/.claude/skills/verify-citations/verify_citations.py --extract-and-lookup-only` to extract all cited DOIs from the document and look each up against the Paperpile mirror's `state.aliases.doi` index. **No external API calls** — the `--extract-and-lookup-only` mode is local-only by design (hard invariant — never falls through to Semantic Scholar / CrossRef / OpenAlex).
+2. Validates the JSON contract (`mirror_status`, `build_id`, `hits`, `misses`, `unavailable_reason` when not ready) so a mirror-unavailable state is reported distinctly from "no hits because nothing cited".
+3. For each in-library hit, reads the paper note from the vault, extracts the `## Abstract` and `## Highlights` sections, and applies the per-paper caps (~250-word abstract; max 3 highlights, oldest-first by page number).
+4. Counts manuscript citation frequency per pack-listed paper (`Surname (year)` / `Surname et al. year` matches in the document body), then ranks `cite_freq` desc → year desc → abstract richness desc → highlights count desc.
+5. Adaptive top-N cap: 20 papers by default, 10 papers if the document exceeds 8,000 words (matches the long-doc flag in Step 1). Papers beyond the cap, and papers with empty Abstract AND Highlights, land in the "Also cited and in library" footer.
+6. Writes `/tmp/red-team-paperpile-pack.md`.
+
+**Print line** (on success):
+`[1b] Paperpile pack — N/M cited DOIs in-library (P%), top K in pack (build_id <id>, references_extraction: headed|full_document_fallback)`
+
+**Print line** (on skip):
+`[1b] Paperpile pack — skipped (<reason>)`
+
+Pack failures fall back cleanly: a non-zero exit code, missing pack file, or empty pack means Step 2 / Step 6a / Step 6d proceed without the pack context (treat as if Step 1b skipped). Do not block the rest of the pipeline on pack failures.
+
+The pack feeds the Step 2 subagent prompt and the Step 6 external reviewer prompts. In `--quick` mode, Step 6 doesn't run but Step 1b still runs because the subagent (the only reviewer in `--quick`) is the highest-value consumer.
 
 ### 2. Run Claude subagent review
 
@@ -105,6 +140,7 @@ Construct the subagent prompt:
 - Include the role framing and full review sequence from `references/review-method.md`
 - Include the full document text
 - Include relevant context docs (with filenames as headers)
+- **If Step 1b produced `/tmp/red-team-paperpile-pack.md`**, include it as an additional context document immediately after `references/review-method.md` and the document under review, under the heading `## Curated literature pack — Paperpile mirror`. Append the following paragraph to the prompt's instruction block: *"The pack above lists papers cited in the document that Simon has in his curated Paperpile library. The abstracts and highlights are extracted from his copies and represent the source-of-truth for what those papers actually said. When evaluating any claim the document makes about a paper in the pack, check it against the pack's abstract and highlights. If the document contradicts the pack on a pack-listed paper, that is by default an error in the document, not the pack (unless the pack itself is incomplete or ambiguous on the specific claim — label such findings as `inference / needs verification` per the uncertainty rule). Flag contradictions as High-severity Accuracy issues with specific quotes from both sides. For citations NOT in the pack, do NOT infer paper content from title, journal, or citation metadata alone — mark such claims as 'needs external verification' rather than guessing. Representation-checking is bounded by what's in the pack; Step 4b separately handles citation identity (DOI/author/year correctness)."*
 - Specify the document type, intended audience, and any domain-specific conventions identified in Step 1
 - Frame as: "This is the first review pass. Be thorough — your findings will inform whether a second independent review is needed."
 
@@ -220,7 +256,11 @@ Use this framing at the top of the prompt file:
 >
 > Rate each issue as High / Medium / Low priority.
 >
+> If a `## Curated literature pack — Paperpile mirror` section appears below in the context documents, those are abstracts and highlights from Simon's curated copies of papers cited in this document. Treat them as the source-of-truth for those papers — **if the document contradicts the pack on a pack-listed paper, that is by default an error in the document, not the pack**, unless the pack itself is incomplete or ambiguous on the specific claim. Flag any contradiction as a High-priority issue with specific quotes from both sides. For citations NOT in the pack, do not infer paper content from title, journal, or citation metadata alone — mark those claims as "needs external verification" rather than guessing.
+>
 > **Output your review as plain text only.** Do not edit any files or take actions beyond reading — just provide your written review.
+
+**If Step 1b produced `/tmp/red-team-paperpile-pack.md`**, inline its contents into the prompt's context-documents block under a `## Curated literature pack — Paperpile mirror` H2 heading (placed after folder CLAUDE.md / voice-reference inlines and before the document text). The pack is shared across reviewers — the same file feeds Step 6d.
 
 **Pre-flight check** before executing:
 - Is the document text complete (not truncated)?
@@ -257,7 +297,11 @@ Read the **post-Gemini-fix document** (the document in its current state after 6
 
 > This document has been through structured-rubric review (subagent) and open-ended review (Gemini), with fixes applied between each. You are the third reviewer — the deepest pass. Your job is to find what the first two missed, and especially to catch any regressions that earlier fixes introduced. Trace actual code paths and implementation details if there are any associated assets — surface-level claims that "X was fixed" should be verified against the actual files.
 >
+> If a `## Curated literature pack — Paperpile mirror` section appears below in the context documents, those are abstracts and highlights from Simon's curated copies of papers cited in this document. **If the document contradicts the pack on a pack-listed paper, that is by default an error in the document, not the pack**, unless the pack itself is incomplete or ambiguous on the specific claim. The pack remains the source-of-truth for cited papers across reviewer passes — the subagent and Gemini have already used it; you should too. If earlier reviewers' fixes have introduced new representation claims about pack papers, verify those new claims against the pack just as carefully. For citations NOT in the pack, do not infer paper content from title, journal, or citation metadata alone — mark those claims as "needs external verification".
+>
 > Output your review as plain text only.
+
+**If Step 1b produced `/tmp/red-team-paperpile-pack.md`**, inline its contents into the Codex prompt's context-documents block under a `## Curated literature pack — Paperpile mirror` H2 heading, same placement convention as the Gemini prompt (after folder CLAUDE.md / voice-reference inlines, before the document text).
 
 #### 6e. Execute Codex
 
@@ -281,7 +325,7 @@ After 6f, the document has been through three reviewer passes with apply-passes 
 
 #### 6g. `--parallel` mode (opt-in fallback)
 
-If `--parallel` was specified: skip 6a–6f. Build both prompts up front per the original convention, run them simultaneously via the standard `codex exec` and `gemini -p` commands, capture both outputs, and proceed to Step 7's three-way reconciliation. The Codex prompt does NOT include the "third reviewer in a sequential round" framing — both reviewers operate against the post-subagent-fix state independently.
+If `--parallel` was specified: skip 6a–6f. Build both prompts up front per the original convention, run them simultaneously via the standard `codex exec` and `gemini -p` commands, capture both outputs, and proceed to Step 7's three-way reconciliation. The Codex prompt does NOT include the "third reviewer in a sequential round" framing — both reviewers operate against the post-subagent-fix state independently. **Both prompts still receive the Paperpile pack** (when Step 1b produced one) under a `## Curated literature pack — Paperpile mirror` H2 heading in the context-documents block, with the same source-of-truth framing-block instructions as the sequential prompts. Step 7's reconciliation surfaces pack-based findings the same way as any other finding; no special handling needed.
 
 #### 6c. Codex app fallback (for large or code-heavy reviews)
 
@@ -415,6 +459,7 @@ Report discrepancies between documented behaviour and actual runtime state. Fix 
 After all edits are applied (document review + ecosystem review), present the done criteria:
 - All High severity issues resolved or explicitly accepted by the user
 - Key factual claims verified via web search (Step 4) or flagged for manual verification by the user
+- Paperpile pack consulted (Step 1b) where applicable, or pack skipped per the documented skip rules — and any pack-based representation findings were either applied or explicitly deferred
 - Final tone/voice pass completed (NZ/UK English)
 - No known unexamined high-risk areas remaining
 - Cross-document consistency verified (Step 8a) or no related documents found

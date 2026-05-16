@@ -162,7 +162,7 @@ Detect the query domain and prioritise sources accordingly:
 - **Weekly strategic research output**: `05_SYSTEM/System Research/` (consumed by self-improvement loop)
 - **Inline/lightweight output**: Depends on task context — project folder, working file, or ask Simon
 - **This process doc**: `05_SYSTEM/Processes/Research Workflow.md`
-- **`/research` skill**: `~/.claude/skills/research/SKILL.md` (git-backed; vault `05_SYSTEM/Skills/research/` has a reverse symlink for Obsidian browsability)
+- **`/research` skill**: `~/.claude/skills/research/SKILL.md` (git-backed; Obsidian-readable index at `05_SYSTEM/Skills Index.md`)
 - **Design spec**: `06_ARCHIVE/Specs — Superseded/2026-03-22-research-skill-design.md`
 
 ### Checks before acting

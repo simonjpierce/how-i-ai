@@ -227,12 +227,25 @@ def _check_inlibrary_consistency(parsed: dict, record: dict) -> list[str]:
     return issues
 
 
+_REFERENCES_HEADING_PATTERN = re.compile(
+    r"^##\s*\**\s*(?:"
+    r"[\w\s]*References?(?:\s+Cited)?|"
+    r"Reference\s+List|"
+    r"Bibliography|"
+    r"Literature\s+Cited|"
+    r"Works\s+Cited|"
+    r"Cited\s+Works|"
+    r"Citations|"
+    r"Sources|"
+    r"REFERENCES[\w\s]*"
+    r")\s*\**",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
 def extract_references(text: str) -> list[str]:
     """Extract individual references from all References sections of a manuscript."""
-    ref_pattern = re.compile(
-        r"^##\s*\**\s*(?:[\w\s]*References?|Bibliography|Literature Cited|REFERENCES[\w\s]*)\s*\**",
-        re.IGNORECASE | re.MULTILINE,
-    )
+    ref_pattern = _REFERENCES_HEADING_PATTERN
 
     # Find ALL reference sections (some manuscripts split into multiple)
     ref_text_parts: list[str] = []
@@ -573,11 +586,80 @@ def verify_references(refs: list[str]) -> list[dict]:
 
 def _has_references_heading(text: str) -> bool:
     """Check if the text contains a References-style H2 heading."""
-    ref_pattern = re.compile(
-        r"^##\s*\**\s*(?:[\w\s]*References?|Bibliography|Literature Cited|REFERENCES[\w\s]*)\s*\**",
-        re.IGNORECASE | re.MULTILINE,
-    )
-    return bool(ref_pattern.search(text))
+    return bool(_REFERENCES_HEADING_PATTERN.search(text))
+
+
+def extract_cited_dois_from_document(text: str) -> tuple[list[str], str]:
+    """Extract every unique normalised DOI cited in a document.
+
+    Tries a headed References/Bibliography/Sources section first via
+    `extract_references` + `parse_reference`. If no such section exists,
+    falls back to `_DOI_REGEX.finditer` over the full document body.
+
+    Returns `(dois, extraction_path)` where `extraction_path` is either
+    `"headed"` (DOIs came from a recognised references section) or
+    `"full_document_fallback"` (no headed section; pulled DOIs from prose).
+
+    Order of first appearance is preserved. The hard no-external-API
+    invariant lives in the caller; this helper is local-only.
+    """
+    refs = extract_references(text)
+    extraction_path = "headed" if refs else "full_document_fallback"
+
+    seen: set[str] = set()
+    dois: list[str] = []
+
+    if refs:
+        for ref in refs:
+            parsed = parse_reference(ref)
+            doi = parsed.get("doi")
+            if doi and doi not in seen:
+                seen.add(doi)
+                dois.append(doi)
+    else:
+        # Full-document fallback — use finditer (match-all), not _extract_doi
+        # (which is single-reference / single-DOI). Per Codex H1.
+        for m in _DOI_REGEX.finditer(text):
+            doi = _normalise_doi(m.group(0))
+            if doi and doi not in seen:
+                seen.add(doi)
+                dois.append(doi)
+
+    return dois, extraction_path
+
+
+def _mirror_metadata() -> tuple[str, Optional[str], Optional[str]]:
+    """Return (status, build_id, unavailable_reason) for the Paperpile mirror.
+
+    `status` is one of:
+      - "ready"        — build-status reports ready, state.json loaded OK
+      - "building"     — build-status status field reports a non-ready state
+      - "unavailable"  — build-status missing, unreadable, or state.json broken
+
+    `build_id` is the build-status `build_id` when known, else None.
+    `unavailable_reason` is a short human-readable string when status != "ready",
+    else None.
+    """
+    if _MIRROR_DISABLED:
+        return ("unavailable", None, "mirror disabled (--no-paperpile)")
+    try:
+        status_text = PAPERPILE_BUILD_STATUS.read_text(encoding="utf-8")
+        status = json.loads(status_text)
+    except FileNotFoundError:
+        return ("unavailable", None, "build-status file missing")
+    except Exception as e:
+        return ("unavailable", None, f"build-status unreadable: {e}")
+
+    build_id = status.get("build_id")
+    raw_status = status.get("status")
+    if raw_status != "ready":
+        return (str(raw_status or "unavailable"), build_id, f"build-status: {raw_status!r}")
+
+    # Status is ready; force state.json load so callers see the same gate
+    # `_mirror_available` enforces.
+    if not _mirror_available():
+        return ("unavailable", build_id, "state.json unreadable")
+    return ("ready", build_id, None)
 
 
 def verify_manuscript(path: Path) -> list[dict]:
@@ -648,9 +730,12 @@ def format_report(results: list[dict], source: str) -> str:
         lines.append("")
         lines.append(
             "The DOI matches a paper in your curated Paperpile library, but the "
-            "manuscript's representation disagrees with the curated record. The "
-            "library is the source of truth — likely a citation error in the "
-            "manuscript."
+            "manuscript's author/year identity disagrees with the curated record. "
+            "The library is the source of truth — likely a citation identity error "
+            "in the manuscript (wrong author, wrong year, or wrong DOI). "
+            "Representation accuracy (whether the manuscript faithfully reports "
+            "what the paper actually said) is a separate check — see /red-team "
+            "Step 1b's curated literature pack."
         )
         lines.append("")
         for r in conflicts:
@@ -774,6 +859,16 @@ def main():
         action="store_true",
         help="Skip the local Paperpile in-library DOI lookup (external APIs only)",
     )
+    parser.add_argument(
+        "--extract-and-lookup-only",
+        action="store_true",
+        help=(
+            "Extract all cited DOIs from the document, look each up in the local "
+            "Paperpile mirror, and emit JSON describing in-library hits and misses. "
+            "NEVER calls Semantic Scholar / CrossRef / OpenAlex. Requires -o "
+            "<output.json>. Used by /red-team's curated-literature pack builder."
+        ),
+    )
     args = parser.parse_args()
 
     # Env-var emergency override (parity with --no-paperpile).
@@ -784,6 +879,62 @@ def main():
     if not path.exists():
         print(f"File not found: {path}", file=sys.stderr)
         sys.exit(1)
+
+    if args.extract_and_lookup_only:
+        if not args.output:
+            print(
+                "--extract-and-lookup-only requires -o <output.json>",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        text = path.read_text()
+        dois, extraction = extract_cited_dois_from_document(text)
+        mirror_status, build_id, unavailable_reason = _mirror_metadata()
+        hits: list[dict] = []
+        misses: list[dict] = []
+        for doi in dois:
+            if mirror_status != "ready":
+                misses.append(
+                    {"cited_doi": doi, "reason": unavailable_reason or mirror_status}
+                )
+                continue
+            record, note_rel = lookup_in_paperpile(doi)
+            if record:
+                hits.append(
+                    {
+                        "cited_doi": doi,
+                        "pub_id": record.get("pub_id"),
+                        "note_rel": note_rel,
+                        "year": record.get("year"),
+                        "title": record.get("title"),
+                        "journal": record.get("journal")
+                        or record.get("journal_full"),
+                        "slug": record.get("slug"),
+                        "paperpile_labels": record.get("paperpile_labels") or [],
+                        "has_abstract": bool(record.get("abstract")),
+                        "has_highlights": bool(record.get("highlights")),
+                    }
+                )
+            else:
+                misses.append({"cited_doi": doi, "reason": "not_in_library"})
+        output = {
+            "document": str(path),
+            "extraction": extraction,
+            "mirror_status": mirror_status,
+            "build_id": build_id,
+            "unavailable_reason": unavailable_reason,
+            "total_cited_dois": len(dois),
+            "hits": hits,
+            "misses": misses,
+        }
+        Path(args.output).write_text(json.dumps(output, indent=2, ensure_ascii=False))
+        print(
+            f"[extract-and-lookup] {len(hits)}/{len(dois)} cited DOIs in-library "
+            f"(extraction: {extraction}, mirror_status: {mirror_status})",
+            file=sys.stderr,
+        )
+        # NO external API calls. NO verify_one. NO Semantic Scholar / CrossRef / OpenAlex.
+        return
 
     if args.refs_only:
         text = path.read_text()
