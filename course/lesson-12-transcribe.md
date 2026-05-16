@@ -2,7 +2,7 @@
 
 Drop in an audio file, get a formatted transcript with speaker labels, topic sections, and action items.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me transcribing a real meeting recording end-to-end.
+The lesson reads on its own. A short screencast — me transcribing a real meeting recording end-to-end — will pair with it when recorded.
 
 ## What it does
 

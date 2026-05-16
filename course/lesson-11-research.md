@@ -2,7 +2,7 @@
 
 Three models, primary literature, a formal report you can read later. The lazy way to do deep research.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me kicking off `/research` on a real topic; what the pipeline does and where the report lands.
+The lesson reads on its own. A short screencast — me kicking off `/research` on a real topic, what the pipeline does, where the report lands — will pair with it when recorded.
 
 ## What it does
 

@@ -2,7 +2,7 @@
 
 This is the lesson that makes Claude useful for *you* specifically, not generic-anyone. It's also the longest single lesson in the course (mostly because Claude is doing the work, not you — you just answer questions).
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me running `/onboard` from scratch on a fresh vault, narrating what's happening.
+The lesson below has every step. A short screencast of `/onboard` running on a fresh vault — what the interview looks like, what files get written — will pair with it when recorded.
 
 ## What we're about to do
 

@@ -40,7 +40,7 @@ You don't build all of this up front. **You start by writing notes in Obsidian a
 
 ## How to use this repo
 
-**If you're new — the course is the way in.** Around sixteen short lessons (paired `.md` + ~3 min screencast) walk you from *"I've heard about this"* to *"I have a working setup and have done one real piece of work in it."* Start at [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md). You don't have to do them in one sitting.
+**If you're new — the course is the way in.** Around sixteen short lessons walk you from *"I've heard about this"* to *"I have a working setup and have done one real piece of work in it."* Each lesson is a markdown page that reads on its own; short screencasts are being added over time and will pair with the lessons as they land. Start at [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md). You don't have to do them in one sitting.
 
 **If you already use Claude Code** and just want to browse:
 

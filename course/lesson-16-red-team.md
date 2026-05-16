@@ -2,7 +2,7 @@
 
 Three independent critical reviewers, none of whom were involved in writing your document, turned loose on it before you submit.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me red-teaming a manuscript draft; how each model approaches it differently and what the consolidated report looks like.
+The lesson reads on its own. A short screencast — me red-teaming a manuscript draft, how each model approaches it differently, what the consolidated report looks like — will pair with it when recorded.
 
 ## What it does
 

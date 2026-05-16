@@ -2,7 +2,7 @@
 
 One command that routes a task to whatever task manager you actually use, so you stop dropping things between Claude and your real to-do list.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me adding three different tasks to Things 3 from inside a Claude session.
+The lesson reads on its own. A short screencast — me adding three different tasks to Things 3 from inside a Claude session — will pair with it when recorded.
 
 ## What it does
 

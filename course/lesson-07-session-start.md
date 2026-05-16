@@ -2,7 +2,7 @@
 
 The first thing you run at the start of every Claude Code session. About thirty seconds of work for an enormous amount of "where was I, what's open, what should I do next" clarity.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me opening a fresh session and running `/session-start`; what it reports and how I use the report.
+The lesson reads on its own. A short screencast — me opening a fresh session and running `/session-start`, what it reports, how I use the report — will pair with it when recorded.
 
 ## What it does
 

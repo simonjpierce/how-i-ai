@@ -2,7 +2,7 @@
 
 The skill that makes tomorrow's session start with context instead of confusion.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me running `/document` at the end of a real session; what gets written and where.
+The lesson reads on its own. A short screencast — me running `/document` at the end of a real session, what gets written and where — will pair with it when recorded.
 
 ## What it does
 

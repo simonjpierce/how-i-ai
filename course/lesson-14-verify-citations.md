@@ -2,7 +2,7 @@
 
 Catches fabricated citations before they end up in something you submit.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me running `/verify-citations` on a manuscript with one deliberately fake reference; what the report looks like and how to act on it.
+The lesson reads on its own. A short screencast — me running `/verify-citations` on a manuscript with one deliberately fake reference, what the report looks like, how to act on it — will pair with it when recorded.
 
 ## What it does
 

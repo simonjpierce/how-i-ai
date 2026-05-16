@@ -2,7 +2,7 @@
 
 You now have a working setup. Time to use it for something real.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me picking one task from my own pile and doing it from scratch with the new setup, ~3–4 minutes.
+The lesson is mostly "go pick a task and do it"; the text below gives you the framing and some prompt seeds. A short screencast of me doing one real task end-to-end will pair with it when recorded.
 
 ## Pick something real
 

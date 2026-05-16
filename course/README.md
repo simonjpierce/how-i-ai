@@ -1,12 +1,12 @@
 # The course
 
-This is the entry point for the MMF Claude Code course — a short series of paired markdown lessons + ~3-minute screencasts that walk you from *"I've heard about this"* to *"I have a working setup and have used it on real work."*
+This is the entry point for the MMF Claude Code course — a short series of markdown lessons that walk you from *"I've heard about this"* to *"I have a working setup and have used it on real work."* Short screencasts are being added over time and pair with the lessons as they land; for now, the lessons read on their own.
 
 If you haven't read the repo-level [README](../README.md) yet, that's the place to start — it gives you the conceptual frame in ~5 minutes of reading.
 
 ## How the course works
 
-- **Sixteen short lessons.** Each lesson is one `.md` page (5–10 minutes to read) and one short video (~2–4 minutes). You can do the video first or the reading first — match your preference.
+- **Sixteen short lessons.** Each lesson is a markdown page that reads on its own. Short videos (~2–4 minutes each) are being added over time and will pair with the lessons as they land.
 - **Part 1 is for everyone.** Lessons 1–6 take you through the hook, the idea, the install, and your first piece of real work. Don't skip these.
 - **Part 2 is tracked.** After lesson 6, pick the path that fits your work. The universal track (lessons 7–10) pays off for everyone; the writing & research and science-specific tracks are optional add-ons.
 - **You don't have to do it in one sitting.** Realistic cadence is one to three lessons per session, over a week or two.

@@ -2,7 +2,7 @@
 
 Two apps. Both free to download; Claude Code needs a paid Claude plan to actually use.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me clicking through the install for both apps end-to-end.
+The lesson below stands alone — every click is in the text. A short screencast of the install (both apps end-to-end) will pair with the lesson when recorded.
 
 ## What you need
 

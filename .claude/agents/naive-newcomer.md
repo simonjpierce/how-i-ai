@@ -69,7 +69,7 @@ Categories of friction to look for explicitly:
 - **Voice/tone mismatches**: instructions written for a developer when the audience is non-technical.
 - **Dead-end loops**: instructions that send the user back to a step they already finished without a way out.
 - **Unstated success signals**: how does the user know the step succeeded?
-- **Video assumptions**: the lessons reference videos. If a video link is a placeholder, does the `.md` carry enough on its own for the lesson to land? Or does it fall apart without the video?
+- **Video gating**: lessons are designed to read on their own; videos are being added over time. Flag anywhere the text leans on a video that doesn't exist yet (*"as you see in the video below…"*, *"watch this first"*) without a self-contained fallback. The `.md` should land without the video.
 - **Course-to-skill handoffs**: does the user know what to do after lesson 6 (universal-track entry) and lesson 10 (track split)? Are the choices clearly framed?
 
 ### 4. Also actively check

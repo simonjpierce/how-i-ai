@@ -2,7 +2,7 @@
 
 Stops your project notes from going silently stale after every working session.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me running `/update` after a session that touched a project's notes and a process doc; what it proposes to change.
+The lesson reads on its own. A short screencast — me running `/update` after a session that touched a project's notes and a process doc, what it proposes to change — will pair with it when recorded.
 
 ## What it does
 

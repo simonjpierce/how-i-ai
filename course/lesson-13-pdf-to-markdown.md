@@ -2,7 +2,7 @@
 
 Get the content of a PDF into your vault without copy-paste hell or losing the structure.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me converting a journal article and a multi-page report; what each looks like in Obsidian afterwards.
+The lesson reads on its own. A short screencast — me converting a journal article and a multi-page report, what each looks like in Obsidian afterwards — will pair with it when recorded.
 
 ## What it does
 

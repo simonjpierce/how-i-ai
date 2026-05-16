@@ -2,7 +2,7 @@
 
 Two modes: a lab notebook that enforces good analytical hygiene, and a manuscript drafter that turns a completed notebook into a first journal-ready draft.
 
-> **Video** *(placeholder):* `<https://loom.com/...>` — me opening a lab-notebook session on a real analysis, then later drafting the manuscript from a different completed notebook.
+The lesson reads on its own. A short screencast — me opening a lab-notebook session on a real analysis, then later drafting the manuscript from a different completed notebook — will pair with it when recorded.
 
 ## What it does
 

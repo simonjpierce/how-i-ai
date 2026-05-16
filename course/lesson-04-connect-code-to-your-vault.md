@@ -2,7 +2,7 @@
 
 Two clicks. The shortest lesson in the course.
 
-> **Video** *(placeholder):* `<https://loom.com/...>`
+The lesson is two clicks; the text below covers them. A short screencast will pair with it when recorded.
 
 ## What "connecting" means
 
