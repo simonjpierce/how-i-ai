@@ -2,7 +2,37 @@
 
 This file is `CLAUDE.md` at the root of a Git repo. Depending on why you're here, jump to the right place:
 
-- **A user pasted the impatient-path prompt** (*"Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine. I have Claude Code installed already; install the starter skills and run /onboard."*) → **read [`skills/onboard/getting-started.md`](./skills/onboard/getting-started.md) next, and follow it.** That doc tells you how to install `/onboard` and the supporting skills, then run the onboarding flow.
+- **A user pasted the impatient-path prompt** (*"Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine. I have Claude Code installed already; install the starter skills and run /onboard."*) → **follow the impatient-path install below**, then run `/onboard`. (Inline because this is a tight enough flow that a separate file was overkill.)
+
+  ```bash
+  # 1. Platform check
+  [ "$(uname)" = "Darwin" ] || { echo "Setup is currently macOS-only. Halting."; exit 1; }
+
+  # 2. Prereq check
+  command -v git >/dev/null 2>&1 || { echo "ERROR: git not installed. Install Xcode Command Line Tools first: xcode-select --install"; exit 1; }
+  command -v bash >/dev/null 2>&1 || { echo "ERROR: bash not available"; exit 1; }
+
+  # 3. Clone the repo to a stable location (not /tmp/, which gets cleaned at reboot)
+  mkdir -p ~/.claude/repos
+  if [ -d ~/.claude/repos/mmf-claude-code ]; then
+    git -C ~/.claude/repos/mmf-claude-code pull --quiet
+  else
+    git clone --depth 1 https://github.com/marinemegafauna/mmf-claude-code.git ~/.claude/repos/mmf-claude-code
+  fi
+
+  # 4. Run bootstrap (--yes on first install, interactive on re-run)
+  if [ -d ~/.claude/skills/onboard ]; then
+    bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh
+  else
+    bash ~/.claude/repos/mmf-claude-code/sync/bootstrap.sh --yes
+  fi
+  ```
+
+  If the `git clone` fails with `fatal: repository not found`, the user doesn't have access — the repo is private. Tell them: *"Looks like you need GitHub access to the `marinemegafauna/mmf-claude-code` repo. The simplest path is `gh auth login` if you have the GitHub CLI installed (or run `brew install gh` first), then I'll re-run the clone. If you don't have a GitHub account at all, ask Simon to add your account."*
+
+  After bootstrap succeeds, tell the user: *"I've installed the starter skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`). To finish, restart Claude Code: in the desktop app choose Claude → Quit (Cmd-Q), then reopen it from your Applications folder. Click into the chat input and type `/onboard` — that picks up where we left off."*
+
+  `/onboard` is self-contained from there.
 - **A user pasted the [README](./README.md) into you and asked for help setting up** → the README is self-contained. Adapt to their OS / existing tools / actual work. If they're on macOS and want the canonical install path, you can either walk them through the course (`course/`) lesson by lesson, or skip to the impatient path above.
 - **The user is new and you're walking them through the course** → start at [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md). Each lesson is self-contained; the user does them in order.
 - **You're working on the repo itself, or running `/update` for Simon** → the rest of this file applies.
