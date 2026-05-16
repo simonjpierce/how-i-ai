@@ -215,15 +215,24 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    Keep it to 5–10 lines unless the update was large.
 
-12. **Route systemic observations to Daily Log housekeeping** (added 2026-05-17 — see Friction Log entry for origin context). Post-run observations like "MEMORY.md still over cap after N sessions" or "automation X is producing phantom files" deserve durable capture in the Daily Log's `## System housekeeping — Claude-managed` section so a future `/morning-briefing` or `/system-upgrade` will see them. The Summary in step 11 surfaces these in-chat but they evaporate when the session closes unless routed.
+12. **Route systemic observations to Daily Log housekeeping** (added 2026-05-17, tightened same day after self-assessment). The Phase 4 Summary surfaces observations in-chat; Simon doesn't always catch them; they evaporate at session close. Persistent systemic observations belong in `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` so `/morning-briefing` and `/system-upgrade` see them.
 
-   For each observation in the Summary that describes a **systemic pattern** (recurring across sessions, affects automations, suggests an investigation), ask:
-   - Is this already covered by an existing Daily Log housekeeping entry? (Grep before appending — avoid duplicates.)
-   - Is it a per-this-session detail (e.g. "12 files changed") or a systemic observation (e.g. "process docs keep accumulating stale historical refs")?
-   - Per-session detail → leave in the chat Summary only.
-   - Systemic observation → append a new entry to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with the standard format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Pick check-after date based on cadence: ~7 days for recurring observations, longer for one-off "verify after stability window".
+   **Trigger gate — apply ALL three before routing:**
+   1. **Classify the observation.** Is it a systemic pattern (recurring across sessions; affects an automation; suggests an investigation), or per-session detail (counts, "documents checked but not changed", confirmations that something specific worked)? Per-session details stay in the chat Summary; only systemic patterns get routed.
+   2. **Mandatory dedupe — blocking check, not advisory.** Before routing ANY observation, grep `05_SYSTEM/OUTPUTS/Daily Log.md` `## System housekeeping — Claude-managed` section for an entry covering the same topic. If an entry already exists, even if its check-after date has passed: do NOT append a new entry. Either update the existing entry's date / status in place (matches the `[MEMORY.md compression mechanism diagnostic — RE-CHECKED 2026-05-17, still over budget — check after 2026-05-18]` pattern), or leave the existing entry alone. Duplicate entries pollute the housekeeping section and waste `/morning-briefing` review time.
+   3. **Mandatory entry quality.** New entries must use the exact format already established in the section:
+      ```
+      - **[<topic-slug> — check after YYYY-MM-DD]** Brief observation + why it matters. **Check action:** named verification command(s) + decision branches ("if A then mark Auto-fixed; if B then escalate to Friction Log"). [created: YYYY-MM-DD]
+      ```
+      Free-form prose entries lacking a named check action are below the bar — the existing entries (e.g. `[OD-11 path migration two-night verification gate]`, `[Domain expert sweep v1 health diagnostic]`) all name a concrete verification command and an Auto-fixed-vs-escalate branch. Match that level; do not append weaker entries.
 
-   This step lives in `/update` rather than `/document` because /update generates the post-run notes; /document's step 12 verification subagent catches gaps but doesn't see /update's chat-only output. Surfacing in the producing skill avoids the cross-skill handoff. Skip this step if the Summary had no systemic observations — most /update runs are routine and won't trigger anything.
+   **Check-after date selection:** ~7 days for recurring patterns (next /morning-briefing cycle), ~30 days for stability-window observations, event-based ("check after next /verify-citations run") for trigger-conditional checks. Match the cadence of the underlying signal — don't pick a default.
+
+   **Skip the step entirely** if the Summary contained no systemic observations (most routine /update runs). Most /update runs are routine.
+
+   **Concurrent-skill dedup with `/document`:** /document's step 12 verification subagent also routes housekeeping items by reading the conversation transcript. If /update Step 12 has already routed an observation to Daily Log, /document's subagent should find the existing entry via the same dedupe check and skip re-routing. The blocking dedupe in sub-step 2 above prevents both sides from creating duplicates.
+
+   Example entries the existing section uses as the quality bar: see `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` (entries dated 2026-05-16 and 2026-05-17) for format reference. Do not produce entries weaker than those.
 
 
 ## Scaling behaviour
