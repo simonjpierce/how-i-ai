@@ -91,7 +91,7 @@ if command -v gh >/dev/null 2>&1; then
 fi
 
 # Source → target mappings. Format: "source_absolute_path::target_path_in_repo"
-# All skills canonically live in ~/.claude/skills/. The vault (05_AI WORKFLOW/
+# All skills canonically live in ~/.claude/skills/. The vault (05_SYSTEM/
 # CLAUDE/Skills/) has symlinks back there for Obsidian visibility — we sync from
 # the canonical location to avoid cp -R only copying the symlinks themselves.
 
@@ -119,14 +119,14 @@ GUIDES=(
   # mappings — so any file in those dirs WITHOUT a mapping here gets deleted.
   # Workflow: write the canonical doc in the vault first, add the mapping here,
   # THEN sync. Don't write directly to repo/guides/ — it'll be wiped on next sync.
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Inviting Collaborators to mmf-claude-code.md::guides/inviting-collaborators.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Scientific Analysis — Process Guide.md::guides/ai-assisted-scientific-analysis.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Scientific Writing – Process Guide.md::guides/ai-assisted-scientific-writing.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/AI-Assisted Writing — Reports, Manuscripts & Analysis.md::guides/ai-assisted-writing.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Literature Intake & Integration Workflow.md::guides/literature-intake-and-integration.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Pre-Submission Manuscript Review – Prompt Template.md::guides/pre-submission-manuscript-review.md"
-  "$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Research Workflow.md::guides/research-workflow.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/Ghostty Setup Guide for Claude Code.md::guides/ghostty-setup.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/Inviting Collaborators to mmf-claude-code.md::guides/inviting-collaborators.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/AI-Assisted Scientific Analysis — Process Guide.md::guides/ai-assisted-scientific-analysis.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/AI-Assisted Scientific Writing – Process Guide.md::guides/ai-assisted-scientific-writing.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/AI-Assisted Writing — Reports, Manuscripts & Analysis.md::guides/ai-assisted-writing.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/Literature Intake & Integration Workflow.md::guides/literature-intake-and-integration.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/Pre-Submission Manuscript Review – Prompt Template.md::guides/pre-submission-manuscript-review.md"
+  "$VAULT_PATH/05_SYSTEM/Processes/Research Workflow.md::guides/research-workflow.md"
 )
 
 TEMPLATES=(
