@@ -344,7 +344,8 @@ The other skills surface when they're useful — Claude will mention them
 in context. You don't need to learn them in advance.
 
 - **Workflow:** `/update`, `/review-friction`, `/refresh-skills`
-- **Writing & research:** `/science-paper`, `/research`, `/verify-citations`
+
+Work-specific skills (`/research`, `/science-paper`, `/verify-citations`, `/transcribe`, `/pdf-to-markdown`, `/red-team`, `/mmf-brand`, `/polish`) ship in the repo as on-demand installs — adopt them when a task needs them. The course's Part 2 walks through each.
 
 ## Two-week check-in
 
@@ -468,7 +469,7 @@ Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
 Logs: ready at AI_WORKFLOW/CLAUDE/
-Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /science-paper, /research, /verify-citations
+Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
 ⚠️ ONE LAST STEP — point Claude Code at your vault.
