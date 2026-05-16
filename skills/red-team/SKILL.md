@@ -53,7 +53,7 @@ Then gather relevant context docs — not all are needed every time:
 1. **Folder CLAUDE.md** — Read the CLAUDE.md in the document's parent folder (or nearest ancestor that has one). Contains audience, tone, and domain conventions.
 2. **Voice reference** (for articles/written content) — Read the voice reference closest to the document's domain. For Planet Ocean / photography content: `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Planet Ocean).md`. For whale shark book content: `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Whale Shark Book).md`. For other domains, use the Planet Ocean reference as the general default.
 3. **Comparison documents** — Use Glob/Grep to find 1–3 closely related vault files (same project, similar document type). These serve as precedent and convention references — not quality authorities. They show how similar documents are typically structured, not what "good" necessarily looks like.
-4. **Current Projects** (for strategic docs) — Read `01_LIFE OS/Current Projects.md` to check alignment with current priorities.
+4. **Current Projects** (for strategic docs) — Read `01_PROJECTS/Current Projects.md` to check alignment with current priorities.
 
 A process doc doesn't need the voice reference. An article doesn't need Current Projects. Include only context that would sharpen the review.
 
@@ -148,12 +148,13 @@ For documents with a References/Bibliography section (manuscripts, literature re
 python3 ~/bin/verify_citations.py "DOCUMENT_PATH" -o /tmp/citation-report.md
 ```
 
-This queries Semantic Scholar, CrossRef, and OpenAlex to verify each reference exists with correct author, year, and title. Takes ~1s per reference.
+For references with a DOI, the script first consults Simon's local Paperpile mirror (~8.8k curated papers) and short-circuits the external waterfall on a hit. Other references fall through to Semantic Scholar, CrossRef, and OpenAlex (~1s per query). Takes ~1s per uncached reference.
 
 After the script completes, read `/tmp/citation-report.md` and:
-1. **NOT_FOUND** references: WebSearch manually to determine if fabricated or just not in the APIs (book chapters and grey literature often aren't indexed)
-2. **PARTIAL_MATCH** references: check whether the issue is a real error or a formatting/name variant
-3. Report all citation issues as High-severity findings in Step 5
+1. **CONFLICT** references: highest priority — the curated Paperpile library disagrees with the cited reference. The library is the source of truth, so a CONFLICT entry is almost always a citation error in the manuscript (wrong DOI, wrong author, wrong year). Click the wikilink to the paper note to confirm. Treat as High-severity in Step 5.
+2. **NOT_FOUND** references: WebSearch manually to determine if fabricated or just not in the APIs (book chapters and grey literature often aren't indexed)
+3. **PARTIAL_MATCH** references: check whether the issue is a real error or a formatting/name variant
+4. Report all citation issues as High-severity findings in Step 5
 
 Skip this step for process docs, specs, and internal notes.
 
@@ -405,7 +406,7 @@ Check the automation's actual runtime state:
 1. **LaunchAgent status**: `launchctl list | grep <identifier>` — is it loaded? What was the last exit code?
 2. **Recent logs**: Read the last 50 lines of stdout and stderr logs. Look for errors, warnings, or unexpected output.
 3. **State file**: If the automation uses a state file, read it. Check last-run timestamp — is it recent enough given the schedule?
-4. **Output files**: If the automation produces output files (e.g. in `01_LIFE OS/REVIEW QUEUE/`), check that recent output exists and looks reasonable.
+4. **Output files**: If the automation produces output files (e.g. in `01_PROJECTS/REVIEW QUEUE/`), check that recent output exists and looks reasonable.
 
 Report discrepancies between documented behaviour and actual runtime state. Fix documentation that doesn't match reality. Flag code issues that need investigation (e.g. repeated errors in logs) — these may need the user's attention rather than an automated fix.
 

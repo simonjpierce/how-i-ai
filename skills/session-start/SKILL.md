@@ -22,7 +22,7 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 
 1. **Locate the logs folder.** Prefer `<vault>/AI_WORKFLOW/CLAUDE/` (starter convention). Fall back to `<vault>/05_AI WORKFLOW/CLAUDE/` (Simon's vault numbering). The first one that exists is the logs folder — reuse this path for steps 4–5. If neither exists, this isn't a CLAUDE-managed vault — skip steps 4–5 silently and just orient on Current Projects + MEMORY.md.
 
-2. **Read Current Projects** if it exists — try `01_LIFE OS/Current Projects.md` first, then `Current Projects.md` at the vault root. This is the most important orientation context. Skip silently if neither exists (the starter vault doesn't ship one).
+2. **Read Current Projects** if it exists — try `01_PROJECTS/Current Projects.md` first, then `Current Projects.md` at the vault root. This is the most important orientation context. Skip silently if neither exists (the starter vault doesn't ship one).
 
 3. **Note MEMORY.md context** — MEMORY.md is auto-loaded into the conversation. Scan the loaded content for feedback entries, infrastructure details, and references relevant to the current task. Don't re-read the file unless you need a section that was truncated.
 
@@ -43,10 +43,10 @@ When a step in this skill fails or needs a workaround, update this skill file wi
    **Always scan recent Decision Log entries (last 3 days) for tool / model / CLI / config decisions, even if the user hasn't stated a topic yet.** A session that starts on an unrelated topic can drift mid-session into work that touches a CLI, model, or config a sibling session recently changed; if you haven't seen those decisions in context, you'll re-discover the constraint the hard way. Specifically grep recent entries for terms matching the tools active in the user's environment (e.g. `Codex`, `gpt-`, `claude_runner`, `~/.codex`, `~/.claude`). Surface anything non-obvious as a one-line "recent decision relevant to your environment" note in the orientation summary. Pattern source: 2026-05-02 — a Codex two-model session re-discovered `gpt-5.5-pro`/`gpt-5.5-fast` unavailability that the morning's sibling session had already documented in the Decision Log; the session lost ~1hr to the rollback (see Friction Log entry).
 
 7. **(SIMON-ONLY) Check automation health (optional)** — run each check ONLY if its directory exists. Skip silently if the directory is missing — that means the user doesn't run that automation, not that something's broken. Newcomer vaults don't ship these automations or directories; the directory-existence gate means newcomers see nothing for this step.
-   - **Weekly review (Simon-vault path):** `ls -lt "01_LIFE OS/REVIEW QUEUE/Weekly Reviews/" | head -3` — flag if newest file >10 days old.
-   - **Nightly workhorse (Simon-vault path):** `ls -lt "01_LIFE OS/REVIEW QUEUE/NIGHTLY WORKHORSE/" | head -3` — flag if newest file >3 days old.
-   - **Self-improvement loop (Simon-vault path):** `ls -lt "01_LIFE OS/REVIEW QUEUE/IMPROVEMENTS/" | head -3` — flag if newest file >3 days old.
-   - These are Simon-vault-specific automations using `01_LIFE OS/REVIEW QUEUE/` paths. Absence of the directory means the user doesn't run them; absence is silent, not an error. Future automations can be added here using the same dir-existence-gated pattern.
+   - **Weekly review (Simon-vault path):** `ls -lt "01_PROJECTS/REVIEW QUEUE/Weekly Reviews/" | head -3` — flag if newest file >10 days old.
+   - **Nightly workhorse (Simon-vault path):** `ls -lt "01_PROJECTS/REVIEW QUEUE/NIGHTLY WORKHORSE/" | head -3` — flag if newest file >3 days old.
+   - **Self-improvement loop (Simon-vault path):** `ls -lt "01_PROJECTS/REVIEW QUEUE/IMPROVEMENTS/" | head -3` — flag if newest file >3 days old.
+   - These are Simon-vault-specific automations using `01_PROJECTS/REVIEW QUEUE/` paths. Absence of the directory means the user doesn't run them; absence is silent, not an error. Future automations can be added here using the same dir-existence-gated pattern.
 
 8. **Present an orientation summary** — output a brief block (max 10 lines) covering:
    - What the last session worked on and its status

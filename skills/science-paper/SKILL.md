@@ -32,6 +32,8 @@ Activate at the start of an interactive analysis session. The analysis note is t
 
 ### Setup
 
+0. **Load the lab-notebook gate rule** (do this BEFORE any other setup step). Read `<vault>/.claude/rules/analysis-lab-notebook.md` so the gate text is in working context for the rest of the session. This rule is path-scoped (loads automatically when an `Analysis — *.md` file is opened), but lab-notebook mode often starts before any notebook file exists yet — verbal scoping, deciding research questions, locating data — so explicit load at activation is the durable trigger. After reading, briefly confirm to Simon: "Lab-notebook gate loaded — I'll update the analysis note after each step before proceeding to the next."
+
 1. **Create or locate the project folder.** Each manuscript gets its own folder under a `MANUSCRIPTS/` directory in the vault — typically `<vault>/MANUSCRIPTS/` for a single-domain vault, or `<domain>/MANUSCRIPTS/` for a vault with domain folders. Read `vault.path` from `~/.claude/projects/<project-key>/config.json` and pick the appropriate location (ask if ambiguous). Name the project folder descriptively (e.g., `Whale Shark Transience/`, `Acoustic LIR/`). If one already exists for this project, use it.
 
 2. **Create or locate the analysis note (lab notebook).** Lives in the project folder. Template:

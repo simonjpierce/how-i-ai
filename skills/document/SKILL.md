@@ -170,13 +170,13 @@ If within budget, proceed silently — no need to report the numbers.
 
     - Extract 3–8 keyword seeds from the session (same as step 9, reuse them).
     - Check for an `## Artifacts` section in any primary project/analysis note touched this session. If present, iterate its rows — each listed file is a candidate. If the Artifacts table is incomplete (session created files not listed), update it.
-    - If no Artifacts section, search: project notes in the user's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/`; newcomer: whatever folders were created during `/onboard`'s domain pass); folder CLAUDE.md files for domains touched; role notes if role-relevant work was done; Scheduled Automations if any automation changed.
+    - If no Artifacts section, search: project notes in the user's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever folders were created during `/onboard`'s domain pass); folder CLAUDE.md files for domains touched; role notes if role-relevant work was done; Scheduled Automations if any automation changed.
     - For each candidate, read and check: is anything **stale**, **missing**, or **inconsistent** with this session's work? Skip docs already updated in step 9.
     - **Auto-update** mechanical changes (paths, statuses, cross-refs, dates) without asking.
     - **Flag for review** any content-level changes (rewrites, removals, scope changes) — present these to the user in step 16's report rather than blocking the handover.
     - If the session was trivial (quick question, single-file edit), skip this step.
 
-11. **Update Current Projects**: Read the Current Projects file — try `<vault>/01_LIFE OS/Current Projects.md` first (Simon), then `<vault>/Current Projects.md` (newcomer). Skip this step if neither exists (the starter vault doesn't ship one). Based on the session analysis (step 4), make targeted edits:
+11. **Update Current Projects**: Read the Current Projects file — try `<vault>/01_PROJECTS/Current Projects.md` first (Simon), then `<vault>/Current Projects.md` (newcomer). Skip this step if neither exists (the starter vault doesn't ship one). Based on the session analysis (step 4), make targeted edits:
    - **Remove** items that were completed this session (don't strikethrough — clean them out).
    - **Update status** of items that progressed (e.g., "draft started" → "v0.4 in review").
    - **Add** new priorities that emerged, if they're significant enough for a cross-domain orientation note (not every task — only things that change what matters right now).

@@ -7,13 +7,13 @@ Owner: shared
 Last reviewed: 2026-03-27
 Uses: 4 (strategic plan benchmarking, 2026-03-13; whale shark essay automation integration, 2026-03-13; photo-ID V3 review — inline research during manuscript development, 2026-03-21; Claude Code system audit — deep mode run 2, 2026-03-22)
 
-> **Deep autonomous research → use `/research`.** The full pipeline (vault scan, Phase 2d comms scan via Gmail + Slack, three-model web research via Claude + Codex + Gemini, claim verification, formal report) is now a skill. Spec: `01_LIFE OS/REVIEW QUEUE/SPECS/2026-03-22-research-skill-design.md`. This process doc covers **inline** and **lightweight** research only.
+> **Deep autonomous research → use `/research`.** The full pipeline (vault scan, Phase 2d comms scan via Gmail + Slack, three-model web research via Claude + Codex + Gemini, claim verification, formal report) is now a skill. Spec: `01_PROJECTS/REVIEW QUEUE/SPECS/2026-03-22-research-skill-design.md`. This process doc covers **inline** and **lightweight** research only.
 
 ### When to use which
 
 | Mode | When to use | Output |
 |---|---|---|
-| **`/research` skill** (deep) | 15+ minute investigation, three-model coverage, formal report | `01_LIFE OS/REVIEW QUEUE/RESEARCH/` |
+| **`/research` skill** (deep) | 15+ minute investigation, three-model coverage, formal report | `01_PROJECTS/REVIEW QUEUE/RESEARCH/` |
 | **This process doc** (inline/lightweight) | Quick answer mid-task, 1–2 subagents, enriching an existing document | Depends on task context |
 | **Weekly strategic research** (automated) | Runs autonomously Sunday 01:00 — automated topic selection for system improvement | `05_AI WORKFLOW/CLAUDE/System Research/` (consumed by nightly self-improvement loop) |
 
@@ -158,7 +158,7 @@ Detect the query domain and prioritise sources accordingly:
 
 - **Scratch files**: `/tmp/research/` (cleaned up on reboot)
 - **Shared source registry**: `/tmp/research/sources.md` (all subagents append)
-- **`/research` skill output**: `01_LIFE OS/REVIEW QUEUE/RESEARCH/Research — {Topic}.md`
+- **`/research` skill output**: `01_PROJECTS/REVIEW QUEUE/RESEARCH/Research — {Topic}.md`
 - **Weekly strategic research output**: `05_AI WORKFLOW/CLAUDE/System Research/` (consumed by self-improvement loop)
 - **Inline/lightweight output**: Depends on task context — project folder, working file, or ask Simon
 - **This process doc**: `05_AI WORKFLOW/CLAUDE/Processes/Research Workflow.md`
@@ -211,7 +211,7 @@ Detect the query domain and prioritise sources accordingly:
 - Multi-model research caught complementary findings: Codex found ISRA dossier with unpublished Maldives tracking data and corrected a vault claim about photo-ID cross-matching. Claude found eDNA microhaplotype preprint and Gujarat tracking data Codex missed. (This run predated Gemini integration.)
 - Key friction: QMD rejects hyphens in vec/hyde queries (parses as negation). Codex `-q` flag doesn't exist (fixed to stdin pipe). Codex duplicates output — needs awk extraction. `/tmp/research/` can contain files from concurrent runs — need cleanup at start.
 - All pass criteria met. Skill improvements applied to SKILL.md.
-- Output: `01_LIFE OS/REVIEW QUEUE/RESEARCH/Research — Whale Shark Connectivity Mozambique to Maldives.md`
+- Output: `01_PROJECTS/REVIEW QUEUE/RESEARCH/Research — Whale Shark Connectivity Mozambique to Maldives.md`
 
 **2026-03-22 — `/research` skill run 2 (Claude Code + Obsidian system audit) → triggered v2 rewrite**:
 - Full pipeline: scoping (1 question) → vault scan (15+ files, thorough) → 6 Claude Opus subagents + Codex gpt-5.4 → synthesis → verification (5 claims) → delivery. ~25 minutes.
@@ -220,11 +220,11 @@ Detect the query domain and prioritise sources accordingly:
 - Multiple friction points: Write tool failed on new files (vault briefing), deferred tools needed ad-hoc loading (3-4 extra round-trips), Phase 2b graph expansion skipped, subagent output naming inconsistent, report finalised before Codex completed.
 - Report quality was good — actionable, well-structured, 4,200 words, 45+ sources, confidence-mapped. User satisfied with output.
 - **Triggered comprehensive v2 rewrite** of SKILL.md and subagent-prompt.md. See "v2 changes" below.
-- Output: `01_LIFE OS/REVIEW QUEUE/RESEARCH/Research — Claude Code Obsidian System Audit.md`
+- Output: `01_PROJECTS/REVIEW QUEUE/RESEARCH/Research — Claude Code Obsidian System Audit.md`
 
 ### `/research` skill — promoted (2026-03-22), v2 rewrite (2026-03-22)
 
-The deep research mode has been promoted to a `/research` skill. Design spec: `01_LIFE OS/REVIEW QUEUE/SPECS/2026-03-22-research-skill-design.md`.
+The deep research mode has been promoted to a `/research` skill. Design spec: `01_PROJECTS/REVIEW QUEUE/SPECS/2026-03-22-research-skill-design.md`.
 
 Key design decisions resolved during promotion:
 - **Three-model research**: Claude subagents + Codex CLI + Gemini CLI research in parallel, all informed by vault briefing (originally dual-model; Gemini added post-v2)

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Citation verification for scientific manuscripts.
 
-Queries Semantic Scholar, CrossRef, and OpenAlex to verify that
-references in a markdown manuscript are real and correctly attributed.
+Queries the local Paperpile mirror (DOI-direct) first, then falls back to
+Semantic Scholar, CrossRef, and OpenAlex to verify that references in a
+markdown manuscript are real and correctly attributed.
 
 Usage:
     python3 verify_citations.py manuscript.md [-o report.md]
     python3 verify_citations.py --refs-only references.txt [-o report.md]
+    python3 verify_citations.py manuscript.md --no-paperpile  # external only
 
 Requirements:
     - Python 3.9+ (uses Optional[] from typing; NOT the 3.10+ dict|None syntax)
@@ -18,6 +20,7 @@ Requirements:
 """
 
 import json
+import os
 import re
 import sys
 import time
@@ -32,6 +35,196 @@ CROSSREF_WORKS = "https://api.crossref.org/works"
 OPENALEX_WORKS = "https://api.openalex.org/works"
 
 MAILTO = "simon@marinemegafauna.org"  # CrossRef polite pool
+
+# Paperpile mirror — local DOI-direct lookup
+VAULT_ROOT = Path(
+    "/Users/simonjpierce/Library/Mobile Documents/iCloud~md~obsidian/Documents/Simon's Vault"
+)
+PAPERPILE_DIR = VAULT_ROOT / "02_MARINE MEGAFAUNA" / "REFERENCE LIBRARY" / "Paperpile Library"
+PAPERPILE_BUILD_STATUS = PAPERPILE_DIR / "_meta" / "build-status"
+PAPERPILE_STATE_JSON = PAPERPILE_DIR / "_meta" / "state.json"
+PAPERPILE_PAPERS_REL = "02_MARINE MEGAFAUNA/REFERENCE LIBRARY/Paperpile Library/papers"
+
+# Lazy/cached module-level state for the mirror.
+_MIRROR_DISABLED = False  # toggled by --no-paperpile / env var
+_MIRROR_AVAILABILITY: Optional[bool] = None  # None until first probe
+_MIRROR_STATE: Optional[dict] = None  # full state.json dict
+_MIRROR_DOI_INDEX: Optional[dict[str, str]] = None  # normalised_doi -> pub_id
+
+
+def set_paperpile_disabled(disabled: bool) -> None:
+    """Disable in-library lookup for the rest of the process."""
+    global _MIRROR_DISABLED, _MIRROR_AVAILABILITY
+    _MIRROR_DISABLED = disabled
+    if disabled:
+        _MIRROR_AVAILABILITY = False
+
+
+def _mirror_available() -> bool:
+    """Probe the build-status gate and load state.json lazily.
+
+    Returns True only when status == 'ready' AND state.json loaded
+    AND the DOI alias index is reachable. Any failure latches False
+    for the remainder of the run.
+    """
+    global _MIRROR_AVAILABILITY, _MIRROR_STATE, _MIRROR_DOI_INDEX
+    if _MIRROR_DISABLED:
+        return False
+    if _MIRROR_AVAILABILITY is not None:
+        return _MIRROR_AVAILABILITY
+    try:
+        status_text = PAPERPILE_BUILD_STATUS.read_text(encoding="utf-8")
+        status = json.loads(status_text)
+        if status.get("status") != "ready":
+            print(
+                f"  [paperpile] build-status not ready ({status.get('status')!r}); "
+                f"skipping in-library lookup.",
+                file=sys.stderr,
+            )
+            _MIRROR_AVAILABILITY = False
+            return False
+    except FileNotFoundError:
+        _MIRROR_AVAILABILITY = False
+        return False
+    except Exception as e:
+        print(f"  [paperpile] build-status unreadable ({e}); skipping in-library lookup.",
+              file=sys.stderr)
+        _MIRROR_AVAILABILITY = False
+        return False
+
+    try:
+        with PAPERPILE_STATE_JSON.open("r", encoding="utf-8") as fh:
+            _MIRROR_STATE = json.load(fh)
+    except Exception as e:
+        print(f"  [paperpile] state.json unreadable ({e}); skipping in-library lookup.",
+              file=sys.stderr)
+        _MIRROR_AVAILABILITY = False
+        return False
+
+    raw_aliases = (_MIRROR_STATE.get("aliases") or {}).get("doi") or {}
+    # Build normalised-DOI index. Skip keys that aren't DOI-shaped (the live
+    # alias table contains a few stragglers like a URL pointing at an IUCN PDF).
+    index: dict[str, str] = {}
+    for raw_doi, pub_id in raw_aliases.items():
+        if not isinstance(raw_doi, str) or not raw_doi.startswith("10."):
+            continue
+        nd = _normalise_doi(raw_doi)
+        if nd:
+            index[nd] = pub_id
+    _MIRROR_DOI_INDEX = index
+    _MIRROR_AVAILABILITY = True
+    return True
+
+
+def _normalise_doi(doi: str) -> str:
+    """Lowercase, strip URL/handle prefixes and Markdown/punctuation wrappers."""
+    if not doi:
+        return ""
+    s = doi.strip()
+    # Strip Markdown link wrappers like `[Guerra 2017](https://doi.org/10.x)` —
+    # we already extracted the URL, but if a raw `[doi]` form sneaks through,
+    # nibble leading `[` and trailing `]` plus parenthesised tails.
+    s = s.strip("[]")
+    # Iteratively strip recognised prefixes (case-insensitive).
+    lowered_prefixes = [
+        "https://dx.doi.org/",
+        "http://dx.doi.org/",
+        "https://doi.org/",
+        "http://doi.org/",
+        "dx.doi.org/",
+        "doi.org/",
+        "doi:",
+        "doi ",
+    ]
+    sl = s.lower()
+    changed = True
+    while changed:
+        changed = False
+        for p in lowered_prefixes:
+            if sl.startswith(p):
+                s = s[len(p):].lstrip()
+                sl = s.lower()
+                changed = True
+                break
+    # Trim trailing wrapper punctuation: `.`, `,`, `;`, `)`, `]`, `>`, `}`,
+    # whitespace, `/`.
+    s = s.rstrip(".,;)>]}/ \t\r\n")
+    # Final lowercase for case-insensitive matching.
+    return s.lower()
+
+
+_DOI_REGEX = re.compile(r"(?i)\b10\.\d{4,9}/\S+")
+
+
+def _extract_doi(text: str) -> Optional[str]:
+    """Extract a DOI from a reference string, normalised. None if no DOI present."""
+    if not text:
+        return None
+    m = _DOI_REGEX.search(text)
+    if not m:
+        return None
+    candidate = m.group(0)
+    return _normalise_doi(candidate) or None
+
+
+def lookup_in_paperpile(doi: str) -> tuple[Optional[dict], Optional[str]]:
+    """Look up a normalised DOI in the local Paperpile mirror.
+
+    Returns (paper_record, vault_relative_note_path) on hit, (None, None) on miss
+    or any drift case (stale alias, missing record, DOI inequality, missing slug,
+    missing note file).
+    """
+    if not _mirror_available():
+        return (None, None)
+    if not doi:
+        return (None, None)
+    assert _MIRROR_STATE is not None and _MIRROR_DOI_INDEX is not None
+    normalised = _normalise_doi(doi)
+    pub_id = _MIRROR_DOI_INDEX.get(normalised)
+    if not pub_id:
+        return (None, None)
+    record = (_MIRROR_STATE.get("paper_records") or {}).get(pub_id)
+    if not record:
+        # Stale alias after merge — fall through.
+        return (None, None)
+    if _normalise_doi(record.get("doi") or "") != normalised:
+        # Alias drift (DOI corrected in Paperpile but alias not pruned).
+        return (None, None)
+    slug = record.get("slug")
+    if not slug:
+        return (None, None)
+    note_rel = f"{PAPERPILE_PAPERS_REL}/{slug}.md"
+    note_abs = VAULT_ROOT / note_rel
+    if not note_abs.exists():
+        # Writer/state drift — fall through to external waterfall.
+        return (None, None)
+    return (record, note_rel)
+
+
+def _check_inlibrary_consistency(parsed: dict, record: dict) -> list[str]:
+    """Compare manuscript-cited author/year against the curated paper_record.
+
+    Returns a list of issues. Empty list means clean — status VERIFIED.
+    Non-empty means status CONFLICT.
+    """
+    issues: list[str] = []
+    # Author check: paper_record stores authors_resolved[0]['display'] (full name);
+    # the manuscript reference's first_author is usually a surname only.
+    resolved = record.get("authors_resolved") or []
+    if resolved:
+        found_display = (resolved[0] or {}).get("display") or ""
+        ref_author = parsed.get("first_author", "")
+        if found_display and ref_author:
+            issue = _check_author(ref_author, found_display)
+            if issue:
+                issues.append(issue)
+    # Year check: ±1 year tolerance for preprint→published transitions.
+    rec_year = record.get("year")
+    ref_year = parsed.get("year")
+    if rec_year and ref_year and abs(int(rec_year) - int(ref_year)) > 1:
+        issues.append(f"Year mismatch: ref={ref_year}, found={rec_year}")
+    # No title check — DOI is the identity; styles vary.
+    return issues
 
 
 def extract_references(text: str) -> list[str]:
@@ -124,6 +317,12 @@ def parse_reference(ref: str) -> dict:
             # Fallback: take first 100 chars as search query
             result["title"] = after_year[:100].strip()
 
+    # Extract DOI (normalised) — used both for in-library lookup and as a hint
+    # downstream. Done here so verify_one can consult it before the title guard.
+    doi = _extract_doi(ref)
+    if doi:
+        result["doi"] = doi
+
     return result
 
 
@@ -211,7 +410,7 @@ def _check_author(ref_author: str, found_name: str) -> Optional[str]:
 
 
 def verify_one(parsed: dict) -> dict:
-    """Verify a single parsed reference against APIs."""
+    """Verify a single parsed reference against the local mirror, then APIs."""
     result = {
         "reference": parsed.get("full", ""),
         "first_author": parsed.get("first_author", ""),
@@ -222,7 +421,26 @@ def verify_one(parsed: dict) -> dict:
         "doi": None,
         "matched_title": None,
         "source_api": None,
+        "paperpile_note": None,
+        "paperpile_pub_id": None,
     }
+
+    # --- Paperpile in-library lookup (DOI-direct) ---
+    # Done BEFORE the title parse-error guard so DOI-bearing references with
+    # weak title extraction still resolve locally.
+    cited_doi = parsed.get("doi")
+    if cited_doi and _mirror_available():
+        record, note_rel = lookup_in_paperpile(cited_doi)
+        if record:
+            issues = _check_inlibrary_consistency(parsed, record)
+            result["source_api"] = "Paperpile (in-library)"
+            result["doi"] = record.get("doi")  # canonical, raw-case from record
+            result["matched_title"] = record.get("title")
+            result["paperpile_note"] = note_rel
+            result["paperpile_pub_id"] = record.get("pub_id")
+            result["issues"] = issues
+            result["status"] = "CONFLICT" if issues else "VERIFIED"
+            return result
 
     title = parsed.get("title", "")
     if not title or len(title) < 10:
@@ -316,6 +534,13 @@ def verify_references(refs: list[str]) -> list[dict]:
     """Verify a list of reference strings."""
     print(f"Verifying {len(refs)} references...", file=sys.stderr)
     results = []
+    status_icon = {
+        "VERIFIED": "✓",
+        "PARTIAL_MATCH": "~",
+        "NOT_FOUND": "✗",
+        "PARSE_ERROR": "?",
+        "CONFLICT": "!",
+    }
     for i, ref in enumerate(refs):
         parsed = parse_reference(ref)
         print(
@@ -324,10 +549,25 @@ def verify_references(refs: list[str]) -> list[dict]:
             file=sys.stderr,
         )
         result = verify_one(parsed)
-        status_icon = {"VERIFIED": "✓", "PARTIAL_MATCH": "~", "NOT_FOUND": "✗", "PARSE_ERROR": "?"}
-        print(f"    {status_icon.get(result['status'], '?')} {result['status']}", file=sys.stderr)
+        # Use ✓P prefix for Paperpile in-library hits (verified or conflict)
+        is_pp = result.get("source_api") == "Paperpile (in-library)"
+        base = status_icon.get(result["status"], "?")
+        icon = f"{base}P" if is_pp and result["status"] in ("VERIFIED", "CONFLICT") else base
+        suffix = ""
+        if is_pp:
+            if result["status"] == "VERIFIED":
+                suffix = " (Paperpile in-library)"
+            elif result["status"] == "CONFLICT":
+                detail = "; ".join(result.get("issues") or []) or "in-library record disagrees"
+                suffix = f" (Paperpile in-library: {detail})"
+        elif result.get("source_api"):
+            suffix = f" ({result['source_api']})"
+        print(f"    {icon} {result['status']}{suffix}", file=sys.stderr)
         results.append(result)
-        time.sleep(0.5)  # Be polite to APIs
+        # Skip the politeness sleep when the result came from local mirror —
+        # no external API was hit, so no rate limit to honour.
+        if not is_pp:
+            time.sleep(0.5)
     return results
 
 
@@ -358,11 +598,19 @@ def verify_manuscript(path: Path) -> list[dict]:
 
 
 def format_report(results: list[dict], source: str) -> str:
-    """Format verification results as a markdown report."""
+    """Format verification results as a markdown report.
+
+    Section order: Not Found → Conflicts → Partial Matches → Verified → Parse Errors.
+    The Verified section emits a wikilink to the Paperpile note when available.
+    Each section line includes the literal status token so downstream callers
+    that substring-count (e.g. nightly_workhorse) can detect entries.
+    """
     verified = [r for r in results if r["status"] == "VERIFIED"]
     partial = [r for r in results if r["status"] == "PARTIAL_MATCH"]
     not_found = [r for r in results if r["status"] == "NOT_FOUND"]
     parse_errors = [r for r in results if r["status"] == "PARSE_ERROR"]
+    conflicts = [r for r in results if r["status"] == "CONFLICT"]
+    in_library = [r for r in results if r.get("source_api") == "Paperpile (in-library)"]
 
     lines = [
         "# Citation Verification Report",
@@ -370,10 +618,12 @@ def format_report(results: list[dict], source: str) -> str:
         f"**Source:** `{source}`",
         f"**Date:** {time.strftime('%Y-%m-%d %H:%M')}",
         f"**Total references:** {len(results)}",
+        f"**Paperpile in-library hits:** {len(in_library)}",
         "",
         "| Status | Count |",
         "|--------|-------|",
         f"| Verified | {len(verified)} |",
+        f"| Conflict (in-library) | {len(conflicts)} |",
         f"| Partial match | {len(partial)} |",
         f"| Not found | {len(not_found)} |",
         f"| Parse error | {len(parse_errors)} |",
@@ -388,16 +638,39 @@ def format_report(results: list[dict], source: str) -> str:
         lines.append("")
         for r in not_found:
             lines.append(
-                f"- **{r['first_author']} ({r['year']})**: "
+                f"- **NOT_FOUND** — {r['first_author']} ({r['year']}): "
                 f"{r['reference'][:200]}"
             )
         lines.append("")
+
+    if conflicts:
+        lines.append("## Conflicts — In-library record disagrees with cited reference")
+        lines.append("")
+        lines.append(
+            "The DOI matches a paper in your curated Paperpile library, but the "
+            "manuscript's representation disagrees with the curated record. The "
+            "library is the source of truth — likely a citation error in the "
+            "manuscript."
+        )
+        lines.append("")
+        for r in conflicts:
+            lines.append(f"**CONFLICT** — {r['first_author']} ({r['year']})")
+            lines.append(f"- Ref: {r['reference'][:200]}")
+            if r.get("doi"):
+                lines.append(f"- DOI: {r['doi']}")
+            if r.get("matched_title"):
+                lines.append(f"- In-library title: {r['matched_title']}")
+            if r.get("paperpile_note"):
+                lines.append(f"- Paperpile note: [[{r['paperpile_note']}]]")
+            for issue in r["issues"]:
+                lines.append(f"- **Issue:** {issue}")
+            lines.append("")
 
     if partial:
         lines.append("## Partial Matches — Issues Found")
         lines.append("")
         for r in partial:
-            lines.append(f"**{r['first_author']} ({r['year']})**")
+            lines.append(f"**PARTIAL_MATCH** — {r['first_author']} ({r['year']})")
             lines.append(f"- Ref: {r['reference'][:150]}...")
             lines.append(f"- Matched: {r['matched_title']}")
             if r["doi"]:
@@ -413,16 +686,18 @@ def format_report(results: list[dict], source: str) -> str:
         for r in verified:
             doi_str = f" — DOI: {r['doi']}" if r["doi"] else ""
             lines.append(
-                f"- {r['first_author']} ({r['year']}){doi_str} "
+                f"- **VERIFIED** — {r['first_author']} ({r['year']}){doi_str} "
                 f"[{r['source_api']}]"
             )
+            if r.get("paperpile_note"):
+                lines.append(f"  → [[{r['paperpile_note']}]]")
         lines.append("")
 
     if parse_errors:
         lines.append("## Parse Errors")
         lines.append("")
         for r in parse_errors:
-            lines.append(f"- {r['reference'][:200]}")
+            lines.append(f"- **PARSE_ERROR** — {r['reference'][:200]}")
         lines.append("")
 
     return "\n".join(lines)
@@ -494,7 +769,16 @@ def main():
         action="store_true",
         help="Insert missing DOIs into manuscript references (modifies the file)",
     )
+    parser.add_argument(
+        "--no-paperpile",
+        action="store_true",
+        help="Skip the local Paperpile in-library DOI lookup (external APIs only)",
+    )
     args = parser.parse_args()
+
+    # Env-var emergency override (parity with --no-paperpile).
+    if args.no_paperpile or os.environ.get("VERIFY_CITATIONS_NO_PAPERPILE") == "1":
+        set_paperpile_disabled(True)
 
     path = Path(args.manuscript)
     if not path.exists():

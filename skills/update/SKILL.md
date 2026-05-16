@@ -96,13 +96,13 @@ If within budget, proceed silently — no need to report the numbers unless aske
    |----------|--------------|---------------|
    | Process docs | `<logs>/Processes/` (Simon: `05_AI WORKFLOW/CLAUDE/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`) | Grep for seed keywords |
    | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
-   | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_LIFE OS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
+   | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |
    | Role notes | Role notes (files with `type: role` frontmatter) — Simon: distributed across `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `04_PERSONAL/`, `05_AI WORKFLOW/`; newcomer: skip silently if not present | If role-relevant work was done |
    | Working files | Paths from conversation context | Files actively being developed |
    | Scheduled Automations | `<logs>/Processes/Scheduled Automations.md` if it exists (Simon's vault has one; newcomer's may not) | If any automation was changed |
    | MEMORY.md | Auto-memory index | If a remembered fact was invalidated |
-   | Current Projects | Current Projects file if it exists (Simon: `01_LIFE OS/Current Projects.md`; newcomer: `<vault>/Current Projects.md` or absent) | If project status changed |
+   | Current Projects | Current Projects file if it exists (Simon: `01_PROJECTS/Current Projects.md`; newcomer: `<vault>/Current Projects.md` or absent) | If project status changed |
 
    Use parallel searches (Grep/Glob/QMD) to build the candidate list quickly. Include files from the conversation that were edited but might have upstream/downstream docs.
 
@@ -182,7 +182,17 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Did any update change a process that a skill references?
    - If so, cascade the fix.
 
-9. **Code backup check**. If the session created or modified scripts, analysis code, or data outputs:
+9. **Refresh auto-generated reference docs**. Run unconditionally — the regenerator is fast and idempotent. It rewrites only the auto-generated section between `<!-- BEGIN AUTO-GENERATED: vault-skills -->` / `<!-- END AUTO-GENERATED: vault-skills -->` markers in `05_AI WORKFLOW/CLAUDE/Slash Commands Reference.md`. The rest of the doc (plugin commands, built-in CLI, keyboard shortcuts) is preserved verbatim.
+
+   ```bash
+   python3 ~/.claude/scripts/refresh_slash_commands_reference.py
+   ```
+
+   Output is silent on the happy path. Surface to Simon if you see either:
+   - `Uncategorised (please add to CATEGORIES): <skills>` — a new skill exists on disk that isn't in the script's category map. Add it by editing the `CATEGORIES` list in `~/.claude/scripts/refresh_slash_commands_reference.py` and re-running.
+   - `In CATEGORIES map but not on disk (remove from map?): <skills>` — a skill was removed from disk but still listed in the category map. Remove it from the script.
+
+10. **Code backup check**. If the session created or modified scripts, analysis code, or data outputs:
    - Check `git status` in each relevant repo for uncommitted changes.
    - Check whether the repo has a GitHub remote (`git remote -v`).
    - **(SIMON-ONLY)** **If scripts/outputs exist outside any repo** (e.g., on Desktop, in a project folder): if `IS_SIMON=true`, assess whether a GitHub repo would be useful. It is if there are ≥2 scripts or the analysis is non-trivial. If so, **create a private repo** on Simon's GitHub (`gh repo create simonjpierce/<name> --private`), initialize locally, add relevant files (scripts, cleaned data, outputs — not raw data from third-party papers), commit, push, and update the Artifacts table with the new repo path. If `IS_SIMON=false`, commit to a local repo only and ask the user where (if anywhere) they want it pushed — do NOT use the `simonjpierce/` namespace.
@@ -197,7 +207,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
 ### Phase 4 — Report
 
-10. **Summary**. Brief report of what was updated:
+11. **Summary**. Brief report of what was updated:
    - Count of auto-updates applied
    - Review items: approved/modified/skipped
    - Any cascading fixes from cross-reference check
@@ -256,6 +266,7 @@ For single-target plan/spec verification (not bulk doc scanning), use the `/code
 - **Timestamp awareness.** If a document has a "Last updated" or "Status" field, update it. If it doesn't, don't add one just because.
 - **Don't create new documents.** This skill updates existing docs. If a new doc is needed, flag it to Simon.
 - **Respect protected sections.** Some docs have sections that shouldn't be touched (e.g., Current Projects' "Life razor" section). Check folder CLAUDE.md files for any such rules.
+- **Current Projects — same-section stale sweep.** When adding a new item to or updating a section of Current Projects, also sweep that same section for items already flagged `⚠️ stale` (set by the nightly refresh on items un-touched for >14 days). For each stale item: if the work is genuinely complete, remove it; if the next-action is superseded by the new item being added, fold the relevant detail into the new item and remove the stale one; if the item is still live but quiet, refresh the date. Don't leave stale-flagged items sitting alongside a fresh entry — they confuse future Claude sessions reading Current Projects for orientation. Confirmed 2026-05-15: added a new Photography line during /update, left a `⚠️ stale` Fiona webinar entry sitting beside it; /document's verification subagent caught the gap. One-line check at the end of any Current Projects edit prevents this.
 - **Maintain the Artifacts section.** If the primary note has an `## Artifacts` table, check whether any files created or modified during this session are missing from it. Add them. If the note doesn't have an Artifacts section yet but has 5+ related files, consider adding one (classify as Review — let Simon decide). The Artifacts table is the contract between interactive work and /update: work adds rows, /update reads them. Include cross-cutting docs (skill specs, process docs) that are being refined alongside the project, not just project-specific files.
 
 

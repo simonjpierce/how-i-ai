@@ -525,7 +525,7 @@ After integrating findings from Phase 5b reference comparisons and/or external m
 
 **Step 1 — Automated API check:** If the report has a References section, invoke the bundled `/verify-citations` skill against the report path. The skill queries Semantic Scholar, CrossRef, and OpenAlex to verify each reference exists with correct metadata. Takes ~1s per reference. The skill writes its report to `/tmp/research/{topic}_citation_report.md` (or wherever it advertises in its output).
 
-**Step 2 — Manual verification of flagged items:** For any NOT_FOUND or PARTIAL_MATCH results from the script, plus any references the script couldn't parse, WebSearch to confirm: (a) the paper exists, (b) author names are correct, (c) journal/year/volume match, (d) the claimed finding actually appears in that paper.
+**Step 2 — Manual verification of flagged items:** For any CONFLICT, NOT_FOUND, or PARTIAL_MATCH results from the script, plus any references the script couldn't parse, WebSearch to confirm: (a) the paper exists, (b) author names are correct, (c) journal/year/volume match, (d) the claimed finding actually appears in that paper. CONFLICT entries go first — the cited DOI matches a paper in the local Paperpile mirror but the manuscript's author/year disagrees with the curated record; the library is the source of truth, so a CONFLICT almost always means the manuscript has the wrong citation.
 
 **What to check for:**
 - **Hallucinated author names** — the most common failure mode. Subagents and external models find real findings but invent plausible author names. Three instances caught in v3 run ("Lutz et al." for Dziergwa, "Park & Lee" and "Vo et al." for Ahn et al.).
