@@ -215,6 +215,16 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    Keep it to 5–10 lines unless the update was large.
 
+12. **Route systemic observations to Daily Log housekeeping** (added 2026-05-17 — see Friction Log entry for origin context). Post-run observations like "MEMORY.md still over cap after N sessions" or "automation X is producing phantom files" deserve durable capture in the Daily Log's `## System housekeeping — Claude-managed` section so a future `/morning-briefing` or `/system-upgrade` will see them. The Summary in step 11 surfaces these in-chat but they evaporate when the session closes unless routed.
+
+   For each observation in the Summary that describes a **systemic pattern** (recurring across sessions, affects automations, suggests an investigation), ask:
+   - Is this already covered by an existing Daily Log housekeeping entry? (Grep before appending — avoid duplicates.)
+   - Is it a per-this-session detail (e.g. "12 files changed") or a systemic observation (e.g. "process docs keep accumulating stale historical refs")?
+   - Per-session detail → leave in the chat Summary only.
+   - Systemic observation → append a new entry to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with the standard format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Pick check-after date based on cadence: ~7 days for recurring observations, longer for one-off "verify after stability window".
+
+   This step lives in `/update` rather than `/document` because /update generates the post-run notes; /document's step 12 verification subagent catches gaps but doesn't see /update's chat-only output. Surfacing in the producing skill avoids the cross-skill handoff. Skip this step if the Summary had no systemic observations — most /update runs are routine and won't trigger anything.
+
 
 ## Scaling behaviour
 
