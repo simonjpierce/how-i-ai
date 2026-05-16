@@ -671,7 +671,7 @@ Invoke the bundled `/todo` skill to create a review task. `/todo` routes to whic
 - Title: `Review: Research — {Topic}` (under 60 chars)
 - Notes: vault link to the report + research question + TL;DR bullets + a Claude Code prompt for resuming work cold
 
-If `/todo` is unavailable, fall back to writing the review task to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## For review`. Do NOT write to `<vault>/TODO.md` — that file was retired 2026-05-15 in Simon's vault.
+If `/todo` is unavailable, fall back to writing the review task to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## For review`. Do NOT write to `<vault>/TODO.md` — that file was retired 2026-05-15 in Simon's vault.
 
 ### Terminal summary
 

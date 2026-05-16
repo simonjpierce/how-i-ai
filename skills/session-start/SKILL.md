@@ -20,7 +20,7 @@ When a step in this skill fails or needs a workaround, update this skill file wi
    ```
    Update this later when the task becomes clear.
 
-1. **Locate the logs folder.** Prefer `<vault>/AI_WORKFLOW/CLAUDE/` (starter convention). Fall back to `<vault>/05_AI WORKFLOW/CLAUDE/` (Simon's vault numbering). The first one that exists is the logs folder — reuse this path for steps 4–5. If neither exists, this isn't a CLAUDE-managed vault — skip steps 4–5 silently and just orient on Current Projects + MEMORY.md.
+1. **Locate the logs folder.** Prefer `<vault>/AI_WORKFLOW/CLAUDE/` (starter convention). Fall back to `<vault>/05_SYSTEM/` (Simon's vault numbering). The first one that exists is the logs folder — reuse this path for steps 4–5. If neither exists, this isn't a CLAUDE-managed vault — skip steps 4–5 silently and just orient on Current Projects + MEMORY.md.
 
 2. **Read Current Projects** if it exists — try `01_PROJECTS/Current Projects.md` first, then `Current Projects.md` at the vault root. This is the most important orientation context. Skip silently if neither exists (the starter vault doesn't ship one).
 

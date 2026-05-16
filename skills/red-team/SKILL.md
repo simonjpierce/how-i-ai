@@ -51,7 +51,7 @@ Identify:
 Then gather relevant context docs — not all are needed every time:
 
 1. **Folder CLAUDE.md** — Read the CLAUDE.md in the document's parent folder (or nearest ancestor that has one). Contains audience, tone, and domain conventions.
-2. **Voice reference** (for articles/written content) — Read the voice reference closest to the document's domain. For Planet Ocean / photography content: `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Planet Ocean).md`. For whale shark book content: `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Whale Shark Book).md`. For other domains, use the Planet Ocean reference as the general default.
+2. **Voice reference** (for articles/written content) — Read the voice reference closest to the document's domain. For Planet Ocean / photography content: `05_SYSTEM/Voice References/Voice Reference — Simon Pierce (Planet Ocean).md`. For whale shark book content: `05_SYSTEM/Voice References/Voice Reference — Simon Pierce (Whale Shark Book).md`. For other domains, use the Planet Ocean reference as the general default.
 3. **Comparison documents** — Use Glob/Grep to find 1–3 closely related vault files (same project, similar document type). These serve as precedent and convention references — not quality authorities. They show how similar documents are typically structured, not what "good" necessarily looks like.
 4. **Current Projects** (for strategic docs) — Read `01_PROJECTS/Current Projects.md` to check alignment with current priorities.
 
@@ -84,7 +84,7 @@ Auto-include Exact and Strong matches. Present Weak matches in the scope estimat
 
 **Related documents**: Identify docs that reference or are referenced by this document:
 - MEMORY.md entries about the same topic
-- `05_AI WORKFLOW/CLAUDE/Processes/Scheduled Automations.md` (if the doc describes an automation)
+- `05_SYSTEM/Processes/Scheduled Automations.md` (if the doc describes an automation)
 - The spec (if the document is a process doc) or the process doc (if the document is a spec)
 - Other process docs in the same domain that share dependencies
 
@@ -241,7 +241,7 @@ gemini -p "" --output-format text --yolo < /tmp/red-team-gemini-prompt.md 2>&1 |
 - Model not found → try fallback, then proceed without that reviewer
 - Any other error → report the error, proceed without that reviewer
 
-Capture the full output. Copy the findings file to the vault as `<vault>/05_AI WORKFLOW/OUTPUTS/onboarding-review-gemini-YYYY-MM-DD.md` (or wherever the user keeps review outputs — read from the spec's Artifacts table if available).
+Capture the full output. Copy the findings file to the vault as `<vault>/05_SYSTEM/OUTPUTS/onboarding-review-gemini-YYYY-MM-DD.md` (or wherever the user keeps review outputs — read from the spec's Artifacts table if available).
 
 #### 6c. Walk user through Gemini findings + apply
 

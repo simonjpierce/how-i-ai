@@ -73,9 +73,9 @@ If within budget, proceed silently — no need to report the numbers.
 
    Determine the logs folder by trying these in order — first that exists wins:
    - `<vault>/AI_WORKFLOW/CLAUDE/` (starter-vault convention)
-   - `<vault>/05_AI WORKFLOW/CLAUDE/` (Simon's vault numbering)
+   - `<vault>/05_SYSTEM/` (Simon's vault numbering)
 
-   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_AI WORKFLOW/` (Simon's prefix) or any other numbered prefix in subagent prompts or substeps — pass the resolved path through. If neither folder exists, this isn't a CLAUDE-managed vault — flag and stop.
+   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_SYSTEM/` (Simon's prefix) or any other numbered prefix in subagent prompts or substeps — pass the resolved path through. If neither folder exists, this isn't a CLAUDE-managed vault — flag and stop.
 
    Read the three current logs to understand their format and latest entries: `Session Handoff Log.md`, `Friction Log.md`, `Decision Log.md` (each inside the logs folder).
 
@@ -151,7 +151,7 @@ If within budget, proceed silently — no need to report the numbers.
    - If no divergences, do NOT include the subsection (signal: zero divergence is the desired state).
    - Divergence findings are ALSO relevant to step 8c classification: a divergence that matches an existing feedback memory means the rule wasn't followed (friction log entry, not new memory); a divergence on a novel trigger may warrant a new behavioural rule. Classify by frequency: **always-on → Tier 1 inline** in MEMORY.md's Feedback & instructions — Tier 1 section; **context-triggered (specific activity/domain) → new or existing Tier 2 leaf** (`memory/feedback_*.md`) with an explicit READ trigger in MEMORY.md's Tier 2 index. See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the convention.
 
-   **8f. Voice reference sweep**: Scan the conversation for any long-form external-facing writing drafted this session — emails, essays, newsletter sections, donor/funder comms, student-facing responses, supporter updates. For each draft, confirm: (a) was the voice guide declared in the first response per the CLAUDE.md Interaction Style rule, and (b) was a voice reference file (in `<logs folder>/Voice References/` — Simon's lives at `05_AI WORKFLOW/CLAUDE/Voice References/`; newcomer vaults don't ship one by default — skip silently if the folder doesn't exist) actually Read before the prose was written?
+   **8f. Voice reference sweep**: Scan the conversation for any long-form external-facing writing drafted this session — emails, essays, newsletter sections, donor/funder comms, student-facing responses, supporter updates. For each draft, confirm: (a) was the voice guide declared in the first response per the CLAUDE.md Interaction Style rule, and (b) was a voice reference file (in `<logs folder>/Voice References/` — Simon's lives at `05_SYSTEM/Voice References/`; newcomer vaults don't ship one by default — skip silently if the folder doesn't exist) actually Read before the prose was written?
 
    - If any drafts were produced without a declared + read voice guide, include them in the handoff entry under a `## Voice reference gaps` subsection. Format: `- Drafted [type] without reading [applicable guide]`. Name the specific voice file that should have been consulted.
    - If the voice guide was correctly declared and read, don't include the subsection (zero is the desired state).
@@ -161,7 +161,7 @@ If within budget, proceed silently — no need to report the numbers.
 
 9. **Update relevant process docs and skills**:
    - Identify 3–5 keywords from the session's work (tools used, workflows touched, domain topics).
-   - Grep `<logs folder>/Processes/` for those keywords (Simon: `05_AI WORKFLOW/CLAUDE/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
+   - Grep `<logs folder>/Processes/` for those keywords (Simon: `05_SYSTEM/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
    - For each match, read the doc and check whether the session's work **changes, refines, or invalidates** anything in it. Update in place if so.
    - **Proactively flag improvements**: After checking for invalidation, also ask: "Did this session produce any reusable workflow patterns, conventions, or lessons learned that should be added to an existing process doc or skill?" Examples: a new convention discovered (e.g., unpublished data citation rules), a workflow step that proved valuable (e.g., citation quality audit), a tool integration pattern (e.g., checking org emails for authoritative figures). Flag these to the user with the specific doc/skill that should be updated and what should be added.
    - Don't create new process docs during handover — just flag if one should be created.
@@ -215,7 +215,7 @@ If within budget, proceed silently — no need to report the numbers.
    > For each item found, classify as one of:
    > - **Apply now** — can be fixed in this session without Simon's judgement (e.g., updating a cross-reference, adding a self-assessment section to a skill).
    > - **Create TODO (Things 3)** — needs Simon to take an action only he can take (send an email, review a proposal, make a scope/design decision, run an interactive command, apply credentials). If Claude can verify/act on it autonomously on a future date, DO NOT pick this — use System housekeeping instead.
-   > - **System housekeeping (Daily Log)** — a deferred check or action that Claude can perform autonomously on or after a specific date: "verify filter fired after N runs", "delete backup file X on YYYY-MM-DD", "confirm automation healthy after stability window". Route to the Daily Log if one exists (Simon: `05_AI WORKFLOW/OUTPUTS/Daily Log.md`; newcomer vaults don't ship one — fall back to "Note for next session" instead). The `System housekeeping → Daily Log` MEMORY rule applies for Simon's setup — do NOT create a Things 3 task for autonomous checks.
+   > - **System housekeeping (Daily Log)** — a deferred check or action that Claude can perform autonomously on or after a specific date: "verify filter fired after N runs", "delete backup file X on YYYY-MM-DD", "confirm automation healthy after stability window". Route to the Daily Log if one exists (Simon: `05_SYSTEM/OUTPUTS/Daily Log.md`; newcomer vaults don't ship one — fall back to "Note for next session" instead). The `System housekeeping → Daily Log` MEMORY rule applies for Simon's setup — do NOT create a Things 3 task for autonomous checks.
    > - **Note for next session** — not urgent but should be captured in the handoff log's "What's next" section.
    >
    > Test for routing: "Can Claude assess this without Simon's input, given enough time?" If yes → System housekeeping. If no → Create TODO.
@@ -225,7 +225,7 @@ If within budget, proceed silently — no need to report the numbers.
    Review the subagent's report and act on it:
    - **Apply now** items: make the changes directly.
    - **(SIMON-ONLY)** **Create TODO (Things 3)** items: if `IS_SIMON=true`, create Things 3 tasks with vault links and clear descriptions. If `IS_SIMON=false`, downgrade these items to "Note for next session" (next bullet).
-   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_AI WORKFLOW/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, a named verification check, AND a `[created: YYYY-MM-DD]` tag (today's date) so the F3 Daily Log lifecycle can age the entry out cleanly after the check action lands. Format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Claude picks these up on future sessions after the check-after date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
+   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, a named verification check, AND a `[created: YYYY-MM-DD]` tag (today's date) so the F3 Daily Log lifecycle can age the entry out cleanly after the check action lands. Format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Claude picks these up on future sessions after the check-after date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
    - **Note for next session** items: add to the "What's next" section of the handoff entry (update step 5 entry if already written).
    - Report all items and actions taken to the user in step 18.
 
@@ -360,7 +360,7 @@ If within budget, proceed silently — no need to report the numbers.
 - If the session was trivial (quick question, no real work done), say so and skip the logs.
 - If a log file doesn't exist, create it with a brief header (e.g., `# Session Handoff Log`) before appending.
 - All vault paths are relative to the vault root recorded in `~/.claude/projects/<project-key>/config.json` under `vault.path`. Don't hard-code a vault path here — derive it at runtime so the skill survives a vault rename.
-- The auto-memory directory is at `~/.claude/projects/.../memory/`. MEMORY.md is the index; individual memory files live alongside it. **(SIMON-ONLY)** Simon's vault has a copy at `05_AI WORKFLOW/CLAUDE/MEMORY (auto-memory).md` symlinked to the auto-memory MEMORY.md — edits to either location propagate. Newcomer vaults don't have this symlink; skip the assumption.
+- The auto-memory directory is at `~/.claude/projects/.../memory/`. MEMORY.md is the index; individual memory files live alongside it. **(SIMON-ONLY)** Simon's vault has a copy at `05_SYSTEM/MEMORY (auto-memory).md` symlinked to the auto-memory MEMORY.md — edits to either location propagate. Newcomer vaults don't have this symlink; skip the assumption.
 
 ## Post-run improvement
 

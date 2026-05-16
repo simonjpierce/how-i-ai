@@ -129,7 +129,7 @@ The variant assignments above are inferred from filenames and the 2016 Brand Man
 ## Spelling and tone
 
 - **Spelling:** Audience-driven, not blanket. **American English** for US-audience MMF artifacts — board decks, US-donor materials, US-grant applications, anything with the MMF Inc. entity as the primary voice (*organization* not *organisation*, *center* not *centre*, *program* not *programme*). **NZ/UK English** for international / scientific audiences — conference talks, scientific presentations, international funder decks (these match the vault default). When the audience is ambiguous, confirm with Simon before drafting. *Updated 2026-04-27 — earlier blanket "American English throughout MMF content" rule narrowed to US-audience output specifically; conference / scientific contexts join scientific manuscripts in following journal/audience convention.*
-- **Tone:** professional, evidence-based, accessible to non-specialist audiences (donors, board, partners). See `02_MARINE MEGAFAUNA/CLAUDE.md` for the full MMF tone guidance, and `05_AI WORKFLOW/CLAUDE/Voice References/` for format-specific voice guides.
+- **Tone:** professional, evidence-based, accessible to non-specialist audiences (donors, board, partners). See `02_MARINE MEGAFAUNA/CLAUDE.md` for the full MMF tone guidance, and `05_SYSTEM/Voice References/` for format-specific voice guides.
 - **Brand expression:** *"Saving ocean giants from extinction."*
 - **Brand purpose touchstone:** *"United for the future of marine life."*
 
@@ -155,4 +155,4 @@ Apply these unless the artifact's brief specifies otherwise:
 - Logo files: `~/.claude/skills/mmf-brand/assets/logos/` (canonical)
 - Background brand manual (2016, partially dated): `02_MARINE MEGAFAUNA/EXTERNAL COMMS/MMF Brand Manual.md`
 - MMF folder context (tone, team, funders): `02_MARINE MEGAFAUNA/CLAUDE.md`
-- Voice guides for specific formats: `05_AI WORKFLOW/CLAUDE/Voice References/`
+- Voice guides for specific formats: `05_SYSTEM/Voice References/`

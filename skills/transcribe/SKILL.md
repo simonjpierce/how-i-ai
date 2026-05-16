@@ -26,7 +26,7 @@ PROMPT hints do not reliably override Whisper's phoneme-level preference when tw
 
 Observed 2026-04-22 (Full Circle Moz meeting). Whisper produced `OMIN`; the corrector with Mozambique meeting context found `Oman` in the roster (a real MMF programme), and confidently applied `OMIN → Oman`. Actual referent was **Pomene** — a Mozambican coastal Marine Reserve missing from the roster at the time. Phonetic+semantic match to a real entry beats "no entry exists" every time, so the correction looked plausible and only got caught on review.
 
-**During Step 3b-iii review**, scan the high-confidence corrections list for any case where the surrounding context belongs to a different region/programme than the canonicalised target. Examples to flag: "Oman" in a meeting about Mozambican CCPs; "Tanzania" in an Indonesia funding discussion; a person from one country programme appearing in another country's meeting. Then re-check the verbatim and roster — if the right referent is missing from the roster, add it with explicit disambiguation notes against the false-positive entry, and correct the formatted version. Full case write-up in `05_AI WORKFLOW/CLAUDE/Processes/Meeting Transcription Pipeline.md` *Failure modes / gotchas*.
+**During Step 3b-iii review**, scan the high-confidence corrections list for any case where the surrounding context belongs to a different region/programme than the canonicalised target. Examples to flag: "Oman" in a meeting about Mozambican CCPs; "Tanzania" in an Indonesia funding discussion; a person from one country programme appearing in another country's meeting. Then re-check the verbatim and roster — if the right referent is missing from the roster, add it with explicit disambiguation notes against the false-positive entry, and correct the formatted version. Full case write-up in `05_SYSTEM/Processes/Meeting Transcription Pipeline.md` *Failure modes / gotchas*.
 
 ### Phonetic near-homophones between two real roster entries (Stefan / Steffen pattern)
 
@@ -192,7 +192,7 @@ Once the user answers:
 **Step 3b-ii: Cross-reference against the Transcription Roster.** The canonical source of truth for people, species, locations, and organisations is:
 
 ```
-05_AI WORKFLOW/CLAUDE/Processes/Transcription Roster.md
+05_SYSTEM/Processes/Transcription Roster.md
 ```
 
 This file replaces the inline staff list that used to live in this skill. Read it when the meeting involves people or domain terms you want to confirm. Each entry has `canonical`, `aliases`, `whisper_misreads`, and `context` fields.
@@ -235,7 +235,7 @@ Dry-run first if you want to preview without modifying the file:
 ```bash
 /opt/homebrew/bin/python3 -c "
 import re, yaml
-text = open('$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Transcription Roster.md').read()
+text = open('$VAULT_PATH/05_SYSTEM/Processes/Transcription Roster.md').read()
 fail = False
 for name, body in re.findall(r'^## ([A-Za-z]+)\\s*\$.*?\`\`\`yaml\\s*\\n(.*?)\\n\`\`\`', text, re.DOTALL | re.MULTILINE):
     try: yaml.safe_load(body)
@@ -284,7 +284,7 @@ Use the date/time from the user's context answers (Step 3). `transcribed` is the
 **4b. Format the body.** Read the process doc and follow it:
 
 ```
-$VAULT_PATH/05_AI WORKFLOW/CLAUDE/Processes/Meeting Transcription Pipeline.md
+$VAULT_PATH/05_SYSTEM/Processes/Meeting Transcription Pipeline.md
 ```
 
 Follow all formatting rules, the mandatory processing approach (plan → write in 40-80 line sections), speaker identification guidance, and output structure from that file. The context and vocabulary from Step 3 inform the corrections.
@@ -340,7 +340,7 @@ Show:
 
 ### 8. MMF board-deck accumulation scan (when MMF-relevant)
 
-If the transcript is MMF-related (team meeting, funder call, partner call, board-side call — touches an MMF project, programme, funder, partner, team member, or board-level event), scan it for content suitable for the next-quarter board update. The intent is continuous accumulation of the next quarter's slide-deck markdown so meeting prep is curate-and-polish, not draft-from-zero. See `05_AI WORKFLOW/CLAUDE/Processes/MMF Board Updates — Workflow.md` § *Continuous slide-deck accumulation* for the full design.
+If the transcript is MMF-related (team meeting, funder call, partner call, board-side call — touches an MMF project, programme, funder, partner, team member, or board-level event), scan it for content suitable for the next-quarter board update. The intent is continuous accumulation of the next quarter's slide-deck markdown so meeting prep is curate-and-polish, not draft-from-zero. See `05_SYSTEM/Processes/MMF Board Updates — Workflow.md` § *Continuous slide-deck accumulation* for the full design.
 
 **Skip the scan entirely if** the transcript is a personal call, non-MMF context (Planet Ocean / photography / Sony partnership), or a purely scientific discussion that doesn't touch board-level matters. When in doubt, skip — the weekly workhorse compile will catch anything missed via project-note review.
 

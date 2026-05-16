@@ -90,15 +90,15 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    **If an Artifacts section exists but seems incomplete** (e.g., the session created files not listed), update the Artifacts table first, then use the updated list.
 
-3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: try the starter-vault convention first (`<vault>/AI_WORKFLOW/CLAUDE/...`), fall back to Simon's numbering (`<vault>/05_AI WORKFLOW/CLAUDE/...`); take the first that exists.
+3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: try the starter-vault convention first (`<vault>/AI_WORKFLOW/CLAUDE/...`), fall back to Simon's numbering (`<vault>/05_SYSTEM/...`); take the first that exists.
 
    | Category | Where to look | What to check |
    |----------|--------------|---------------|
-   | Process docs | `<logs>/Processes/` (Simon: `05_AI WORKFLOW/CLAUDE/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`) | Grep for seed keywords |
+   | Process docs | `<logs>/Processes/` (Simon: `05_SYSTEM/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`) | Grep for seed keywords |
    | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
    | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |
-   | Role notes | Role notes (files with `type: role` frontmatter) — Simon: distributed across `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `04_PERSONAL/`, `05_AI WORKFLOW/`; newcomer: skip silently if not present | If role-relevant work was done |
+   | Role notes | Role notes (files with `type: role` frontmatter) — Simon: distributed across `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `04_PERSONAL/`, `05_SYSTEM/`; newcomer: skip silently if not present | If role-relevant work was done |
    | Working files | Paths from conversation context | Files actively being developed |
    | Scheduled Automations | `<logs>/Processes/Scheduled Automations.md` if it exists (Simon's vault has one; newcomer's may not) | If any automation was changed |
    | MEMORY.md | Auto-memory index | If a remembered fact was invalidated |
@@ -182,7 +182,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Did any update change a process that a skill references?
    - If so, cascade the fix.
 
-9. **Refresh auto-generated reference docs**. Run unconditionally — the regenerator is fast and idempotent. It rewrites only the auto-generated section between `<!-- BEGIN AUTO-GENERATED: vault-skills -->` / `<!-- END AUTO-GENERATED: vault-skills -->` markers in `05_AI WORKFLOW/CLAUDE/Slash Commands Reference.md`. The rest of the doc (plugin commands, built-in CLI, keyboard shortcuts) is preserved verbatim.
+9. **Refresh auto-generated reference docs**. Run unconditionally — the regenerator is fast and idempotent. It rewrites only the auto-generated section between `<!-- BEGIN AUTO-GENERATED: vault-skills -->` / `<!-- END AUTO-GENERATED: vault-skills -->` markers in `05_SYSTEM/Slash Commands Reference.md`. The rest of the doc (plugin commands, built-in CLI, keyboard shortcuts) is preserved verbatim.
 
    ```bash
    python3 ~/.claude/scripts/refresh_slash_commands_reference.py

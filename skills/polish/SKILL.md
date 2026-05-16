@@ -140,8 +140,8 @@ This step is **gated on `features.is_simon`** in the per-vault `config.json`. Re
 
 When the text is Simon's writing (essays, manuscripts, blog posts, grant applications — not internal notes or process docs), check it against the appropriate voice reference:
 
-- **Scientific/academic writing** (manuscripts, book chapters, grant applications, whale shark essays): `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Whale Shark Book).md`
-- **Web/photography/travel writing** (blog posts, naturetripper, simonjpierce.com, photography essays): `05_AI WORKFLOW/CLAUDE/Voice References/Voice Reference — Simon Pierce (Planet Ocean).md`
+- **Scientific/academic writing** (manuscripts, book chapters, grant applications, whale shark essays): `05_SYSTEM/Voice References/Voice Reference — Simon Pierce (Whale Shark Book).md`
+- **Web/photography/travel writing** (blog posts, naturetripper, simonjpierce.com, photography essays): `05_SYSTEM/Voice References/Voice Reference — Simon Pierce (Planet Ocean).md`
 
 Read the applicable voice reference, then scan the text for mismatches. The checks below are drawn from the scientific voice reference — adapt based on which reference applies. Focus on:
 

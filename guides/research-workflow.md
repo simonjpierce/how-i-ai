@@ -15,7 +15,7 @@ Uses: 4 (strategic plan benchmarking, 2026-03-13; whale shark essay automation i
 |---|---|---|
 | **`/research` skill** (deep) | 15+ minute investigation, three-model coverage, formal report | `01_PROJECTS/REVIEW QUEUE/RESEARCH/` |
 | **This process doc** (inline/lightweight) | Quick answer mid-task, 1–2 subagents, enriching an existing document | Depends on task context |
-| **Weekly strategic research** (automated) | Runs autonomously Sunday 01:00 — automated topic selection for system improvement | `05_AI WORKFLOW/CLAUDE/System Research/` (consumed by nightly self-improvement loop) |
+| **Weekly strategic research** (automated) | Runs autonomously Sunday 01:00 — automated topic selection for system improvement | `05_SYSTEM/System Research/` (consumed by nightly self-improvement loop) |
 
 The weekly strategic research (`self_improve_research.py` + LaunchAgent `nz.simon.selfimproveresearch`) is a separate automated pipeline that selects topics from friction themes, changelog trends, and bookmark signals, then runs Claude + Codex research. Its output feeds the self-improvement loop, not the review queue. See `Scheduled Automations.md` entry #20.
 
@@ -159,10 +159,10 @@ Detect the query domain and prioritise sources accordingly:
 - **Scratch files**: `/tmp/research/` (cleaned up on reboot)
 - **Shared source registry**: `/tmp/research/sources.md` (all subagents append)
 - **`/research` skill output**: `01_PROJECTS/REVIEW QUEUE/RESEARCH/Research — {Topic}.md`
-- **Weekly strategic research output**: `05_AI WORKFLOW/CLAUDE/System Research/` (consumed by self-improvement loop)
+- **Weekly strategic research output**: `05_SYSTEM/System Research/` (consumed by self-improvement loop)
 - **Inline/lightweight output**: Depends on task context — project folder, working file, or ask Simon
-- **This process doc**: `05_AI WORKFLOW/CLAUDE/Processes/Research Workflow.md`
-- **`/research` skill**: `~/.claude/skills/research/SKILL.md` (git-backed; vault `05_AI WORKFLOW/CLAUDE/Skills/research/` has a reverse symlink for Obsidian browsability)
+- **This process doc**: `05_SYSTEM/Processes/Research Workflow.md`
+- **`/research` skill**: `~/.claude/skills/research/SKILL.md` (git-backed; vault `05_SYSTEM/Skills/research/` has a reverse symlink for Obsidian browsability)
 - **Design spec**: `06_ARCHIVE/Specs — Superseded/2026-03-22-research-skill-design.md`
 
 ### Checks before acting
