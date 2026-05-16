@@ -83,7 +83,6 @@ mmf-claude-code/
 
 7. `/session-start` — orient at the start of a session.
 8. `/document` — wrap-up handover.
-9. `/todo` — capture tasks.
 10. `/update` — sync related docs.
 
 *Writing & research*

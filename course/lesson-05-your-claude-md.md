@@ -38,7 +38,7 @@ The questions cover:
 - **Who you are** — your name, what you do, organisation.
 - **How you write** — spelling conventions (NZ/UK English vs US), tone, what you care about ("evidence-based", "measured claims", "no overstatement").
 - **What you work on** — the broad domains you split your time across (research, writing, ops, photography, personal — whatever it is for you).
-- **Your task manager** — if you use Things 3, Todoist, Apple Reminders, Asana, etc., `/todo` can route tasks to it.
+- **Your task manager** — Claude records which one you use (Things 3, Todoist, Apple Reminders, Asana, etc.). Some optional skills (like `/research`'s follow-up task) reference it. The `/todo` skill that routes tasks into it is in the graduation page's personal-workflow section — install it later if you want it.
 - **Optional: per-domain context** — for each top-level folder you flag as important, Claude offers to write a `CLAUDE.md` with domain-specific terminology, key people, project lists.
 
 Just answer in plain English. **Ramble if you want.** Don't structure your answers — Claude sorts through tangents and asks follow-ups if anything's ambiguous.

@@ -215,7 +215,7 @@ Set up by \`/onboard\` on $INSTALL_DATE. This note is yours to edit.
 - Your vault is at \`$FAKE_VAULT\`.
 - Root CLAUDE.md is populated from your interview answers.
 - Logs ready at \`AI_WORKFLOW/CLAUDE/\`: Session Handoff, Decision, Friction.
-- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/todo\`, \`/science-paper\`, \`/research\`, \`/verify-citations\`.
+- Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`, \`/science-paper\`, \`/research\`, \`/verify-citations\`.
 
 ## One last setup step — point Claude Code at your vault
 

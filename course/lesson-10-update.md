@@ -26,9 +26,9 @@ Claude lists the docs it thinks should be updated and what it proposes to change
 
 The slow rot where project notes stop matching reality. Without `/update`, project state lives in your head and in whatever you happened to write down at the time; with it, the notes catch up at the end of each session.
 
-## Part 2 universal track done
+## Universal track done
 
-Lessons 7–10 are the four skills that pay off for everyone, regardless of what you do. From here, the course splits by track:
+The universal skills (`/session-start`, `/document`, `/update`) pay off regardless of what you do. From here, the course splits by track:
 
 - **Writing & research** (most of the team): [Lesson 11 — `/research`](./lesson-11-research.md).
 - **Science-specific** (analysis + manuscript folks): skip ahead to [Lesson 15 — `/science-paper`](./lesson-15-science-paper.md).

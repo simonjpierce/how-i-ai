@@ -75,7 +75,7 @@ You've installed both apps, connected them, set up your personalised cascade, an
 
 ## What's next
 
-Part 2 of the course covers core skills — short videos walking through `/session-start`, `/document`, `/todo`, `/update`, then writer-specific and scientist-specific tracks. You can do them in order or pick the ones that fit your work.
+Part 2 of the course covers core skills — short videos walking through `/session-start`, `/document`, `/update`, then writer-specific and scientist-specific tracks. You can do them in order or pick the ones that fit your work.
 
 [Lesson 7 — `/session-start`](./lesson-07-session-start.md).
 

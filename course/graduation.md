@@ -4,7 +4,7 @@ You've worked through the course. You have:
 
 - Claude Desktop + Obsidian installed and connected.
 - A personalised `CLAUDE.md` cascade describing who you are and how you work.
-- The core skills under your belt: `/session-start`, `/document`, `/todo`, `/update`.
+- The core skills under your belt: `/session-start`, `/document`, `/update`.
 - Track-specific skills if you went through Part 2.
 - At least one real piece of work done the new way.
 
@@ -18,6 +18,8 @@ These ship in [`skills/`](../skills/) but didn't get a video lesson. Each has a 
 - **`/polish`** — grammar and style checks via LanguageTool + Vale. Useful if you write a lot and want a second-pass mechanical proofread.
 - **`/review-friction`** — walk through `[OPEN]` Friction Log entries one at a time. Run weekly when the list grows.
 - **`/refresh-skills`** — pull contributor improvements from this repo into your local `~/.claude/`. Run occasionally to stay current.
+- **`/todo`** — capture tasks to your task manager (Things 3, Todoist, Apple Reminders, vault `TODO.md`). Personal-workflow skill — only useful if you use one of those task managers as your primary list.
+- **`/do-this-later`** — pause a working thread cleanly so a fresh Claude session can pick it up cold (writes a State-of-Play doc + a queued task). Personal-workflow skill.
 
 ## Deeper workflow guides
 

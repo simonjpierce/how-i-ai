@@ -43,7 +43,6 @@ STARTER_SKILLS=(
   update
   review-friction
   refresh-skills
-  todo
   science-paper
   research
   verify-citations

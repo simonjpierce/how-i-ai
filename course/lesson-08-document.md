@@ -29,4 +29,6 @@ If the session involved decisions worth remembering ("we decided to switch from 
 
 ## What's next
 
-[Lesson 9 — `/todo`](./lesson-09-todo.md). Capture the tasks `/document` surfaced into the actual task manager you use.
+[Lesson 10 — `/update`](./lesson-10-update.md). After a substantial piece of work, sweep the related project notes and docs so they reflect what just happened.
+
+If `/document` surfaced tasks you want to capture, the optional `/todo` skill (see the [graduation page](./graduation.md)) routes them to Things 3 / Todoist / Apple Reminders if you use one of those. It's a personal-workflow skill, not part of the core course.

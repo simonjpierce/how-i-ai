@@ -28,8 +28,9 @@ After lesson 6, you have the **minimum viable system.** Everything from here is 
 
 7. [`/session-start`](./lesson-07-session-start.md) — orient at the start of a session.
 8. [`/document`](./lesson-08-document.md) — wrap-up handover.
-9. [`/todo`](./lesson-09-todo.md) — capture tasks.
 10. [`/update`](./lesson-10-update.md) — sync related docs.
+
+*(Lesson 9, `/todo`, was archived 2026-05-17 — it's a personal-workflow skill, not core. See graduation.)*
 
 ### Writing & research
 
