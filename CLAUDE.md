@@ -1,8 +1,13 @@
 # mmf-claude-code — notes for Claude
 
-If you're reading this because a user just pasted *"Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine..."* into Claude Code: **read [`getting-started/05-set-up-your-vault.md`](./getting-started/05-set-up-your-vault.md) next, and follow it.** That doc tells you how to install `/onboard` and the supporting skills, then run the onboarding flow for the user. The user is not expected to read this file or any of the others — that's your job.
+This file is `CLAUDE.md` at the root of a Git repo. Depending on why you're here, jump to the right place:
 
-If you're not in an onboarding context (you're working on the repo itself, or running `/update` for Simon), the rest of this file applies.
+- **A user pasted the impatient-path prompt** (*"Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine. I have Claude Code installed already; install the starter skills and run /onboard."*) → **read [`skills/onboard/getting-started.md`](./skills/onboard/getting-started.md) next, and follow it.** That doc tells you how to install `/onboard` and the supporting skills, then run the onboarding flow.
+- **A user pasted the [README](./README.md) into you and asked for help setting up** → the README is self-contained. Adapt to their OS / existing tools / actual work. If they're on macOS and want the canonical install path, you can either walk them through the course (`course/`) lesson by lesson, or skip to the impatient path above.
+- **The user is new and you're walking them through the course** → start at [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md). Each lesson is self-contained; the user does them in order.
+- **You're working on the repo itself, or running `/update` for Simon** → the rest of this file applies.
+
+The README addresses humans + LLMs + contributors directly; this file is for LLMs operating *inside* the repo (during onboarding, contribution review, or sync runs).
 
 ---
 

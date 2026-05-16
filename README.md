@@ -1,123 +1,146 @@
 # MMF Claude Code
 
-A complete **Claude Code + Obsidian** system for thinking knowledge work — memory across sessions, behavioural defaults, log-driven self-customisation. Two apps wired together: Claude Code does the work, Obsidian is where your notes live. Built up by Simon over the past year and shared here for the MMF team and close collaborators. Block 30 minutes total: ~10 minutes downloading both apps, then a 10–15 minute interview where Claude asks you questions. **No reading required.**
+A working pattern for using Claude Code as a knowledge collaborator on real research, writing, and operations work — with persistent memory, behavioural defaults, and a vault of notes Claude can read alongside you. Built up over a year by Simon Pierce, shared here for the MMF science team and close collaborators.
 
-**Currently macOS-only.** Windows and Linux support is on the v1 roadmap. If you're on Windows or Linux and want to set this up anyway, ping Simon for a manual install — `/onboard` will halt cleanly otherwise.
+**New here?** Start with the short course → [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md).
 
-## What this gives you
+This README is also designed to be **pasteable into any LLM**. Drop it into Claude, ChatGPT, Gemini, or any other model and ask *"help me set this up on my machine"* — there's enough context here for the model to walk you through it, adapted to your OS, your existing tools, and the work you actually do.
 
-A working AI collaborator that knows your projects, your voice, and how you work — without you having to remember to remind it every session. The system bundles **Claude Code** (does the work) with **Obsidian** (where your notes live), wired together so notes you take become context Claude reads, and outputs Claude produces become notes you can find again.
+---
 
-Real workflows the system ships with:
+## The core idea
 
-- **Drafting reports and updates** — funder reports, board updates, supporter newsletters. Claude reads your project notes and drafts in your voice. See [`guides/ai-assisted-writing.md`](./guides/ai-assisted-writing.md).
-- **Running analyses and drafting manuscripts** — lab-notebook discipline (every analytical step recorded as you go), then a manuscript drafted from the completed notebook. See [`guides/ai-assisted-scientific-analysis.md`](./guides/ai-assisted-scientific-analysis.md) and [`guides/ai-assisted-scientific-writing.md`](./guides/ai-assisted-scientific-writing.md).
-- **Pre-submission peer review** — three-model adversarial critique on a manuscript before you send it to journals or co-authors. See [`guides/pre-submission-manuscript-review.md`](./guides/pre-submission-manuscript-review.md).
-- **Deep research** — Claude + Codex + Gemini investigate a topic in parallel, claims verified against primary literature, formal report delivered. See [`guides/research-workflow.md`](./guides/research-workflow.md).
-- **Literature intake and integration** — papers in, findings woven into your project notes. See [`guides/literature-intake-and-integration.md`](./guides/literature-intake-and-integration.md).
+If you've used Claude Chat or ChatGPT for any length of time, you've probably noticed the same pattern: every conversation starts from zero. Yesterday's three-hour working session leaves nothing behind except a chat window you'll never scroll back to. Personalisation hits a ceiling fast, your chats don't function as documents you can build on, and you re-brief the AI on basically everything every time.
 
-Each of those is one Slack message away from "rough idea" to "polished output" once setup is done. The 30 minutes of setup is what makes that possible — Claude can't do these things well without knowing the shape of your work.
+The workaround this repo describes is to **give the AI files it can read and edit, and to let those files live on your computer**.
 
-## How to set this up
+- **Claude Code** is Claude with file-system access — same model as Claude Chat, but it can read and edit the documents on your Mac.
+- **Obsidian** is a free editor for those documents — they're plain markdown, so any tool can read them; Obsidian happens to be the nicest one for humans.
+- Your notes, meeting transcripts, project plans, drafts, and decisions all live in a folder of `.md` files. You edit them; Claude reads and edits the same files when asked. **One set of documents, two readers.**
 
-You don't need to read this repo to use it. Three steps:
+Conversations come and go. The documents accumulate. Each session is richer than the last because the AI has access to the notes you've built up over weeks and months.
 
-1. **Install [Claude Desktop](https://claude.com/download).** Claude Code is included on a Pro plan ($20/month) and any higher tier. **MMF science team:** Simon should have added you to the MMF org plan before sending this link — if you sign in and the Code tab still says "upgrade," DM him your GitHub username + the email you signed in to Claude with. **Close collaborators outside MMF:** Pro is the right plan; the higher tiers aren't necessary.
-2. **Click the "Code" tab** in the desktop app (you'll see Chat, Cowork, and Code tabs). Despite the name, "Code" isn't just for programming — it's the only tab that can read and write files on your Mac. Click **Select folder** and pick any folder for now (your Documents folder is fine). This is a temporary "scratch" folder just to run the install. At the end of `/onboard`, Claude will tell you to quit and relaunch the Code tab pointed at your new vault — that's where all your real work happens.
-3. **Paste this prompt** into the Code tab:
+That's the whole idea. Everything else in this repo is plumbing that makes it work smoothly.
 
-   ```
-   Walk me through setting up the system at github.com/marinemegafauna/mmf-claude-code on my machine. I'm new to all of this — please hand-hold me through it, asking me one question at a time.
-   ```
+---
 
-Claude takes it from there — a short interview (~10–15 min) and you end up with a working vault, a personalised CLAUDE.md cascade, behavioural defaults, log files, and a kickoff note in your inbox. **Dictation strongly recommended over typing** — in the Claude Code desktop app, **press and hold the microphone button** in the prompt area, talk, release to send. (Terminal users: macOS Fn-Fn dictation works anywhere, or ChatGPT voice mode with Plus + paste.) Ramble is fine — unstructured monologues, tangents, contradictions are all welcome. Claude will sort through what you said and ask follow-ups if anything's unclear.
+## The four customisation layers
 
-## Already using Claude Code?
+1. **Instruction files (`CLAUDE.md`).** Plain markdown files that load automatically when Claude works in that folder. A root file holds your cross-cutting preferences (*"I write in NZ English", "I'm a marine biologist", "be measured in claims"*). Domain folders can have their own files with team names, terminology, project context. Claude reads them automatically — write once, applies forever.
 
-If you have an existing setup and want to browse rather than reinstall:
+2. **Auto-memory.** A distilled knowledge base that loads every session. When you correct Claude on something — *"don't batch questions, ask them one at a time"* — it saves the correction here. You don't correct the same thing twice.
 
-- **The big picture and philosophy** — [`getting-started/00-how-simon-ais.md`](./getting-started/00-how-simon-ais.md). Architectural overview; ~10 min read.
-- **Browse skills** — [`skills/`](./skills/). Each `SKILL.md` has a one-line description. Two-command install: see [`getting-started/04-adopting-skills.md`](./getting-started/04-adopting-skills.md).
-- **Deeper workflow docs** — [`guides/`](./guides/).
-- **Contribute** — [`CONTRIBUTING.md`](./CONTRIBUTING.md). Small improvements welcome; large changes best discussed first.
+3. **Skills.** Reusable prompts as `.md` files. Type `/research`, `/transcribe`, `/document` and Claude follows the recipe. A new skill is a new file — or ask Claude to write one for you next time it does a workflow you know you'll repeat.
 
-## Who this is for
+4. **Hooks and automations** *(advanced)*. Things that run on a schedule or in response to events. You don't need these on day one.
 
-The MMF science team and close collaborators — the people working with Simon on research, writing, and operations who use (or want to use) Claude Code in that work.
+You don't build all of this up front. **You start by writing notes in Obsidian and asking Claude to help with one real task.** The rest grows underneath you as you notice friction and let the system fix itself.
 
-This is **not** a public resource. The content references MMF projects, funders, and internal workflows, and assumes you have context from working with Simon.
+---
 
-If you want to read the architecture before/instead of running `/onboard`:
+## How to use this repo
 
-- `00-how-simon-ais.md`, `01-install-claude-code.md`, `02-use-code-not-chat.md` are written for humans — they explain what Claude Code is and why this setup is shaped the way it is.
-- `03-your-first-skill.md`, `04-adopting-skills.md`, `05-set-up-your-vault.md` are written for Claude to follow during onboarding — you can read them, but they're scripts, not explainers.
+**If you're new — the course is the way in.** Around sixteen short lessons (paired `.md` + ~3 min screencast) walk you from *"I've heard about this"* to *"I have a working setup and have done one real piece of work in it."* Start at [`course/lesson-01-the-hook.md`](./course/lesson-01-the-hook.md). You don't have to do them in one sitting.
 
-## Repository map
+**If you already use Claude Code** and just want to browse:
+
+- **`skills/`** — installable skills, one folder each. Each `SKILL.md` describes when to invoke it. Two-command install: `cp -R skills/<name> ~/.claude/skills/`, restart Claude Code.
+- **`guides/`** — deeper workflow docs (scientific writing, manuscript review, literature intake, Ghostty terminal setup).
+- **`templates/`** — starter `~/.claude/` config and a starter Obsidian vault.
+
+**If you're an LLM reading this on a user's behalf** — you have enough context to set this up adaptively. The user's OS, existing tools, and current work matter more than mechanical adherence to this repo's exact files. The course lessons assume macOS; for Windows or Linux, adapt step by step. The bundled skills assume Claude Code, but the *pattern* (vault as external memory, `CLAUDE.md` as instructions, skills as reusable recipes) doesn't depend on any specific model — translate to whatever the user has.
+
+---
+
+## Repo map
 
 ```
 mmf-claude-code/
-├── getting-started/    Numbered onboarding guides + tactical setup doc Claude reads during /onboard
-├── skills/             Installable Claude Code skills (one folder per skill)
-├── guides/             Deeper-dive workflow docs — Ghostty setup, lab notebook, manuscript review
-├── templates/          Starter vault and `~/.claude/` templates that ship with /onboard
-└── sync/               The script Simon uses to mirror his vault's skills and templates into this repo
+├── course/         The video course. Numbered lessons + short videos. Start here.
+├── skills/         Installable Claude Code skills (one folder per skill).
+├── guides/         Deeper workflow docs.
+├── templates/      Starter ~/.claude/ config and starter Obsidian vault.
+├── sync/           Scripts Simon uses to mirror his local setup into this repo.
+└── .claude/        Repo-level skill assets (agents that audit the course, etc.).
 ```
 
-## Available skills
+---
 
-Skills are markdown files Claude reads to know how to handle specific tasks. The `/onboard` flow auto-installs ten of these (marked ★ below); the rest ship in [`skills/`](./skills/) — ask Claude to install any of them when you want it (e.g. *"install /transcribe for me"* — Claude will check the dependencies, brew-install anything missing, and copy the skill). You don't need to memorise slash-command names; plain-English requests work too.
+## Course outline
 
-### Core onboarding & workflow
+**Part 1 — Onboarding** *(everyone)*
 
-- **`/onboard`** ★ — first-run setup: discovery interview, personalised CLAUDE.md cascade, starter logs, kickoff note. Run once per machine.
-- **`/session-start`** ★ — orient at the start of a session: reads recent handoff, surfaces stale friction, checks open threads.
-- **`/document`** ★ — end-of-session handover: records what was done so the next session picks up cleanly.
-- **`/update`** ★ — bring all docs current: scans related process docs, project notes, skills, CLAUDE.md files.
-- **`/refresh-skills`** ★ — pull contributor improvements from this repo into your local `~/.claude/`, walking through any conflicts.
-- **`/review-friction`** ★ — walk through `[OPEN]` Friction Log entries one at a time, marking each resolved/deferred/skip.
+1. **The hook** — a real workflow, in 3 minutes.
+2. **The idea** — externalised memory, the cascade, why this is different from chat.
+3. **Install the stack** — Claude Desktop + Obsidian.
+4. **Connect Code to your vault.**
+5. **Your `CLAUDE.md`** — let Claude interview you and draft it.
+6. **Your first real task** — pick something on your plate, do it the new way.
 
-### Writing & research
+**Part 2 — Core skills** *(pick your track after lesson 6)*
 
-- **`/research`** ★ — three-model deep research (Claude + Codex + Gemini), claim verification, formal report. *Optional: Codex CLI + Gemini CLI logged in. Without them, runs Claude-only.*
-- **`/science-paper`** ★ — lab-notebook discipline during analysis sessions; manuscript drafting from a completed notebook. *Optional: GitHub CLI (`gh`) authenticated to push the analysis repo to GitHub. Without it, the skill creates a local-only git repo and tells you how to add a remote later.*
-- **`/todo`** ★ — add a task to your task manager (Things 3, Todoist, Apple Reminders, or a vault `TODO.md`). Routes based on the choice you made during `/onboard`. Other task managers (Asana, Linear, Notion) aren't natively routed yet — fall back to `vault_todo` or ask Claude to add a routing branch for your tool.
-- **`/polish`** — grammar and style checks via LanguageTool + Vale, then apply fixes. *Requires LanguageTool + Vale installed locally.*
-- **`/verify-citations`** ★ — verify scientific citations against Semantic Scholar, CrossRef, OpenAlex. *Requires Python 3 + the `requests` library.*
+*Universal*
 
-### Ingestion
+7. `/session-start` — orient at the start of a session.
+8. `/document` — wrap-up handover.
+9. `/todo` — capture tasks.
+10. `/update` — sync related docs.
 
-- **`/transcribe`** — transcribe audio or format raw transcripts; runs whisper-cli with speaker labels and topic sections. *Requires whisper-cli; speaker diarization needs pyannote.*
-- **`/pdf-to-markdown`** — convert a PDF into clean markdown for Obsidian. *Requires `marker_single` (preferred) or `pdftotext` + `pandoc` as fallback.*
+*Writing & research*
 
-### Independent review
+11. `/research` — three-model deep research.
+12. `/transcribe` — audio → formatted notes.
+13. `/pdf-to-markdown` — paper → vault.
+14. `/verify-citations` — check references.
 
-- **`/red-team`** — three-model independent critical review of an important document. *Optional: Codex + Gemini CLIs for second/third opinions; without them, runs as a Claude-subagent-only review.*
+*Science-specific*
 
-### MMF-only
+15. `/science-paper` — lab notebook + manuscript.
+16. `/red-team` — adversarial review.
 
-- **`/mmf-brand`** — apply Marine Megafauna Foundation brand identity (colours, typography, logos, layout) to MMF-facing artifacts. Most useful if you produce MMF materials.
+After lesson 16, the **graduation page** points at `skills/`, `guides/`, and `templates/` as the optional menu — pick what's useful when you want it.
+
+The skill list above is the current shape; some lessons may consolidate as the underlying skills get reviewed.
+
+---
 
 ## The stack
 
-**Required:**
+- **[Claude Code](https://docs.claude.com/claude-code)** — desktop app (start here) or CLI (later, if you want hooks and automation).
+- **[Obsidian](https://obsidian.md)** — where notes live.
 
-- **[Claude Code](https://docs.claude.com/claude-code)** — the underlying tool, available as a desktop app or CLI. Skills are markdown files loaded from `~/.claude/skills/` and work identically in either. The `/onboard` flow defaults to the desktop app for newcomers; the terminal CLI is the path for advanced users wanting hooks and shell-tool integration (see [`guides/ghostty-setup.md`](./guides/ghostty-setup.md)).
-- **[Obsidian](https://obsidian.md)** — where notes live. Most guides reference Obsidian workflows, but the skills themselves don't require it. `/onboard` walks you through Obsidian install if you don't have it yet.
+*Optional, install when a specific skill asks for them:* [Codex CLI](https://github.com/openai/codex) and [Gemini CLI](https://github.com/google-gemini/gemini-cli) — used by `/red-team` and `/research` as second / third independent reviewers.
 
-**Optional (install later if you want them):**
+---
 
-- **[Codex CLI](https://github.com/openai/codex)** — ChatGPT's equivalent, useful for a second-opinion peer review from inside Claude Code. `/red-team` uses it when available.
-- **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — free for 1,000 requests/day. Used as a third reviewer by `/red-team`.
+## Who this is for
 
-Individual skills document their own dependencies in their `SKILL.md`.
+MMF science team and close collaborators — people doing research, writing, and operations work alongside Simon. **Private repo.** Content references MMF projects, funders, and workflows.
 
-## Living repo disclaimer
+If you don't have repo access and want it: ping Simon with your GitHub username.
 
-This repository mirrors a real, evolving setup. Things change. If something looks broken, stale, or contradicts another doc, open an issue or PR — that's how we keep it current.
+---
+
+## The impatient path
+
+If you already use Claude Code and don't want to sit through the course, paste this prompt into a Claude Code session instead:
+
+```
+Walk me through setting up github.com/marinemegafauna/mmf-claude-code on my machine.
+I have Claude Code installed already; install the starter skills and run /onboard.
+```
+
+This runs the install scripts and the `/onboard` interview directly. You skip the philosophical grounding but get a working setup quickly if you already know what you're doing.
+
+---
+
+## Living repo
+
+This setup evolves. Things change. If something looks broken, stale, or contradicts another doc, open an issue or PR. See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## Licence
 
-- **Code** (scripts, skills, hook configs): [MIT](./LICENSE).
-- **Prose** (guides, README, templates): [CC-BY-4.0](./LICENSE-CC-BY-4.0).
+- Code (scripts, skills, hook configs): [MIT](./LICENSE).
+- Prose (guides, README, course lessons, templates): [CC-BY-4.0](./LICENSE-CC-BY-4.0).
 
-Private repository; licence terms apply in the event that content is later extracted and shared externally.
+Private repository; licence terms apply if content is later extracted and shared externally.

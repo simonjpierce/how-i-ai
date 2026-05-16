@@ -68,11 +68,11 @@ description: One-line description. When should Claude invoke this skill? Be spec
 
 ## Adding or modifying a guide
 
-Guides live in `guides/` (and `getting-started/` for onboarding-sequence docs). A guide is a markdown explainer — longer than a skill, meant to be read rather than invoked.
+Guides live in `guides/`. Course lessons live in `course/`. A guide is a markdown explainer — longer than a skill, meant to be read rather than invoked. Course lessons are paired with short videos and walk a newcomer through onboarding sequentially.
 
 - Write in NZ/UK English (organisation, behaviour, colour).
 - Second person (you) rather than first-person plural (we) — it reads more directly.
-- Assume the reader has Claude Code installed and working, unless the guide is in `getting-started/` and explicitly covers setup.
+- Assume the reader has Claude Code installed and working, unless the lesson is in `course/` and explicitly covers setup.
 - Worked examples beat abstract instructions. Reference real MMF contexts where useful.
 - If a guide points to external tools, link them once at first mention — don't bury the dependency.
 

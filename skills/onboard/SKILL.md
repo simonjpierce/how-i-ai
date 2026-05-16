@@ -4,7 +4,7 @@ description: First-run setup for a new Claude + Obsidian system. Detects whether
 allowed-tools: Read, Write, Edit, Bash, Glob, Skill
 ---
 
-This skill is the bridge from "nothing installed" to "working Claude system." It hides the architectural detail behind a short interview — the user doesn't have to read or understand the `getting-started/00–04` docs to benefit from them.
+This skill is the bridge from "nothing installed" to "working Claude system." It hides the architectural detail behind a short interview — the user doesn't have to work through the `course/` lessons to benefit from the same outcome. The course is the canonical onboarding path; `/onboard` is the impatient-path shortcut for users who already use Claude Code or who want to skip the philosophical grounding.
 
 ## Preamble — read this back to the user before starting
 
