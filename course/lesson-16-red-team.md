@@ -4,6 +4,8 @@ Three independent critical reviewers, none of whom were involved in writing your
 
 The lesson reads on its own. A short screencast — me red-teaming a manuscript draft, how each model approaches it differently, what the consolidated report looks like — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill red-team`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 Runs three independent reviews of an important document:

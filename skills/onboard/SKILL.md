@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: First-run setup for a new Claude + Obsidian system. Detects whether the user already has Obsidian, walks them through install if not, runs a short discovery interview (5–7 questions), and writes a personalised CLAUDE.md cascade, starter MEMORY.md, log files, and kickoff note into their vault. Optional domain-folder pass. Schedules a follow-up routine in 2 weeks for the nightly self-improvement loop. Use when the user says "/onboard", "set up my vault", "walk me through this system", or pastes the README's three-step prompt.
+description: First-run setup for a new Claude + Obsidian system. Detects whether the user already has Obsidian, walks them through install if not, runs a short discovery interview (5–7 questions), and writes a personalised CLAUDE.md cascade, starter MEMORY.md, log files, and kickoff note into their vault. Optional domain-folder pass. Writes a two-week check-in note. Use when the user says "/onboard", "set up my vault", "walk me through this system", or pastes the README's three-step prompt.
 allowed-tools: Read, Write, Edit, Bash, Glob, Skill
 ---
 
@@ -434,14 +434,24 @@ Written by `/onboard` on {{INSTALL_DATE}} as a two-week check-in. You've had
 ~14 days with your Claude Code setup. A couple of things worth considering
 now that you've lived with it.
 
-## The nightly self-improvement loop
+## Self-improvement is already running
 
-Optional, but useful once friction has accumulated. It's a scheduled
-automation (a macOS background task) that scans your Friction Log overnight
-and proposes fixes — the system improves itself while you sleep. Setup takes
-~30 minutes. To install, ask Claude:
+You don't need to install anything for the system to improve itself.
+The `/document` skill — which you run at the end of each session, or
+which Claude invokes automatically when wrapping up — has an
+autonomous-fix gate that scans the Friction Log, classifies each entry,
+applies mechanical fixes silently, and walks you through judgement
+calls one at a time. The system improves itself a little every time
+you close a session.
 
-> *"Walk me through installing the nightly self-improvement loop."*
+If you find the Friction Log accumulating faster than `/document`
+closes things out, ask Claude:
+
+> *"Sweep the Friction Log."*
+
+That runs the closure logic on demand without waiting for the next
+session end. There's no separate nightly automation to install — the
+session-driven gate is the v1 design.
 
 ## New domain folder?
 

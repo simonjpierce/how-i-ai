@@ -4,6 +4,8 @@ Catches fabricated citations before they end up in something you submit.
 
 The lesson reads on its own. A short screencast — me running `/verify-citations` on a manuscript with one deliberately fake reference, what the report looks like, how to act on it — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill verify-citations`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 Reads the reference list (or in-text citations) of a manuscript and checks each one against Semantic Scholar, CrossRef, and OpenAlex. Flags:

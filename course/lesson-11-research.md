@@ -4,6 +4,8 @@ Three models, primary literature, a formal report you can read later. The lazy w
 
 The lesson reads on its own. A short screencast — me kicking off `/research` on a real topic, what the pipeline does, where the report lands — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill research`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 Runs a parallel deep-research pipeline. In order:

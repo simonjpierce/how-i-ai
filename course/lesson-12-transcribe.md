@@ -4,6 +4,8 @@ Drop in an audio file, get a formatted transcript with speaker labels, topic sec
 
 The lesson reads on its own. A short screencast — me transcribing a real meeting recording end-to-end — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill transcribe`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 Runs whisper-cli on an audio file (or formats an already-raw transcript), then post-processes the result: speaker labels, topic-level subheadings, action items extracted into a dedicated section. Output is a tidy markdown file in your inbox, ready to act on or file under a project.

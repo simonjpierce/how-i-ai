@@ -4,6 +4,8 @@ Two modes: a lab notebook that enforces good analytical hygiene, and a manuscrip
 
 The lesson reads on its own. A short screencast — me opening a lab-notebook session on a real analysis, then later drafting the manuscript from a different completed notebook — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill science-paper`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 **Lab notebook mode** — activated at the start of an analysis session. Enforces the discipline of recording every decision (model choice, parameter, exclusion, sanity check) as you make it. Includes an "update-after-each-step" gate so the notebook stays current with the analysis. Output: a complete lab notebook in your vault that captures what you did and why, before any results are written up.

@@ -4,6 +4,8 @@ Get the content of a PDF into your vault without copy-paste hell or losing the s
 
 The lesson reads on its own. A short screencast — me converting a journal article and a multi-page report, what each looks like in Obsidian afterwards — will pair with it when recorded.
 
+> **First time using this skill?** It's an on-demand install, not part of the starter pack. From the Claude Code prompt, run `/install-skill pdf-to-markdown`, then quit and reopen Claude Code so the new skill is discovered.
+
 ## What it does
 
 Converts a PDF into clean markdown for Obsidian. Handles the annoying bits that pure text extraction usually fluffs: paragraph joining, table reconstruction, header / footer removal, hyphenation repair (words split across line breaks), footnotes, reference list cleanup, and common OCR artefacts.
