@@ -58,7 +58,7 @@ HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes >/dev/null
 
 echo ""
 echo "  Skills installed:"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills install-skill; do
   check "skills/$skill/SKILL.md present" \
     "[[ -f '$FAKE_HOME/.claude/skills/$skill/SKILL.md' ]]"
 done
@@ -93,14 +93,14 @@ echo ""
 echo "Phase 2 — bootstrap.sh re-run safety (idempotent)"
 RERUN_OUTPUT=$(HOME="$FAKE_HOME" bash "$REPO_ROOT/sync/bootstrap.sh" --yes 2>&1 || true)
 UNCHANGED_COUNT=$(echo "$RERUN_OUTPUT" | grep -c '^  unchanged:' || true)
-# Expect 12: 2 templates + 10 skills.
-if [[ "$UNCHANGED_COUNT" -eq 12 ]]; then
+# Expect 13: 2 templates + 7 skills + 4 hooks.
+if [[ "$UNCHANGED_COUNT" -eq 13 ]]; then
   PASS=$((PASS + 1))
-  echo "  ✓ re-run reports 'unchanged' for all 12 entries (idempotent)"
+  echo "  ✓ re-run reports 'unchanged' for all 13 entries (idempotent)"
 else
   FAIL=$((FAIL + 1))
-  FAILURES+=("re-run idempotency: expected 12 unchanged, got $UNCHANGED_COUNT")
-  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 12)"
+  FAILURES+=("re-run idempotency: expected 13 unchanged, got $UNCHANGED_COUNT")
+  echo "  ✗ re-run did not skip identical files (saw $UNCHANGED_COUNT 'unchanged' lines, expected 13)"
 fi
 
 # --- Phase 3: simulate /onboard file-creation steps --------------------------
@@ -408,7 +408,7 @@ fi
 echo ""
 echo "Phase 9 — kickoff Getting Started.md promises align with installed skills"
 KICKOFF_FILE="$FAKE_VAULT/INBOX/Getting Started.md"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills install-skill; do
   if grep -q "/${skill}\b" "$KICKOFF_FILE"; then
     if [[ -f "$FAKE_HOME/.claude/skills/$skill/SKILL.md" ]]; then
       PASS=$((PASS + 1))
@@ -427,7 +427,7 @@ done
 # /verify-citations regression Codex flagged in the third red-team pass.
 echo ""
 echo "Phase 10 — bundled skills don't reference unbundled ~/bin/* dependencies"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills install-skill; do
   skill_file="$REPO_ROOT/skills/$skill/SKILL.md"
   [[ -f "$skill_file" ]] || continue
   # Match `~/bin/foo` or `$HOME/bin/foo` — reject any reference unless prefixed
@@ -452,7 +452,7 @@ done
 # config.user.{name,role}. Catch any future regression in any starter skill.
 echo ""
 echo "Phase 12 — no hardcoded Simon identity in starter skills + references"
-for skill in onboard document session-start update review-friction refresh-skills; do
+for skill in onboard document session-start update review-friction refresh-skills install-skill; do
   skill_dir="$REPO_ROOT/skills/$skill"
   [[ -d "$skill_dir" ]] || continue
   bad=$(grep -rnE 'Dr\. Simon J Pierce' "$skill_dir" 2>/dev/null | grep -v 'SIMON-ONLY' || true)

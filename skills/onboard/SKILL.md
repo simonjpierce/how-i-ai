@@ -168,7 +168,7 @@ Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminder
 
 Q8 maps to a `{{DAY_1_TASK}}` block in the kickoff note (filled at step 8b after the domain pass). Map the user's answer to one of these patterns.
 
-**Skill-install note**: starter install ships only the universal session/system skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`). Skills marked `*` below are work-specific and need installing first via `cp -R ~/.claude/repos/mmf-claude-code/skills/<name> ~/.claude/skills/` then restarting Claude Code. Include the install line in the kickoff recommendation when you use them.
+**Skill-install note**: starter install ships only the universal session/system skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`, `/install-skill`). Skills marked `*` below are work-specific and need installing first via `/install-skill <name>` (from the Claude Code prompt) then restarting Claude Code. Include the install line in the kickoff recommendation when you use them.
 
 | User mentions | Day-1 recommendation |
 |---|---|
@@ -481,7 +481,8 @@ Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
 Logs: ready at SYSTEM/
-Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research, /verify-citations
+Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /install-skill
+Work-specific skills available on demand via /install-skill: /transcribe, /pdf-to-markdown, /verify-citations, /science-paper, /research, /red-team, /polish, /mmf-brand, /todo
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 
 ⚠️ ONE LAST STEP — point Claude Code at your vault.

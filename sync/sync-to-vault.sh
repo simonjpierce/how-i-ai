@@ -100,6 +100,7 @@ STARTER_SKILLS_LIST=(
   update
   review-friction
   refresh-skills
+  install-skill
 )
 is_starter_skill() {
   local name="$1"
@@ -133,6 +134,7 @@ SKILLS=(
   "skills/review-friction::$CLAUDE_CONFIG/skills/review-friction"
   "skills/session-start::$CLAUDE_CONFIG/skills/session-start"
   "skills/refresh-skills::$CLAUDE_CONFIG/skills/refresh-skills"
+  "skills/install-skill::$CLAUDE_CONFIG/skills/install-skill"
   "skills/polish::$CLAUDE_CONFIG/skills/polish"
   "skills/todo::$CLAUDE_CONFIG/skills/todo"
   "skills/science-paper::$CLAUDE_CONFIG/skills/science-paper"

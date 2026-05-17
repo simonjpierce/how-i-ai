@@ -107,6 +107,7 @@ SKILLS=(
   "$CLAUDE_CONFIG/skills/review-friction::skills/review-friction"
   "$CLAUDE_CONFIG/skills/session-start::skills/session-start"
   "$CLAUDE_CONFIG/skills/refresh-skills::skills/refresh-skills"
+  "$CLAUDE_CONFIG/skills/install-skill::skills/install-skill"
   "$CLAUDE_CONFIG/skills/polish::skills/polish"
   "$CLAUDE_CONFIG/skills/todo::skills/todo"
   "$CLAUDE_CONFIG/skills/science-paper::skills/science-paper"
