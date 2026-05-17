@@ -230,10 +230,10 @@ Dry-run first if you want to preview without modifying the file:
 
 **If you observe a new persistent misread** during review (e.g. Whisper consistently renders "Nakia" as "Naki" in Mozambique contexts), add it to that roster entry's `whisper_misreads` list in `Transcription Roster.md` so it's caught automatically next time. This is the roster-maintenance feedback loop.
 
-**After ANY edit to `Transcription Roster.md`**, validate YAML before continuing. Two reruns in the past 7 days were caused by unquoted colons in `context:` values (Stefan/Steffen disambiguation, Mark Hackney/Erdmann disambiguation). Run:
+**After ANY edit to `Transcription Roster.md`**, validate YAML before continuing. Two reruns in the past 7 days were caused by unquoted colons in `context:` values (Stefan/Steffen disambiguation, Mark Hackney/Erdmann disambiguation). Use the transcription venv interpreter (`~/bin/transcription/venv/bin/python3`) — system `/opt/homebrew/bin/python3` lacks `yaml`:
 
 ```bash
-/opt/homebrew/bin/python3 -c "
+~/bin/transcription/venv/bin/python3 -c "
 import re, yaml
 text = open('$VAULT_PATH/05_SYSTEM/Processes/Transcription Roster.md').read()
 fail = False
