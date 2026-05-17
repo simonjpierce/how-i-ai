@@ -61,9 +61,9 @@ The repo's `skills/`, `guides/`, and `templates/` directories synchronise with t
 Follow this exact sequence. **Do not** run plain `git add` / `git commit` on files in `skills/`, `guides/`, or `templates/` — always go through the sync scripts so the canonical sources stay authoritative.
 
 1. **Pull merged PRs into Simon's local copy.** Run `./sync/sync-to-vault.sh` (dry-run) from the repo root. If anything has merged into the repo that isn't yet in `~/.claude/`, the script lists the differences. Surface the count to Simon in a single line ("N items differ between repo and `~/.claude/` — apply?"). If he agrees, re-run with `--apply`. If he declines or is unsure, stop and let him investigate.
-2. **Push Simon's local changes to the repo.** Run `./sync/sync-from-vault.sh --commit` from the repo root. The script pulls `origin/main` first, then copies `~/.claude/` into the repo, commits, and pushes.
+2. **Push Simon's local changes to the repo, wrapped with the course sweep.** Capture `git rev-parse HEAD` BEFORE running the sync, then run `./sync/sync-from-vault.sh --commit` from the repo root (pulls `origin/main` first, copies `~/.claude/` into the repo, commits, and pushes). Capture `HEAD` again after the sync returns. Then follow the protocol at [`sync/course-sweep-protocol.md`](./sync/course-sweep-protocol.md) with `CALLER="update"`, the captured `PRE_SYNC_HEAD` / `POST_SYNC_HEAD`, and `REPO_ROOT` pointing at this clone. The sweep proposes course-lesson edits for any modified starter skill, scaffolds lessons for new local skills that should ship, and archives lessons for retired skills. Exits silently if nothing changed.
 
-Simon has confirmed (2026-04-25) that `/update` runs both steps in order when operating on this repo.
+Simon has confirmed (2026-04-25) that `/update` runs both steps in order when operating on this repo. The course sweep was added 2026-05-17 — without it, lessons drift out of date when starter skills evolve.
 
 Either script's credential scanner will abort if it detects a token-like pattern in staged content. Fix the offending source file in `~/.claude/` and re-run — do not bypass.
 

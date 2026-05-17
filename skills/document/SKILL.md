@@ -269,10 +269,20 @@ If within budget, proceed silently — no need to report the numbers.
 
    **Sync flow when default-on:**
    1. Check `git status` in `~/.claude/` — confirm any session-modified skills/templates/CLAUDE.md are committed (per the pre-authorised commit class for `~/.claude/` infrastructure).
-   2. Run the sync script with the **`--commit` flag** so it actually applies, commits, and pushes (default behaviour without the flag is dry-run only): `cd ~/repos/mmf-claude-code && ./sync/sync-from-vault.sh --commit`. The script asserts the repo is on `main`, pulls latest, reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), stages mapped changes (skills/, guides/, templates/), and — when there are staged changes — commits with the message `sync: mirror from vault (<date>)` and pushes explicitly to `origin main`.
-   3. **Capture the script's output and report it in step 17.** The script prints either "No changes to commit." (when only Simon-personal files were touched), or "Committed and pushed to origin/main: sync: mirror from vault (<date>)" (when something synced). Don't run a second commit / push — the script owns that path.
-   4. **`--commit` aborts if mapped sources are missing locally.** Pass `--allow-missing` only when the user has explicitly OK'd pruning; otherwise an aborted sync usually means a recent vault rename/delete that needs investigating before pushing.
-   5. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), and the script's final line (commit message + push confirmation, or "No changes to commit."). If sync produced nothing, say so explicitly.
+   2. **Capture `PRE_SYNC_HEAD`** before the sync runs so the course sweep (step 6) can diff what actually changed:
+      ```bash
+      cd ~/repos/mmf-claude-code
+      PRE_SYNC_HEAD=$(git rev-parse HEAD)
+      ```
+   3. Run the sync script with the **`--commit` flag** so it actually applies, commits, and pushes (default behaviour without the flag is dry-run only): `./sync/sync-from-vault.sh --commit`. The script asserts the repo is on `main`, pulls latest, reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), stages mapped changes (skills/, guides/, templates/), and — when there are staged changes — commits with the message `sync: mirror from vault (<date>)` and pushes explicitly to `origin main`.
+   4. **Capture `POST_SYNC_HEAD`** and the script's output for step 17:
+      ```bash
+      POST_SYNC_HEAD=$(git rev-parse HEAD)
+      ```
+      The script prints either "No changes to commit." (when only Simon-personal files were touched), or "Committed and pushed to origin/main: sync: mirror from vault (<date>)" (when something synced). Don't run a second commit / push — the script owns that path.
+   5. **`--commit` aborts if mapped sources are missing locally.** Pass `--allow-missing` only when the user has explicitly OK'd pruning; otherwise an aborted sync usually means a recent vault rename/delete that needs investigating before pushing.
+   6. **Run the course sweep.** After the sync returns (whether it committed or was a no-op), follow the protocol at `~/repos/mmf-claude-code/sync/course-sweep-protocol.md`. Pass: `REPO_ROOT=~/repos/mmf-claude-code`, `CALLER="document"`, the captured `PRE_SYNC_HEAD`, and `POST_SYNC_HEAD`. The protocol detects modified / new / deleted skills, proposes lesson edits one at a time, scaffolds lessons for new local skills that should ship, and archives lessons for retired skills. **Exits silently if there's nothing to sweep** (the common case for short sessions that didn't touch a starter skill). Surface the protocol's "Course sweep" summary block in step 17 if it ran.
+   7. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), and the script's final line (commit message + push confirmation, or "No changes to commit."). Add the course-sweep summary block if step 6 produced output. If sync produced nothing AND the sweep was a no-op, say so explicitly.
 
    **Failure mode handling:** if the sync script errors (branch assertion fails because repo is on a side branch, filter breaks, file conflict, push rejected, missing-source abort), do NOT roll back — surface the error in step 17 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
 
