@@ -214,7 +214,7 @@ For each template file, do **placeholder substitution then write**:
 - `{{USER_NAME}}` → from Q1 (extract a clear name; if user gave a description, infer or ask)
 - `{{USER_BIO}}` → from Q1 (the full description)
 - `{{USER_PREFERENCES}}` → from Q3 + Q4 (compose a paragraph)
-- `{{VAULT_STRUCTURE}}` → list of folders being created (filled from Q2 + the 05_SYSTEM + INBOX defaults)
+- `{{VAULT_STRUCTURE}}` → list of folders being created (filled from Q2 + the SYSTEM + INBOX defaults)
 - `{{ADDITIONAL_PREFERENCES}}` → from Q5 (voice sample → distilled rule, e.g. "match the conversational-but-informed tone of the sample") + Q6 (anything else)
 - `{{INSTALL_DATE}}` → today's ISO date
 
@@ -226,19 +226,19 @@ Write to `<vault>/CLAUDE.md`.
 mkdir -p "<vault>/INBOX"
 ```
 
-**6c. 05_SYSTEM folder + log files.**
+**6c. SYSTEM folder + log files.**
 
 ```bash
-mkdir -p "<vault>/05_SYSTEM/Processes" "<vault>/05_SYSTEM/templates"
+mkdir -p "<vault>/SYSTEM/Processes" "<vault>/SYSTEM/templates"
 ```
 
 Copy from templates:
-- `Session Handoff Log.md` → `<vault>/05_SYSTEM/Session Handoff Log.md`
-- `Decision Log.md` → `<vault>/05_SYSTEM/Decision Log.md`
-- `Friction Log.md` → `<vault>/05_SYSTEM/Friction Log.md`
-- `Self-Improvement Changelog.md` → `<vault>/05_SYSTEM/Self-Improvement Changelog.md`
-- `Processes/Process Note Template.md` → `<vault>/05_SYSTEM/Processes/Process Note Template.md`
-- `folder-CLAUDE.template.md` → `<vault>/05_SYSTEM/templates/folder-CLAUDE.template.md`
+- `Session Handoff Log.md` → `<vault>/SYSTEM/Session Handoff Log.md`
+- `Decision Log.md` → `<vault>/SYSTEM/Decision Log.md`
+- `Friction Log.md` → `<vault>/SYSTEM/Friction Log.md`
+- `Self-Improvement Changelog.md` → `<vault>/SYSTEM/Self-Improvement Changelog.md`
+- `Processes/Process Note Template.md` → `<vault>/SYSTEM/Processes/Process Note Template.md`
+- `folder-CLAUDE.template.md` → `<vault>/SYSTEM/templates/folder-CLAUDE.template.md`
 
 Each is template content as-is — examples included to show shape; user deletes when adding their first real entry.
 
@@ -378,7 +378,7 @@ If yes (1 or 2), for each chosen domain:
 > *D2. Key people, tools, terminology, or conventions specific to this domain?*
 > *D3. Anything different from your general writing voice here — more formal, more technical, more playful?"*
 
-After their answer, generate the folder + folder-level CLAUDE.md by substituting into `~/.claude/templates/starter-vault/05_SYSTEM/templates/folder-CLAUDE.template.md`:
+After their answer, generate the folder + folder-level CLAUDE.md by substituting into `~/.claude/templates/starter-vault/SYSTEM/templates/folder-CLAUDE.template.md`:
 
 - `{{DOMAIN_NAME}}` → user's chosen folder name
 - `{{ONE_PARAGRAPH_DESCRIPTION}}` → from D1
@@ -470,7 +470,7 @@ Setup complete.
 Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
-Logs: ready at 05_SYSTEM/
+Logs: ready at SYSTEM/
 Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research, /verify-citations
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 

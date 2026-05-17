@@ -9,10 +9,10 @@
 
   "folders": {
     "inbox": "INBOX",
-    "system": "05_SYSTEM",
-    "logs_relative": "05_SYSTEM",
-    "specs_relative": "05_SYSTEM/SPECS",
-    "templates_relative": "05_SYSTEM/templates"
+    "system": "SYSTEM",
+    "logs_relative": "SYSTEM",
+    "specs_relative": "SYSTEM/SPECS",
+    "templates_relative": "SYSTEM/templates"
   },
 
   "logs": {

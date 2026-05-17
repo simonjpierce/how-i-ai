@@ -71,9 +71,9 @@ If within budget, proceed silently — no need to report the numbers.
 
 1. **Locate the logs folder and read the current logs.**
 
-   Read `~/.claude/projects/<project-key>/config.json` and resolve the logs folder from `folders.logs_relative` (default `05_SYSTEM`). The logs folder is `<vault>/<logs_relative>/`. If the config doesn't exist or the folder doesn't exist, this isn't a CLAUDE-managed vault — flag and stop.
+   Read `~/.claude/projects/<project-key>/config.json` and resolve the logs folder from `folders.logs_relative` (default `SYSTEM`). The logs folder is `<vault>/<logs_relative>/`. If the config doesn't exist or the folder doesn't exist, this isn't a CLAUDE-managed vault — flag and stop.
 
-   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_SYSTEM/` or any other prefix in subagent prompts or substeps — pass the resolved path through.
+   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `SYSTEM/` or any other prefix in subagent prompts or substeps — pass the resolved path through.
 
    Read the three current logs to understand their format and latest entries: `Session Handoff Log.md`, `Friction Log.md`, `Decision Log.md` (each inside the logs folder).
 
@@ -159,7 +159,7 @@ If within budget, proceed silently — no need to report the numbers.
 
 9. **Update relevant process docs and skills**:
    - Identify 3–5 keywords from the session's work (tools used, workflows touched, domain topics).
-   - Grep `<logs folder>/Processes/` for those keywords (resolved from config; default `05_SYSTEM/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
+   - Grep `<logs folder>/Processes/` for those keywords (resolved from config; default `SYSTEM/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
    - For each match, read the doc and check whether the session's work **changes, refines, or invalidates** anything in it. Update in place if so.
    - **Proactively flag improvements**: After checking for invalidation, also ask: "Did this session produce any reusable workflow patterns, conventions, or lessons learned that should be added to an existing process doc or skill?" Examples: a new convention discovered (e.g., unpublished data citation rules), a workflow step that proved valuable (e.g., citation quality audit), a tool integration pattern (e.g., checking org emails for authoritative figures). Flag these to the user with the specific doc/skill that should be updated and what should be added.
    - Don't create new process docs during handover — just flag if one should be created.
@@ -253,7 +253,7 @@ If within budget, proceed silently — no need to report the numbers.
 14. **Log maintenance** — keep the active sections lean:
    - **Session Handoff Log** (plumbing item #2, 2026-05-12). Canonical archival lives in `self_improve.py:apply_handoff_log_lifecycle()` — runs unconditional, strict-date (≥30 days), idempotent in the nightly 03:30 cycle. The foreground bridge for /document is:
      ```bash
-     python3 ~/bin/obsidian_reviews/self_improve.py --handoff-only
+     python3 ~/bin/obsidian_reviews/self_improve.py --handoff-only  # SIMON-ONLY
      ```
      Run this in step 14 so /document and the nightly converge on the same archival pass. If `IS_SIMON=false`, skip — newcomer machines don't have the obsidian_reviews script installed; the nightly automation owns archival.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.

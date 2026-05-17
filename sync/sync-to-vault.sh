@@ -43,10 +43,10 @@ try:
     d = json.load(open(sys.argv[1]))
     v = d.get("vault", {}).get("path", "").strip()
     folders = d.get("folders", {})
-    s = (folders.get("system") or folders.get("ai_workflow") or "05_SYSTEM").strip() or "05_SYSTEM"
+    s = (folders.get("system") or folders.get("ai_workflow") or "SYSTEM").strip() or "SYSTEM"
     print(f"{v}\t{s}")
 except Exception:
-    print("\t05_SYSTEM")
+    print("\tSYSTEM")
 ' "$cfg" 2>/dev/null) || true
     if [[ -n "${candidate:-}" ]]; then
       VAULT_PATH="$candidate"
@@ -60,7 +60,7 @@ except Exception:
     echo "Note: no config.json with vault.path found — falling back to Simon's vault layout." >&2
   fi
 fi
-SYSTEM_DIR="${SYSTEM_DIR:-05_SYSTEM}"
+SYSTEM_DIR="${SYSTEM_DIR:-SYSTEM}"
 VAULT_PROCESSES="$VAULT_PATH/$SYSTEM_DIR/Processes"
 
 CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"

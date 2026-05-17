@@ -77,16 +77,16 @@ check "templates/starter-vault/CLAUDE.md present" \
   "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/CLAUDE.md' ]]"
 check "templates/starter-vault/INBOX/ present (gitkeep)" \
   "[[ -d '$FAKE_HOME/.claude/templates/starter-vault/INBOX' ]]"
-check "templates/starter-vault/05_SYSTEM/Session Handoff Log.md" \
-  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Session Handoff Log.md' ]]"
-check "templates/starter-vault/05_SYSTEM/Decision Log.md" \
-  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Decision Log.md' ]]"
-check "templates/starter-vault/05_SYSTEM/Friction Log.md" \
-  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Friction Log.md' ]]"
-check "templates/starter-vault/05_SYSTEM/Processes/Process Note Template.md" \
-  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Processes/Process Note Template.md' ]]"
-check "templates/starter-vault/05_SYSTEM/templates/folder-CLAUDE.template.md" \
-  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/templates/folder-CLAUDE.template.md' ]]"
+check "templates/starter-vault/SYSTEM/Session Handoff Log.md" \
+  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Session Handoff Log.md' ]]"
+check "templates/starter-vault/SYSTEM/Decision Log.md" \
+  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Decision Log.md' ]]"
+check "templates/starter-vault/SYSTEM/Friction Log.md" \
+  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Friction Log.md' ]]"
+check "templates/starter-vault/SYSTEM/Processes/Process Note Template.md" \
+  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Processes/Process Note Template.md' ]]"
+check "templates/starter-vault/SYSTEM/templates/folder-CLAUDE.template.md" \
+  "[[ -f '$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/templates/folder-CLAUDE.template.md' ]]"
 
 # --- Phase 2: bootstrap re-run safety (re-running shouldn't break anything) --
 echo ""
@@ -118,7 +118,7 @@ VAULT_NAME="$(basename "$FAKE_VAULT")"
 VAULT_NAME_URL_ENCODED="$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$VAULT_NAME")"
 PROJECT_KEY="$(echo "$FAKE_VAULT" | sed 's|[^a-zA-Z0-9]|-|g')"
 PROJECT_DIR="$FAKE_HOME/.claude/projects/$PROJECT_KEY"
-mkdir -p "$PROJECT_DIR/memory" "$FAKE_VAULT/INBOX" "$FAKE_VAULT/05_SYSTEM/Processes" "$FAKE_VAULT/05_SYSTEM/templates"
+mkdir -p "$PROJECT_DIR/memory" "$FAKE_VAULT/INBOX" "$FAKE_VAULT/SYSTEM/Processes" "$FAKE_VAULT/SYSTEM/templates"
 
 # Helper: substitute placeholders from $1 (input file) into $2 (output path).
 # Implementation note: cannot use `python3 - <<EOF` AND read stdin — the
@@ -133,7 +133,7 @@ subs = {
     "{{USER_NAME}}": os.environ["USER_NAME"],
     "{{USER_BIO}}": os.environ["USER_BIO"],
     "{{USER_PREFERENCES}}": os.environ["USER_PREFERENCES"],
-    "{{VAULT_STRUCTURE}}": "INBOX, 05_SYSTEM",
+    "{{VAULT_STRUCTURE}}": "INBOX, SYSTEM",
     "{{ADDITIONAL_PREFERENCES}}": os.environ["ADDITIONAL_PREFERENCES"],
     "{{INSTALL_DATE}}": os.environ["INSTALL_DATE"],
     "{{VAULT_PATH}}": os.environ["FAKE_VAULT"],
@@ -179,16 +179,16 @@ export USER_NAME USER_BIO USER_PREFERENCES ADDITIONAL_PREFERENCES \
 substitute_to "$FAKE_HOME/.claude/templates/starter-vault/CLAUDE.md" "$FAKE_VAULT/CLAUDE.md"
 
 # 6c. Log file copies (no substitution)
-cp "$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Session Handoff Log.md" \
-   "$FAKE_VAULT/05_SYSTEM/Session Handoff Log.md"
-cp "$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Decision Log.md" \
-   "$FAKE_VAULT/05_SYSTEM/Decision Log.md"
-cp "$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Friction Log.md" \
-   "$FAKE_VAULT/05_SYSTEM/Friction Log.md"
-cp "$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/Processes/Process Note Template.md" \
-   "$FAKE_VAULT/05_SYSTEM/Processes/Process Note Template.md"
-cp "$FAKE_HOME/.claude/templates/starter-vault/05_SYSTEM/templates/folder-CLAUDE.template.md" \
-   "$FAKE_VAULT/05_SYSTEM/templates/folder-CLAUDE.template.md"
+cp "$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Session Handoff Log.md" \
+   "$FAKE_VAULT/SYSTEM/Session Handoff Log.md"
+cp "$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Decision Log.md" \
+   "$FAKE_VAULT/SYSTEM/Decision Log.md"
+cp "$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Friction Log.md" \
+   "$FAKE_VAULT/SYSTEM/Friction Log.md"
+cp "$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/Processes/Process Note Template.md" \
+   "$FAKE_VAULT/SYSTEM/Processes/Process Note Template.md"
+cp "$FAKE_HOME/.claude/templates/starter-vault/SYSTEM/templates/folder-CLAUDE.template.md" \
+   "$FAKE_VAULT/SYSTEM/templates/folder-CLAUDE.template.md"
 
 # 6d. Global ~/.claude/CLAUDE.md (only if not exists — bootstrap may have written it via templates path, but the CLAUDE.md template at config root is separate)
 if [[ ! -f "$FAKE_HOME/.claude/CLAUDE.md" ]]; then
@@ -214,7 +214,7 @@ Set up by \`/onboard\` on $INSTALL_DATE. This note is yours to edit.
 
 - Your vault is at \`$FAKE_VAULT\`.
 - Root CLAUDE.md is populated from your interview answers.
-- Logs ready at \`05_SYSTEM/\`: Session Handoff, Decision, Friction.
+- Logs ready at \`SYSTEM/\`: Session Handoff, Decision, Friction.
 - Skills installed: \`/onboard\`, \`/document\`, \`/session-start\`, \`/update\`, \`/review-friction\`, \`/refresh-skills\`.
 
 ## One last setup step — point Claude Code at your vault
@@ -238,16 +238,16 @@ check "vault/CLAUDE.md present" "[[ -f '$FAKE_VAULT/CLAUDE.md' ]]"
 check "vault/INBOX/Getting Started.md present" "[[ -f '$FAKE_VAULT/INBOX/Getting Started.md' ]]"
 check "vault/INBOX/Onboarding follow-up — $DATE_PLUS_14.md present" \
   "[[ -f '$FAKE_VAULT/INBOX/Onboarding follow-up — $DATE_PLUS_14.md' ]]"
-check "vault/05_SYSTEM/Session Handoff Log.md present" \
-  "[[ -f '$FAKE_VAULT/05_SYSTEM/Session Handoff Log.md' ]]"
-check "vault/05_SYSTEM/Decision Log.md present" \
-  "[[ -f '$FAKE_VAULT/05_SYSTEM/Decision Log.md' ]]"
-check "vault/05_SYSTEM/Friction Log.md present" \
-  "[[ -f '$FAKE_VAULT/05_SYSTEM/Friction Log.md' ]]"
-check "vault/05_SYSTEM/Processes/Process Note Template.md present" \
-  "[[ -f '$FAKE_VAULT/05_SYSTEM/Processes/Process Note Template.md' ]]"
-check "vault/05_SYSTEM/templates/folder-CLAUDE.template.md present" \
-  "[[ -f '$FAKE_VAULT/05_SYSTEM/templates/folder-CLAUDE.template.md' ]]"
+check "vault/SYSTEM/Session Handoff Log.md present" \
+  "[[ -f '$FAKE_VAULT/SYSTEM/Session Handoff Log.md' ]]"
+check "vault/SYSTEM/Decision Log.md present" \
+  "[[ -f '$FAKE_VAULT/SYSTEM/Decision Log.md' ]]"
+check "vault/SYSTEM/Friction Log.md present" \
+  "[[ -f '$FAKE_VAULT/SYSTEM/Friction Log.md' ]]"
+check "vault/SYSTEM/Processes/Process Note Template.md present" \
+  "[[ -f '$FAKE_VAULT/SYSTEM/Processes/Process Note Template.md' ]]"
+check "vault/SYSTEM/templates/folder-CLAUDE.template.md present" \
+  "[[ -f '$FAKE_VAULT/SYSTEM/templates/folder-CLAUDE.template.md' ]]"
 check "~/.claude/CLAUDE.md (global) present" "[[ -f '$FAKE_HOME/.claude/CLAUDE.md' ]]"
 check "projects/<key>/config.json present" "[[ -f '$PROJECT_DIR/config.json' ]]"
 check "projects/<key>/memory/MEMORY.md present" "[[ -f '$PROJECT_DIR/memory/MEMORY.md' ]]"

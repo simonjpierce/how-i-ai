@@ -34,7 +34,7 @@ This skill ships ready-to-use but expects:
 - **Gemini CLI** (`npm i -g @google/gemini-cli`) with interactive login completed. If absent, the pipeline degrades to Claude + Codex. If both Codex and Gemini are absent, the pipeline runs single-model with explicit notice.
 - **QMD search** over your vault. Falls back to Glob/Grep if QMD is unavailable.
 - **Voice matching (Phase 6)** is gated on `features.is_simon` in your per-vault `config.json` AND on the existence of a voice reference under your vault. For standard installs, Phase 6 runs only if a voice reference file is present and named per the conventions in `guides/ai-assisted-writing.md`; otherwise it skips cleanly.
-- **Output location** comes from your per-vault config: `vault.path` + the research subfolder (default `<vault>/RESEARCH/` or `<vault>/05_SYSTEM/RESEARCH/`). Pick the location during /onboard or edit your config later.
+- **Output location** comes from your per-vault config: `vault.path` + the research subfolder (default `<vault>/RESEARCH/` or `<vault>/SYSTEM/RESEARCH/`). Pick the location during /onboard or edit your config later.
 - **Task creation** uses the bundled `/todo` skill, which routes to whichever task manager you configured during /onboard (Things 3, Todoist, Apple Reminders, or vault TODO.md).
 
 # Design principles
@@ -583,7 +583,7 @@ Every time an external model output is integrated (Claude Desktop, ChatGPT, or a
 ### 6a: Locate voice reference
 
 Search for a voice reference file relevant to the output. Standard locations:
-- `<vault>/05_SYSTEM/Voice References/Voice Reference — *.md`
+- `<vault>/SYSTEM/Voice References/Voice Reference — *.md`
 - `<project-folder>/Voice Reference — *.md`
 
 If multiple matches exist, pick the one whose filename or content best matches the research topic and audience.
@@ -656,7 +656,7 @@ Print: `[7/9] Polished — {N} fixes applied`
 
 ### Save report
 
-Read `vault.path` from `~/.claude/projects/<project-key>/config.json`. Write the report to a `RESEARCH/` subfolder of the vault — typically `<vault>/RESEARCH/` or `<vault>/05_SYSTEM/RESEARCH/` depending on the user's layout. Create the folder if missing:
+Read `vault.path` from `~/.claude/projects/<project-key>/config.json`. Write the report to a `RESEARCH/` subfolder of the vault — typically `<vault>/RESEARCH/` or `<vault>/SYSTEM/RESEARCH/` depending on the user's layout. Create the folder if missing:
 
 ```bash
 mkdir -p "<vault>/RESEARCH"
@@ -671,7 +671,7 @@ Invoke the bundled `/todo` skill to create a review task. `/todo` routes to whic
 - Title: `Review: Research — {Topic}` (under 60 chars)
 - Notes: vault link to the report + research question + TL;DR bullets + a Claude Code prompt for resuming work cold
 
-If `/todo` is unavailable, fall back to writing the review task to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## For review`. Do NOT write to `<vault>/TODO.md` — that file was retired 2026-05-15 in Simon's vault.
+If `/todo` is unavailable, fall back to writing the review task to `SYSTEM/OUTPUTS/Daily Log.md` under `## For review` (Simon's vault: `05_SYSTEM/OUTPUTS/Daily Log.md`). Do NOT write to `<vault>/TODO.md` — that file was retired 2026-05-15 in Simon's vault.
 
 ### Terminal summary
 

@@ -90,11 +90,11 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    **If an Artifacts section exists but seems incomplete** (e.g., the session created files not listed), update the Artifacts table first, then use the updated list.
 
-3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: read `folders.logs_relative` from `~/.claude/projects/<key>/config.json` (default `05_SYSTEM`); paths below are relative to that resolved logs folder.
+3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: read `folders.logs_relative` from `~/.claude/projects/<key>/config.json` (default `SYSTEM`); paths below are relative to that resolved logs folder.
 
    | Category | Where to look | What to check |
    |----------|--------------|---------------|
-   | Process docs | `<logs>/Processes/` (default `05_SYSTEM/Processes/`) | Grep for seed keywords |
+   | Process docs | `<logs>/Processes/` (default `SYSTEM/Processes/`) | Grep for seed keywords |
    | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
    | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |
@@ -182,7 +182,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
    - Did any update change a process that a skill references?
    - If so, cascade the fix.
 
-9. **Refresh auto-generated reference docs**. Run unconditionally — the regenerator is fast and idempotent. It rewrites only the auto-generated section between `<!-- BEGIN AUTO-GENERATED: vault-skills -->` / `<!-- END AUTO-GENERATED: vault-skills -->` markers in `05_SYSTEM/Slash Commands Reference.md`. The rest of the doc (plugin commands, built-in CLI, keyboard shortcuts) is preserved verbatim.
+9. **(SIMON-ONLY) Refresh auto-generated reference docs.** Only runs on Simon's machine — the regenerator script lives at `~/.claude/scripts/refresh_slash_commands_reference.py` which newcomer installs don't have. It rewrites only the auto-generated section between `<!-- BEGIN AUTO-GENERATED: vault-skills -->` / `<!-- END AUTO-GENERATED: vault-skills -->` markers in `05_SYSTEM/Slash Commands Reference.md`. The rest of the doc (plugin commands, built-in CLI, keyboard shortcuts) is preserved verbatim. Skip silently if `IS_SIMON=false`.
 
    ```bash
    python3 ~/.claude/scripts/refresh_slash_commands_reference.py
@@ -219,7 +219,7 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    **Trigger gate — apply ALL three before routing:**
    1. **Classify the observation.** Is it a systemic pattern (recurring across sessions; affects an automation; suggests an investigation), or per-session detail (counts, "documents checked but not changed", confirmations that something specific worked)? Per-session details stay in the chat Summary; only systemic patterns get routed.
-   2. **Mandatory dedupe — blocking check, not advisory.** Before routing ANY observation, grep `05_SYSTEM/OUTPUTS/Daily Log.md` `## System housekeeping — Claude-managed` section for an entry covering the same topic. If an entry already exists, even if its check-after date has passed: do NOT append a new entry. Either update the existing entry's date / status in place (matches the `[MEMORY.md compression mechanism diagnostic — RE-CHECKED 2026-05-17, still over budget — check after 2026-05-18]` pattern), or leave the existing entry alone. Duplicate entries pollute the housekeeping section and waste `/morning-briefing` review time.
+   2. **Mandatory dedupe — blocking check, not advisory.** Before routing ANY observation, grep Simon's `05_SYSTEM/OUTPUTS/Daily Log.md` `## System housekeeping — Claude-managed` section for an entry covering the same topic. If an entry already exists, even if its check-after date has passed: do NOT append a new entry. Either update the existing entry's date / status in place (matches the `[MEMORY.md compression mechanism diagnostic — RE-CHECKED 2026-05-17, still over budget — check after 2026-05-18]` pattern), or leave the existing entry alone. Duplicate entries pollute the housekeeping section and waste `/morning-briefing` review time.
    3. **Mandatory entry quality.** New entries must use the exact format already established in the section:
       ```
       - **[<topic-slug> — check after YYYY-MM-DD]** Brief observation + why it matters. **Check action:** named verification command(s) + decision branches ("if A then mark Auto-fixed; if B then escalate to Friction Log"). [created: YYYY-MM-DD]
