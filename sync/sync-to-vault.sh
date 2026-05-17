@@ -11,11 +11,14 @@
 # script reverses the sanitisation before comparing or applying.
 #
 # Usage:
-#   ./sync/sync-to-vault.sh            # dry run — show diffs across all categories
-#   ./sync/sync-to-vault.sh --apply    # apply if no local conflicts; HALT and
-#                                      # list conflict files otherwise
-#   ./sync/sync-to-vault.sh --force    # apply unconditionally (your local
-#                                      # edits to conflict files will be lost)
+#   ./sync/sync-to-vault.sh                     # dry run — show diffs across all categories
+#   ./sync/sync-to-vault.sh --apply             # apply if no local conflicts; HALT and
+#                                               # list conflict files otherwise
+#   ./sync/sync-to-vault.sh --force             # apply unconditionally (your local
+#                                               # edits to conflict files will be lost)
+#   ./sync/sync-to-vault.sh --filter universal  # limit SKILLS to the starter set
+#                                               # (templates + guides still sync as usual);
+#                                               # combine with --apply/--force as above
 
 set -euo pipefail
 
@@ -64,7 +67,47 @@ SYSTEM_DIR="${SYSTEM_DIR:-SYSTEM}"
 VAULT_PROCESSES="$VAULT_PATH/$SYSTEM_DIR/Processes"
 
 CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"
-MODE="${1:-dry-run}"
+
+# Argument parsing. Accepts --apply, --force, --filter <value>, and the legacy
+# bare positional (no flag) for dry-run. Order-independent.
+MODE="dry-run"
+FILTER="all"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --apply) MODE="--apply"; shift ;;
+    --force) MODE="--force"; shift ;;
+    --filter)
+      FILTER="${2:-}"
+      [[ -z "$FILTER" ]] && { echo "Error: --filter needs a value (universal|all)" >&2; exit 2; }
+      shift 2 ;;
+    --filter=*) FILTER="${1#*=}"; shift ;;
+    --dry-run|dry-run) shift ;;
+    *) echo "Error: unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+case "$FILTER" in
+  universal|all) ;;
+  *) echo "Error: --filter must be one of: universal, all (got: $FILTER)" >&2; exit 2 ;;
+esac
+
+# Starter skills — mirror of mmf-claude-code/sync/bootstrap.sh STARTER_SKILLS.
+# Used when --filter universal narrows the SKILLS iteration to just these.
+# Keep in sync with bootstrap.sh.
+STARTER_SKILLS_LIST=(
+  onboard
+  document
+  session-start
+  update
+  review-friction
+  refresh-skills
+)
+is_starter_skill() {
+  local name="$1"
+  for s in "${STARTER_SKILLS_LIST[@]}"; do
+    [[ "$s" == "$name" ]] && return 0
+  done
+  return 1
+}
 
 STAGE_DIR="$(mktemp -d "/tmp/mmf-claude-code-revstage.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
@@ -197,10 +240,23 @@ apply_mapping() {
   echo "  Applied: $repo_rel → $target"
 }
 
-# --- Stage every mapping ---
+# --- Build the active SKILLS iteration list, filtered if requested ---
+
+ACTIVE_SKILLS=()
+for mapping in "${SKILLS[@]}"; do
+  repo_rel="${mapping%%::*}"
+  skill_name="$(basename "$repo_rel")"
+  if [[ "$FILTER" == "universal" ]] && ! is_starter_skill "$skill_name"; then
+    continue
+  fi
+  ACTIVE_SKILLS+=("$mapping")
+done
+
+# --- Stage every active mapping ---
 
 echo "Staging repo content with placeholders resolved..."
-for mapping in "${SKILLS[@]}" "${TEMPLATES[@]}" "${GUIDES[@]}"; do
+[[ "$FILTER" != "all" ]] && echo "Filter: $FILTER (${#ACTIVE_SKILLS[@]} of ${#SKILLS[@]} skills)"
+for mapping in "${ACTIVE_SKILLS[@]}" "${TEMPLATES[@]}" "${GUIDES[@]}"; do
   repo_rel="${mapping%%::*}"
   stage_and_desanitise "$repo_rel" || echo "  SKIP: source missing — $repo_rel" >&2
 done
@@ -210,7 +266,7 @@ echo "--- Comparing desanitised repo content against local canonical paths ---"
 
 echo ""
 echo "[SKILLS]"
-for mapping in "${SKILLS[@]}"; do
+for mapping in "${ACTIVE_SKILLS[@]}"; do
   repo_rel="${mapping%%::*}"
   target="${mapping##*::}"
   compare_mapping "$repo_rel" "$target"
