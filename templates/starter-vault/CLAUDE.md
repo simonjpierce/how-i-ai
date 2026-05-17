@@ -43,7 +43,7 @@ Exception: a structured audit or report explicitly requested in that form. In th
 
 Each domain folder has its own `CLAUDE.md` with domain-specific context — terminology, key people, conventions for that area. Claude reads the nearest CLAUDE.md automatically: when you ask for help on a research paper, the research-domain file applies; when you switch to drafting an email, the relevant domain takes over. You don't have to think about which file to load.
 
-When you create a new domain folder, add a folder-level `CLAUDE.md` to take advantage of the cascade. The starter template at `<vault>/SYSTEM/templates/folder-CLAUDE.template.md` shows the structural shape; copy and fill in.
+When you create a new domain folder, add a folder-level `CLAUDE.md` to take advantage of the cascade. The starter template at `<vault>/AI_WORKFLOW/templates/folder-CLAUDE.template.md` shows the structural shape; copy and fill in.
 
 ## Working Principles
 
@@ -79,7 +79,7 @@ Never retry Read on the same large file without narrowing scope.
 
 ## File and Folder Creation
 
-Before creating a new file or folder, check the target location's `CLAUDE.md` for structure rules. Vault root folders are stable — don't create new ones without thinking. Default to existing locations: the inbox folder for unprocessed/landing items, the spec folder for planning docs, the system folder (`SYSTEM/`) for system docs.
+Before creating a new file or folder, check the target location's `CLAUDE.md` for structure rules. Vault root folders are stable — don't create new ones without thinking. Default to existing locations: the inbox folder for unprocessed/landing items, the spec folder for planning docs, the AI_WORKFLOW folder for system docs.
 
 When in doubt, use the inbox.
 

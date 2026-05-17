@@ -1,7 +1,7 @@
 ---
 name: document
 description: End-of-session handover. Summarises the session, captures decisions and lessons, and updates vault logs. Invoke proactively when the conversation is getting long, a substantial task is complete, or the session is winding down. Also use when the user says "wrap up", "save progress", "checkpoint", or signals goodbye.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, Skill
 ---
 
 Perform an end-of-session handover. Review the full conversation and write updates to the vault.
@@ -21,12 +21,30 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 Before step 1, run:
 
 ```bash
-# Derive Claude Code's per-vault project key from the current working
-# directory. Claude Code sanitises any non-alphanumeric character in the
-# absolute vault path to a hyphen, so /Users/.../Simon's Vault becomes
-# -Users-...-Simon-s-Vault.
-PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
-PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
+# Resolve the per-vault project dir. Claude Code sanitises any non-alphanumeric
+# character in the absolute vault path to a hyphen, so /Users/.../Simon's Vault
+# becomes -Users-...-Simon-s-Vault. BUT pwd can drift below the vault root
+# (e.g. cd'd into a subfolder mid-session), which would derive a key for a
+# project dir that doesn't exist. So: first scan known project configs for one
+# whose vault.path is pwd or an ancestor of pwd; only fall back to pwd-derived
+# if no ancestor match. Confirmed 2026-05-17 — pre-flight failed in /document
+# when cwd was 02_MARINE MEGAFAUNA rather than the vault root.
+PROJECT_DIR=$(python3 -c '
+import json, glob, os, sys
+cwd = os.getcwd()
+for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
+    try:
+        vp = json.load(open(p)).get("vault", {}).get("path")
+        if vp and (cwd == vp or cwd.startswith(vp.rstrip("/") + "/")):
+            print(os.path.dirname(p))
+            sys.exit()
+    except Exception:
+        pass
+# fallback: pwd-derived key
+key = "".join(c if c.isalnum() else "-" for c in cwd)
+print(os.path.expanduser(f"~/.claude/projects/{key}"))
+' 2>/dev/null)
+PROJECT_KEY=$(basename "$PROJECT_DIR")
 CONFIG_FILE="$PROJECT_DIR/config.json"
 MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
 
@@ -79,6 +97,8 @@ If within budget, proceed silently — no need to report the numbers.
 
 2. **Check for prior entries from this session**. Search the Session Handoff Log for today's date and a matching topic. If a handoff entry for this session's work already exists (from a mid-session checkpoint), update it in place rather than appending a duplicate.
 
+   **EXCLUSION rule (paused-thread entries).** Handoff entries whose `## YYYY-MM-DD — ...` heading contains `[PAUSED]` OR whose `<!-- session:... -->` marker slug ends in `-paused` are EXEMPT from the same-day-matching-topic update-in-place heuristic. These are paused-thread siblings (written by `/do-this-later` Phase 5a) and represent in-flight work that must not be overwritten by a different session's `/document` run. Skip past them when searching for "your" handoff entry; if your topic matches one, write a fresh entry rather than updating the paused one in place.
+
 3. **Check "What's next" from recent sessions** (concurrent-session-aware). Simon often runs multiple Claude sessions in parallel, so "the most recent prior entry" may belong to a DIFFERENT session whose work is orthogonal to yours. Read the last 2–3 handoff entries (anything dated within the last 3 days, up to 3 entries max). For each, note which of its "What's next" items were addressed by THIS session's work, which are still open, and which belong to a sibling session (orthogonal — leave to that session's owner). Include the follow-up in your handoff entry.
 
    **Session marker convention** (added 2026-04-20): Each new handoff entry should carry an HTML comment immediately after the `## YYYY-MM-DD — topic` heading in the form `<!-- session:topic-slug -->` where `topic-slug` is a kebab-case short identifier unique to the session's work (e.g. `meta-fixer`, `memory-restructure`, `thailand-lir`). This lets a concurrent `/document` disambiguate entries when rolling up open items. When writing your own entry, add the marker. When reading prior entries, treat entries with different markers as sibling sessions (their open items are NOT yours to close or drop).
@@ -94,7 +114,7 @@ If within budget, proceed silently — no need to report the numbers.
    - Any process docs that were created or should be updated
    - Any recurring bottleneck that could be removed by a skill, script, or automation
 
-   (Suggested improvements — moved to step 16b so they can incorporate findings from the verification subagent, log maintenance, and archival sweeps. Generating them here produces shallower, pre-subagent output.)
+   (Improvement candidates — emitted by the verification subagent's Pass 2 in step 11, then routed to the IMPROVEMENTS queue + Daily Log `[Self-improve]` by step 13. NOT surfaced inline in the step 19 report — that user-facing "Suggested improvements" pattern was removed 2026-05-17 in favour of async L6 self-improvement queue routing.)
 
 5. **Prepend to the Session Handoff Log** with today's date and a brief topic label. Newest entries go to the top of the file (immediately below the intro/`## Format` section), separated from earlier entries by a `---` line. `/session-start` reads from the top, so prepending is what makes the most recent session's context the first thing the next session sees.
    - What was done
@@ -157,24 +177,23 @@ If within budget, proceed silently — no need to report the numbers.
 
    For trivial sessions with no errors, corrections, divergences, or writing drafts, skip this step entirely.
 
-9. **Update relevant process docs and skills**:
-   - Identify 3–5 keywords from the session's work (tools used, workflows touched, domain topics).
-   - Grep `<logs folder>/Processes/` for those keywords (resolved from config; default `SYSTEM/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
-   - For each match, read the doc and check whether the session's work **changes, refines, or invalidates** anything in it. Update in place if so.
-   - **Proactively flag improvements**: After checking for invalidation, also ask: "Did this session produce any reusable workflow patterns, conventions, or lessons learned that should be added to an existing process doc or skill?" Examples: a new convention discovered (e.g., unpublished data citation rules), a workflow step that proved valuable (e.g., citation quality audit), a tool integration pattern (e.g., checking org emails for authoritative figures). Flag these to the user with the specific doc/skill that should be updated and what should be added.
-   - Don't create new process docs during handover — just flag if one should be created.
+9. **Doc-currency sweep via `/update`** — invoke the `/update` skill to handle all doc-update logic in one place (this replaces the prior steps 9 + 10 which duplicated `/update`'s discovery/classification/execution).
 
-10. **Document update sweep** — verify all associated docs are current, using the `/update` skill's logic. This catches documents beyond process docs and skills (project notes, CLAUDE.md files, Artifacts tables, role notes, working files).
+   ```
+   Skill(skill: "update", args: "<derived scope from session>")
+   ```
 
-    - Extract 3–8 keyword seeds from the session (same as step 9, reuse them).
-    - Check for an `## Artifacts` section in any primary project/analysis note touched this session. If present, iterate its rows — each listed file is a candidate. If the Artifacts table is incomplete (session created files not listed), update it.
-    - If no Artifacts section, search: project notes in the user's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever folders were created during `/onboard`'s domain pass); folder CLAUDE.md files for domains touched; role notes if role-relevant work was done; Scheduled Automations if any automation changed.
-    - For each candidate, read and check: is anything **stale**, **missing**, or **inconsistent** with this session's work? Skip docs already updated in step 9.
-    - **Auto-update** mechanical changes (paths, statuses, cross-refs, dates) without asking.
-    - **Flag for review** any content-level changes (rewrites, removals, scope changes) — present these to the user in step 16's report rather than blocking the handover.
-    - If the session was trivial (quick question, single-file edit), skip this step.
+   Derive the scope argument from the session: a project name, topic, or comma-separated file paths the session touched. If session context is ambiguous, pass an empty string — `/update` will infer scope from context.
 
-11. **Update Current Projects**: Read the Current Projects file — try `<vault>/01_PROJECTS/Current Projects.md` first (Simon), then `<vault>/Current Projects.md` (newcomer). Skip this step if neither exists (the starter vault doesn't ship one). Based on the session analysis (step 4), make targeted edits:
+   **`/update` IS interactive when it has review items.** Per `~/.claude/skills/update/SKILL.md` step 7, `/update` will WAIT for the user's approval on judgement-call content changes (review items) before continuing. `/document`'s invocation of `/update` therefore blocks until `/update` completes its full pass — including any inline review-item walk with the user. This is the desired behaviour: review items are content judgements the user needs to resolve inline; the new step 20 report records counts only (the user already decided on each item during `/update`'s walk).
+
+   **Skip `/update` if it already ran on the same scope earlier in this session.** Mirror `/do-this-later`'s skip rule — `/update` has no cross-invocation memory, and re-running it when vault state hasn't materially changed since the prior call is wasteful and risks duplicate Daily Log housekeeping entries. If `/update` was invoked earlier in the session on the same or overlapping scope, skip the `Skill` call and note the skip in the step 20 report.
+
+   **If `/update` aborts** (e.g. its Codex dispatch fails on a 9+ doc scope), continue with the rest of `/document`'s steps and surface the abort in the step 20 report. Close-out is not gated on `/update` succeeding.
+
+   After `/update` returns, read its natural-language Phase 4 summary and capture counts (auto-updates applied, review items resolved/pending, docs checked but not changed) for inclusion in the step 20 report.
+
+10. **Update Current Projects**: Read the Current Projects file — try `<vault>/01_PROJECTS/Current Projects.md` first (Simon), then `<vault>/Current Projects.md` (newcomer). Skip this step if neither exists (the starter vault doesn't ship one). Based on the session analysis (step 4), make targeted edits:
    - **Remove** items that were completed this session (don't strikethrough — clean them out).
    - **Update status** of items that progressed (e.g., "draft started" → "v0.4 in review").
    - **Add** new priorities that emerged, if they're significant enough for a cross-domain orientation note (not every task — only things that change what matters right now).
@@ -182,9 +201,9 @@ If within budget, proceed silently — no need to report the numbers.
    - Update the "Last updated" date.
    - Skip if the session didn't materially change any Current Projects priorities.
 
-12. **Verify log completeness and sweep for missed items** — after writing to the Session Handoff Log, Decision Log, and Friction Log (steps 5–7), spawn a sonnet verification subagent.
+11. **Verify log completeness and sweep for missed items** — after writing to the Session Handoff Log, Decision Log, and Friction Log (steps 5–7), spawn a sonnet verification subagent.
 
-   **Skip threshold (narrower than it looks).** Skip ONLY when the session truly was trivial: a quick question with no file edits, a single-line read-and-explain, or a one-line cosmetic edit. Anything involving multi-file edits, log/changelog entries, commits, cleanup operations (file deletions, task deletions), skill/process-doc updates, or substantive Bash computation is NOT trivial — run the subagent. The subagent's gap-analysis pass (unacted-on recommendations, logical gaps, missing self-improvement loops, unsurfaced action items) is exactly what catches the issues a tired-end-of-session inline review misses. Confirmed 2026-04-26: a 2-file-edit + 6-deletion + 1-commit session was wrongly judged "borderline trivial" and skipped this step; the resulting Suggested improvements (step 16b) were shallow enough that Simon flagged it.
+   **Skip threshold (narrower than it looks).** Skip ONLY when the session truly was trivial: a quick question with no file edits, a single-line read-and-explain, or a one-line cosmetic edit. Anything involving multi-file edits, log/changelog entries, commits, cleanup operations (file deletions, task deletions), skill/process-doc updates, or substantive Bash computation is NOT trivial — run the subagent. The subagent's gap-analysis pass (unacted-on recommendations, logical gaps, missing self-improvement loops, unsurfaced action items) is exactly what catches the issues a tired-end-of-session inline review misses. Confirmed 2026-04-26: a 2-file-edit + 6-deletion + 1-commit session was wrongly judged "borderline trivial" and skipped this step; the resulting improvement-draft routing (step 13) is also skipped when this step is skipped (hard dependency).
 
    The subagent performs two passes:
 
@@ -220,14 +239,45 @@ If within budget, proceed silently — no need to report the numbers.
    >
    > Report findings grouped by classification. Be selective — only flag items that genuinely matter. Don't flag things that were explicitly deferred with reasoning, or trivial style suggestions.
 
+   **Pass 2 also emits an `Improvement candidates` block** as the formatting bridge to step 13 (improvement-draft routing). This is in addition to the gap-classification report above.
+
+   > Additionally, identify any **improvement candidates** for the L6 self-improvement queue — workflow patterns, skill enhancements, automation opportunities, or quality improvements that surfaced during the session and would benefit from being proposed as a durable IMPROVEMENT (not just a fleeting note). For each candidate, emit the following block (matching the canonical `~/bin/obsidian_reviews/self_improve.py:4384-4395` producer contract):
+   >
+   > ```
+   > ### Candidate: <Short title>
+   > - **Rationale:** <1-3 sentences — why this is valuable>
+   > - **Current state:** <what exists today>
+   > - **Proposed change:** <specific, concrete change>
+   > - **Affected files:** <vault-relative or absolute paths>
+   > - **Cold-start prompt:** <a complete Claude Code prompt that could implement this in a fresh session>
+   > ```
+   >
+   > Be selective. Phase A drafting upper bound: 2–4 candidates per session. If nothing surfaces, return zero. Do NOT include candidates that duplicate existing IMPROVEMENT files (a quick `Glob` of `01_PROJECTS/REVIEW QUEUE/IMPROVEMENTS/` and `06_ARCHIVE/IMPROVEMENTS/` is appropriate).
+
+   The verification subagent's structured output now has TWO sections: the existing gap-classification report AND the Improvement candidates block. Step 13 consumes the latter.
+
    Review the subagent's report and act on it:
    - **Apply now** items: make the changes directly.
    - **(SIMON-ONLY)** **Create TODO (Things 3)** items: if `IS_SIMON=true`, create Things 3 tasks with vault links and clear descriptions. If `IS_SIMON=false`, downgrade these items to "Note for next session" (next bullet).
-   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, append to `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` with `check-after: YYYY-MM-DD`, a description, a named verification check, AND a `[created: YYYY-MM-DD]` tag (today's date) so the F3 Daily Log lifecycle can age the entry out cleanly after the check action lands. Format: `- **[topic — check after YYYY-MM-DD]** description ... [created: YYYY-MM-DD]`. Claude picks these up on future sessions after the check-after date. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
+   - **(SIMON-ONLY)** **System housekeeping (Daily Log)** items: if `IS_SIMON=true`, call `daily_log_helper.append_system_housekeeping()` rather than raw-editing `05_SYSTEM/OUTPUTS/Daily Log.md`. The helper acquires the Daily Log lock + writes atomically (per spec `2026-05-17-internal-loop-write-concurrency-safety.md`), produces the canonical entry format, and includes the `[created: YYYY-MM-DD]` tag automatically. Invocation:
+     ```bash
+     PYTHONPATH="$HOME/bin/obsidian_reviews" python3 -c "
+     from daily_log_helper import append_system_housekeeping
+     append_system_housekeeping(
+         topic_slug='<short-slug>',
+         check_after='YYYY-MM-DD',
+         description='Brief observation + why it matters',
+         check_action='named verification command + if-A-then-X else-escalate branch',
+     )
+     "
+     ```
+     Renders: `- **[<topic-slug> — check after YYYY-MM-DD]** description. **Check action:** ... [created: YYYY-MM-DD]`. Claude picks these up on future sessions after the check-after date.
+     DO NOT use raw `Edit` on Daily Log for housekeeping appends — bypasses the lock + risks concurrent-write data loss with /tomorrow, /update, healthchecks, and the nightly. If `IS_SIMON=false`, append the deferred check to the handoff entry's "What's next" instead — the user's vault doesn't have a Daily Log file by default.
    - **Note for next session** items: add to the "What's next" section of the handoff entry (update step 5 entry if already written).
-   - Report all items and actions taken to the user in step 18.
+   - **Improvement candidates** are NOT acted on here — they feed step 13's routing.
+   - Report all items and actions taken to the user in step 19 (the report).
 
-13. **Distil to MEMORY.md**: Review what was learned this session and check whether any patterns should be promoted to auto-memory. The convention changed 2026-04-20 to a two-tier model (see `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the full convention):
+12. **Distil to MEMORY.md**: Review what was learned this session and check whether any patterns should be promoted to auto-memory. The convention changed 2026-04-20 to a two-tier model (see `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the full convention):
 
    - **Feedback memories — classify by firing frequency:**
      - **Tier 1 (always-on) → inline in MEMORY.md's `## Feedback & instructions — Tier 1` section.** Rules that fire every session regardless of task (interaction style, filing defaults, execute-now rules, Things 3 rules, meta). Format: `**Rule title.**` heading + compressed body (critical Why/How only — anecdotes belong in a leaf or process doc, not inline).
@@ -250,6 +300,59 @@ If within budget, proceed silently — no need to report the numbers.
    - **Budget**: MEMORY.md has a hard cap of 200 lines / 25 KB (the loader truncates past this). Target ≤150 lines to preserve headroom. If MEMORY.md is approaching the cap, move context-triggered rules from Tier 1 to Tier 2 leaves rather than compressing Tier 1 rules past the point of usefulness.
    - Skip this step if the session was trivial or nothing new was learned.
 
+13. **Improvement-draft routing** — replaces the old user-facing "Suggested improvements" section. Take the verification subagent's Improvement candidates block (from step 11's Pass 2) and route surviving items to the L6 self-improvement queue.
+
+   **Hard dependency on step 11.** If step 11 was skipped (trivial session), step 13 is skipped too. No draft generation outside the verification-subagent path.
+
+   **Backlog gate (BLOCKING, live-queue-scoped).** Before doing anything else, scan `01_PROJECTS/REVIEW QUEUE/IMPROVEMENTS/*.md` for live unreviewed proposals (files whose `## Decision` heading is missing or empty per `~/bin/obsidian_reviews/self_improve.py:1709`'s `_extract_decision_section()` check). Compute count and max age (filename date parsed via `self_improve.py:1697-1700`). If `len(unreviewed) > 3 AND oldest > 14 days` (matching the existing gate at `self_improve.py:1755-1758`), DO NOT write new proposals this run. Surface a single one-line handoff-log note: `Improvement-draft routing skipped — backlog gate triggered (N unreviewed, oldest M days). Walk via /system-upgrade before queueing more.` Skip the rest of step 13. The gate is recomputed live each call — not session-scoped.
+
+   **Inline Cut-criteria check** (mandatory; lifted from the previous Phase B prompt to preserve the bar).
+
+   Cut criteria — drop the candidate if ANY apply:
+   1. Too narrow / one-off value; covered by an existing skill, process doc, or memory entry.
+   2. Shallow rephrasing of work already done this session.
+   3. Speculative ("might be useful") rather than concretely valuable.
+   4. Too low-stakes vs. the implementation cost.
+   5. Symptom-only when the underlying root cause is unaddressed.
+   6. Would generate noise (false positives, log spam).
+   7. **Scope inflation** — the proposed mechanism is larger than the actual problem.
+   8. **Mechanism over-engineering** — a new script/automation/process doc proposed for a problem an existing mechanism already covers.
+   9. **Conceptual muddle** — the proposed change applies to a context not actually validated.
+
+   Three pressure-test questions (mandatory for each surviving candidate):
+   1. **Does this fix the cause or just the symptom?** A one-off action that the same warning could trigger again next session is symptom-only. If an existing housekeeping/investigation entry addresses the root cause, let it fire instead.
+   2. **Is this in scope for the current run?** /document is wrap-this-session. Heavy multi-file restructures, MEMORY.md sweeps, or dependency-chasing belong in their own session.
+   3. **Does executing this now respect prior deliberate state?** If the suggestion reclassifies entries previously classified by Simon (or a prior /document run), the prior classification was probably deliberate. Autonomous reversal needs strong evidence.
+
+   If any of the three pressure-test questions trips, drop the item. The bar is high — under-surface preferred to over-surface.
+
+   **Write the IMPROVEMENT proposal file** for each surviving candidate, using the canonical `~/bin/obsidian_reviews/self_improve.py:4384-4395` producer template:
+
+   - **Filename:** `Improvement — YYYY-MM-DD — <slug>.md` where `YYYY-MM-DD` is today's date and `<slug>` is a short kebab-case description. The dated filename is REQUIRED — `self_improve.py`'s age parser at `:1697-1700` defaults missing-date files to today's age, silently masking aging across the queue.
+   - **Body sections (in order):** `# <Title>` heading; `## Rationale`; `## Current state`; `## Proposed change`; `## Affected files`; `## Cold-start prompt`. **No `## Decision` heading at write time** — its absence is the "undecided" signal for `_extract_decision_section()`. `/system-upgrade` Source #1 surfaces files that lack a populated `## Decision`; the empty heading is added later when the decision is made.
+   - **Frontmatter (recommended):** `title:`, `date:`, `category:`, `priority:`, `source: /document` (or `/do-this-later`). The `source:` field distinguishes manual-writer proposals from nightly `self_improve.py` proposals.
+   - **Path:** write to `01_PROJECTS/REVIEW QUEUE/IMPROVEMENTS/` (current canonical per `self_improve.py:57`). DO NOT use the legacy `01_LIFE OS/REVIEW QUEUE/IMPROVEMENTS/` path that appears in older Daily Log entries — pre-migration drift.
+
+   **Surface via Daily Log** using `daily_log_helper.log_entry()` with the explicit `source=rel_path` kwarg. Since /document runs from the vault, use the PYTHONPATH shell form (no editable install):
+
+   ```bash
+   PYTHONPATH="$HOME/bin/obsidian_reviews" python3 -c "
+   from daily_log_helper import log_entry
+   log_entry('For review', 'Self-improve', '<Title>. \`<rel_path>\`', source='<rel_path>')
+   "
+   ```
+
+   This renders: `- [ ] **[Self-improve]** <Title>. \`<rel_path>\` [created: YYYY-MM-DD] [source: <rel_path>]`. The bold token is `**[Self-improve]**` ONLY — NOT `**[For review][Self-improve]**`. `## For review` is the section heading, not part of the bold token.
+
+   **Dedupe before appending (three-tier fallback chain).** Before appending the Daily Log entry, search the existing `## For review` section in this priority order:
+   1. **Primary key:** `[source: <rel_path>]` exact match (post-2026-05-17 entries from both writers).
+   2. **Fallback 1:** Backticked path `` `<rel_path>` `` in the description body (pre-fix entries from `self_improve.py` or any other writer).
+   3. **Fallback 2:** Normalised title match (case-insensitive substring on the IMPROVEMENT title — covers entries lacking both source metadata and backticked paths).
+
+   If any tier matches, update the matched entry's `[created:]` date in place rather than appending a duplicate. If none match, append a fresh entry.
+
+   **No Opus subagent dispatch.** The previous Phase B Opus filter is removed entirely; the inline Cut-criteria check above replaces it. If the inline check is too lax in practice and `/system-upgrade` reports noise, the fix is to tighten the inline check, NOT to re-introduce the filter subagent.
+
 14. **Log maintenance** — keep the active sections lean:
    - **Session Handoff Log** (plumbing item #2, 2026-05-12). Canonical archival lives in `self_improve.py:apply_handoff_log_lifecycle()` — runs unconditional, strict-date (≥30 days), idempotent in the nightly 03:30 cycle. The foreground bridge for /document is:
      ```bash
@@ -259,11 +362,11 @@ If within budget, proceed silently — no need to report the numbers.
    - **Decision Log**: Move entries >2 months old that have no future "Revisit by" date to the `## Archived decisions` section. Compress archived entries to 1-3 lines.
    - **Friction Log**: Move entries marked ✓ to the `## Resolved` section. Compress to one-line summaries.
 
-14b. **(SIMON-ONLY)** **Sync `~/.claude/` changes to the contributor repo (default-on)**: Skip this step entirely if `IS_SIMON=false` — newcomer users don't have the `mmf-claude-code` contributor repo and shouldn't be pushed to. If `IS_SIMON=true`:
+15. **(SIMON-ONLY)** **Sync `~/.claude/` changes to the contributor repo (default-on)**: Skip this step entirely if `IS_SIMON=false` — newcomer users don't have the `mmf-claude-code` contributor repo and shouldn't be pushed to. If `IS_SIMON=true`:
 
    **Default behaviour: run the sync as part of /document's session-end work.** Simon's design choice (2026-04-29 evening): the trigger's job is "is the work stable enough to ship?", not "is the change broadly relevant?" — that latter question is the sync script's job (the script filters Simon-personal files; the trigger doesn't need to). Asking every session whether to sync produces the same answer almost every time, so default-on respects that.
 
-   **Opt-out:** if `$ARGUMENTS` contains `--no-sync` (or the user invoked `/document --no-sync`), skip this step and note in the step 17 report that sync was deferred per the user's flag. Use this when a particular skill change isn't ready to ship — e.g. WIP, experimental, or Simon wants to refine before pushing.
+   **Opt-out:** if `$ARGUMENTS` contains `--no-sync` (or the user invoked `/document --no-sync`), skip this step and note in the step 19 report that sync was deferred per the user's flag. Use this when a particular skill change isn't ready to ship — e.g. WIP, experimental, or Simon wants to refine before pushing.
 
    **Detection:** look for `sync-from-vault.sh` (or similar named sync script) in any cloned repo under `~/repos/`. The canonical example is `~/repos/mmf-claude-code/sync/sync-from-vault.sh`. If no sync script found, skip silently — the user isn't a contributor and this step doesn't apply. **Do not** invent a sync target or push to a repo the user hasn't established a sync flow with.
 
@@ -275,65 +378,29 @@ If within budget, proceed silently — no need to report the numbers.
       PRE_SYNC_HEAD=$(git rev-parse HEAD)
       ```
    3. Run the sync script with the **`--commit` flag** so it actually applies, commits, and pushes (default behaviour without the flag is dry-run only): `./sync/sync-from-vault.sh --commit`. The script asserts the repo is on `main`, pulls latest, reads from `~/.claude/` filesystem state, applies its own filtering (Simon-personal references, hooks, settings stay local), stages mapped changes (skills/, guides/, templates/), and — when there are staged changes — commits with the message `sync: mirror from vault (<date>)` and pushes explicitly to `origin main`.
-   4. **Capture `POST_SYNC_HEAD`** and the script's output for step 17:
+   4. **Capture `POST_SYNC_HEAD`** and the script's output for step 19:
       ```bash
       POST_SYNC_HEAD=$(git rev-parse HEAD)
       ```
       The script prints either "No changes to commit." (when only Simon-personal files were touched), or "Committed and pushed to origin/main: sync: mirror from vault (<date>)" (when something synced). Don't run a second commit / push — the script owns that path.
    5. **`--commit` aborts if mapped sources are missing locally.** Pass `--allow-missing` only when the user has explicitly OK'd pruning; otherwise an aborted sync usually means a recent vault rename/delete that needs investigating before pushing.
-   6. **Run the course sweep.** After the sync returns (whether it committed or was a no-op), follow the protocol at `~/repos/mmf-claude-code/sync/course-sweep-protocol.md`. Pass: `REPO_ROOT=~/repos/mmf-claude-code`, `CALLER="document"`, the captured `PRE_SYNC_HEAD`, and `POST_SYNC_HEAD`. The protocol detects modified / new / deleted skills, proposes lesson edits one at a time, scaffolds lessons for new local skills that should ship, and archives lessons for retired skills. **Exits silently if there's nothing to sweep** (the common case for short sessions that didn't touch a starter skill). Surface the protocol's "Course sweep" summary block in step 17 if it ran.
-   7. **Surface in step 17 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), and the script's final line (commit message + push confirmation, or "No changes to commit."). Add the course-sweep summary block if step 6 produced output. If sync produced nothing AND the sweep was a no-op, say so explicitly.
+   6. **Run the course sweep.** After the sync returns (whether it committed or was a no-op), follow the protocol at `~/repos/mmf-claude-code/sync/course-sweep-protocol.md`. Pass: `REPO_ROOT=~/repos/mmf-claude-code`, `CALLER="document"`, the captured `PRE_SYNC_HEAD`, and `POST_SYNC_HEAD`. The protocol detects modified / new / deleted skills, proposes lesson edits one at a time, scaffolds lessons for new local skills that should ship, and archives lessons for retired skills. **Exits silently if there's nothing to sweep** (the common case for short sessions that didn't touch a starter skill). Surface the protocol's "Course sweep" summary block in step 19 if it ran.
+   7. **Surface in step 19 report** under a `## Sync to mmf-claude-code` subsection (or similar): list the synced files with one-line each ("voice-capture skill (new)", "research skill v6 lessons", etc.), and the script's final line (commit message + push confirmation, or "No changes to commit."). Add the course-sweep summary block if step 6 produced output. If sync produced nothing AND the sweep was a no-op, say so explicitly.
 
-   **Failure mode handling:** if the sync script errors (branch assertion fails because repo is on a side branch, filter breaks, file conflict, push rejected, missing-source abort), do NOT roll back — surface the error in step 17 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
+   **Failure mode handling:** if the sync script errors (branch assertion fails because repo is on a side branch, filter breaks, file conflict, push rejected, missing-source abort), do NOT roll back — surface the error in step 19 and let Simon decide how to recover. Sync failure is not a /document failure; the rest of the handover should still complete.
 
-15. **Flag completed notes for archiving**: If any vault notes worked on this session are now complete (plans executed, audits finished, process docs promoted to skills), note them for archival to the user's archive folder (Simon: `06_ARCHIVE/`; newcomer vaults don't ship one by default — flag for the user to create one or skip). Move them if Simon has given standing approval, or list them for confirmation.
+16. **Flag completed notes for archiving**: If any vault notes worked on this session are now complete (plans executed, audits finished, process docs promoted to skills), note them for archival to the user's archive folder (Simon: `06_ARCHIVE/`; newcomer vaults don't ship one by default — flag for the user to create one or skip). Move them if Simon has given standing approval, or list them for confirmation.
 
-16. **Evaluate skill candidates**: If any process doc has been used 3+ times with stable steps, note it as a candidate for skill promotion.
+17. **Evaluate skill candidates**: If any process doc has been used 3+ times with stable steps, note it as a candidate for skill promotion.
 
-16b. **Generate Suggested improvements** (2–4 ideas → Opus filter pass → final list shown to Simon): Now — AFTER the verification subagent (step 12), document-update sweep (step 10), log maintenance (step 14), and archival/skill-candidate evaluation (steps 15–16). Generating suggestions at this point lets them incorporate everything that came out of those steps (gaps the verification subagent flagged, patterns surfaced by archival, missing retrospective loops, etc.) instead of shallow pre-subagent guesses.
+<!--
+Old step 16b ("Generate Suggested improvements" — Phase A draft + Phase B Opus filter pass + inline render in report)
+was REMOVED 2026-05-17 per spec 2026-05-17-session-closeout-skills-refactor.
+Improvement-draft routing is now step 13 — writes proposals to IMPROVEMENTS queue + Daily Log [Self-improve],
+consumed by /system-upgrade. The report (step 19) no longer carries a user-facing "Suggested improvements" section.
+-->
 
-   **Hard dependency on step 12.** If step 12 was skipped (trivial session opt-out), do NOT generate Suggested improvements — they must be informed by the verification subagent's gap analysis. In that case, omit the Suggested improvements section entirely from the step 17 report, or state explicitly "Suggested improvements skipped — verification subagent did not run." Inline self-review without the subagent produces shallow, premature-feeling suggestions and misses the gap classes the subagent is designed to catch (unacted-on recommendations, logical gaps, missing self-improvement loops, unsurfaced action items). Confirmed 2026-04-26: meeting-prep-filter-fix session skipped step 12 as borderline-trivial; the suggestions generated felt premature to Simon, who flagged that improvements should always wait for the verification agents to finish.
-
-   The corollary: if you are tempted to generate Suggested improvements, you should also be running step 12. Resist the "trivial session" opt-out unless the session genuinely involved zero file edits and zero substantive computation. Skill modifications, multi-file edits, log entries, commits, and cleanup operations are NOT trivial — run the subagent.
-
-   **Two-phase generation:**
-
-   **Phase A — internal draft (2–5 ideas).** Think about the workflows, skills, and processes touched this session. What enhancements, extensions, or adjacent improvements would you suggest if Simon asked "what else could we do here?" These should be ideas that weren't discussed during the session — things Simon might not think to ask about. Consider: missing integrations, underused data sources, automation opportunities, quality improvements, workflow gaps, and anything the verification subagent surfaced as a logical-gap pattern worth generalising. Be specific and actionable, not generic. Generate the internal draft in your scratch — do NOT show this version to Simon.
-
-   **Phase B — Opus filter pass.** Spawn an Opus subagent (`subagent_type: "general-purpose"`, `model: "opus"`) with the internal draft and a brief framing of the session. The subagent's job is to be a hard gatekeeper:
-
-   > You are reviewing draft "Suggested improvements" before they are shown to Simon. The bar is high: Simon already gets a steady stream of good suggestions and wants the noisy ones cut. Your job is to filter and improve.
-   >
-   > For each draft suggestion:
-   > 1. **Cut it** if any of the following apply: too narrow / one-off value; covered by an existing skill, process doc, or memory entry; shallow rephrasing of work already done this session; speculative ("might be useful"); too low-stakes vs. the implementation cost; symptom-only when the underlying root cause is unaddressed; would generate noise (false positives, log spam); **scope inflation** (the proposed mechanism is larger than the actual problem — e.g. "sweep all skills" when the real scope is the four shipped in the starter bundle); **mechanism over-engineering** (new script / automation / process doc proposed for a problem an existing mechanism already covers — e.g. a new spec-lint script when /red-team already does this); **conceptual muddle** (the proposed change applies to a context the proposer hasn't actually validated — e.g. shipping a sync-script hook to a vault that has no sync scripts).
-   > 2. **Sharpen it** if the idea is good but the framing is fuzzy — make the implementation concrete, name files/functions, state the value clearly, identify the failure mode it prevents. Also: validate the scope (count the actual targets) and pressure-test the mechanism (does an existing skill/hook/process already cover this?) before letting it through.
-   > 3. **Recommend a verdict** per surviving suggestion: **Apply now** (cheap + high-confidence, do it in the next turn) / **Apply soon** (worth a Things 3 task or housekeeping check) / **Defer** (real value but needs more thought or signal to fire) / **Cut** (do not surface).
-   >
-   > Return ONLY the surviving suggestions, in order of strongest-first, with for each: a tight title, 2–4 sentences of substance, and a verdict line. If fewer than 2 suggestions survive, that's fine — under-suggesting is preferred to over-suggesting. If zero survive, return "No suggestions worth surfacing this session" and explain in one line why the drafts didn't clear the bar.
-
-   Pass the subagent the full internal draft text plus 3–5 sentences of session context.
-
-   **Phase B verdicts are inputs, not authoritative.** After the Opus filter returns, re-read each surviving suggestion + verdict and check it against your own first-principles read of the underlying evidence. Opus operates from the framing you gave it; if you disagree with a verdict (e.g. it says Defer but the evidence supports Apply now, or vice versa), surface your own assessment alongside the Opus verdict rather than rendering the filter output verbatim. The most common failure mode: Opus calling for a `--flag` opt-in when the evidence supports flipping the default outright (or vice versa). Calibration source: 2026-04-28 onboarding round — Opus filter recommended a `--sequential` opt-in flag for /red-team Step 6; Simon pushed back ("sequential did show value here?") and the C1 catch (regression-of-a-fix that only sequential would have caught) supported flipping the default rather than keeping parallel. Don't make Simon do that re-evaluation — do it before surfacing.
-
-   **Pressure-test surviving suggestions against the Cut criteria — Opus often passes through a draft that Phase B says to cut.** The Phase B prompt lists "symptom-only when the underlying root cause is unaddressed", "scope inflation", and "mechanism over-engineering" as Cut criteria, but Opus may still let one through if the framing in your draft makes it look high-confidence. Before surfacing each surviving suggestion, ask three questions explicitly:
-
-   1. **Does this fix the cause or just the symptom?** A one-off action that the same warning could trigger again next session is symptom-only. Look for an existing housekeeping/investigation entry that addresses the root cause — if one exists, the better-scoped action is to let that entry fire, not to do the workaround.
-   2. **Is this in scope for the current run?** /document is wrap-this-session. Heavy multi-file restructures, MEMORY.md sweeps, or dependency-chasing belong in their own session, even if the spec for that work already exists elsewhere in the system.
-   3. **Does executing this now respect prior deliberate state?** If the suggestion involves reclassifying entries that were previously classified by Simon (or a prior /document run), the prior classification was probably deliberate. Autonomous reversal needs strong evidence, not a "lean Tier 2" default.
-
-   If any of the three trips, downgrade Apply now → Defer or Cut, and surface your own reasoning alongside Opus's verdict. Calibration source: 2026-04-29 — Opus filter passed "trigger MEMORY.md compression sweep as part of this /document" as Apply now (recommended) for the talk-import session; Simon flagged it on review with three-point reasoning (symptom-only vs investigation entry on Daily Log line 313; scope inflation against /document being a wrap-this-session run; deliberate Tier 1 classification not respected). The fix isn't to let Opus catch this — it's to do this pressure-test BEFORE surfacing.
-
-   **Step 17 output format.** Render the Opus-reviewed list under the **Suggested improvements** heading as a numbered list (`1.`, `2.`, `3.`) with the verdict inline so Simon can reply with just a number to apply one. Format per item:
-
-   ```
-   1. **Title.** 2–4 sentences. **Verdict:** Apply now (recommended).
-   2. **Title.** 2–4 sentences. **Verdict:** Apply soon — worth a Things 3 task.
-   3. **Title.** 2–4 sentences. **Verdict:** Defer — wait for [signal].
-   ```
-
-   Add a one-line offer at the end: "Reply with a number to apply, or `none` to skip all." This is the easy-pick mechanism — Simon should be able to act on a recommendation without having to retype anything.
-
-16c. **Autonomous-fix gate — close the friction-log loop.** This is the closure mechanism that prevents the Friction Log from becoming write-only. Replaces the older surface-proposed-fixes pattern: instead of reporting proposed fixes for Simon to act on later, this step *applies* mechanical fixes silently and walks judgement items with the user one-at-a-time in-session.
+18. **Autonomous-fix gate — close the friction-log loop.** This is the closure mechanism that prevents the Friction Log from becoming write-only. Replaces the older surface-proposed-fixes pattern: instead of reporting proposed fixes for Simon to act on later, this step *applies* mechanical fixes silently and walks judgement items with the user one-at-a-time in-session.
 
    Read the Friction Log. For each entry tagged `[OPEN]` or `[STUCK]` that is older than this session (skip entries just written in step 7 to avoid double-handling), classify:
 
@@ -378,25 +445,28 @@ If within budget, proceed silently — no need to report the numbers.
 
    **Cap**: no per-session cap on mechanical fixes (they're silent and git-reversible). No hard cap on judgement walks — the kill switch is always available. The autonomous-fix gate is *intentionally* willing to do a lot of work when there's a lot of accumulated friction.
 
-   **Skip threshold**: if no eligible `[OPEN]` or `[STUCK]` entries exist (older than this session), skip 16c entirely.
+   **Skip threshold**: if no eligible `[OPEN]` or `[STUCK]` entries exist (older than this session), skip step 18 entirely.
 
-   **Append summary line** to the Step 17 report:
+   **Append summary line** to the Step 19 report:
    `Friction sweep: auto-fixed N; resolved M with you; deferred D; wontfix W; skipped S.` Skip the line if no entries were processed.
 
-17. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead.
+19. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead.
 
    **Required section order in the final report** (Simon flagged 2026-04-27 — recurring failure mode):
 
-   1. Brief summary of what was logged, MEMORY.md changes, document update sweep results (step 10 — auto-updates applied and any review items pending), log maintenance performed, notes flagged for archival, and any skill candidates.
+   1. Brief summary of what was logged, MEMORY.md changes, document update sweep results (step 9 — `/update` invocation: counts of auto-updates applied / review items resolved / docs checked-but-not-changed; OR skip note if /update was skipped because it already ran this session OR /update aborted), log maintenance performed, notes flagged for archival, and any skill candidates.
    2. **`**Verification:**` block** per the global CLAUDE.md proactive-verification rule. Either list each new file edited this /document run with `path:line` + short excerpt, OR — if this is a checkpoint /document where the handoff entry was updated in place and earlier edits were already verified inline — explicitly state `**Verification:** no verification needed because checkpoint /document made no new edits — all session work was verified inline at the time of each change`. Without this block the `stop-verification-check` hook will fire on the closing-line completion language. Confirmed 2026-04-25: hook fired three times in one session on `Handover complete` despite the work being captured.
-   3. **Suggested improvements** from step 16b under a clear heading — these are ideas Simon can act on, defer, or dismiss. **MUST come AFTER the Verification block, not before.** Reason: Simon evaluates suggestions against a known-clean baseline of what was actually verified, and the Suggested improvements section is the one he acts on — putting it last means the easy-pick mechanism (reply with a number) is the very last thing in the message, where his eye lands.
-   4. Closing line.
+   3. **One-line Improvements queued summary** from step 13 — one of:
+      - `**Improvements queued:** N proposals written to \`01_PROJECTS/REVIEW QUEUE/IMPROVEMENTS/\` and surfaced via Daily Log \`[Self-improve]\`. /system-upgrade will walk them next Saturday.` (when N ≥ 1)
+      - `**Improvement-draft routing skipped:** backlog gate (N unreviewed, oldest M days). Walk existing queue via /system-upgrade.` (when the backlog gate fired)
+      - Omit the line entirely when no candidates surfaced (the common case) OR when step 11 was skipped (trivial session).
 
-   Wrong order (Simon flagged this): Suggested improvements → Verification → closing. The Suggested improvements appearing before Verification reads as if work is being recommended before the work-just-done has been confirmed clean.
+      NO user-facing "Suggested improvements" section. Removed 2026-05-17 per spec 2026-05-17-session-closeout-skills-refactor. The previously inline-rendered improvement ideas now ride the L6 self-improvement queue (IMPROVEMENTS files + Daily Log `[Self-improve]`) and are walked by `/system-upgrade` weekly. This keeps the close-out report focused on what just happened, not what should happen next.
+   4. Closing line.
 
    End with: **"Handover complete — you are now clear to close or compact this session."**
 
-18. **Suggest compaction if appropriate**: If the conversation is long or context usage is high, suggest running `/compact` after the handover. The pattern is: `/document` → `/compact` → re-read vault files to restore context. Only suggest this if there's remaining work — if the session is ending, just complete the handover.
+20. **Suggest compaction if appropriate**: If the conversation is long or context usage is high, suggest running `/compact` after the handover. The pattern is: `/document` → `/compact` → re-read vault files to restore context. Only suggest this if there's remaining work — if the session is ending, just complete the handover.
 
 ## Guidelines
 - Be concise in log entries. A few lines per section, not paragraphs.

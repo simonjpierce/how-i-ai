@@ -21,48 +21,56 @@ When a step in this skill fails or needs a workaround, update this skill file wi
 Before any steps, run:
 
 ```bash
-# Derive Claude Code's per-vault project key from the current working
-# directory. Claude Code sanitises any non-alphanumeric character in the
-# absolute vault path to a hyphen.
-PROJECT_KEY=$(pwd | sed 's|[^a-zA-Z0-9]|-|g')
-PROJECT_DIR="$HOME/.claude/projects/$PROJECT_KEY"
+# Resolve the per-vault project dir. Claude Code sanitises any non-alphanumeric
+# character in the absolute vault path to a hyphen. BUT pwd can drift below the
+# vault root (e.g. cd'd into a subfolder mid-session) or to a repo dir, which
+# would derive a key for a project dir that doesn't exist. So: first scan known
+# project configs for one whose vault.path is pwd or an ancestor of pwd; only
+# fall back to pwd-derived if no ancestor match. This makes PROJECT_DIR,
+# CONFIG_FILE, AND MEMORY_FILE all drift-tolerant (the earlier partial fix only
+# protected MEMORY_FILE). Confirmed 2026-05-17 (parallel to /document fix) —
+# CONFIG_FILE stayed pwd-derived even after the union scan ran.
+PROJECT_DIR=$(python3 -c '
+import json, glob, os, sys
+cwd = os.getcwd()
+for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
+    try:
+        vp = json.load(open(p)).get("vault", {}).get("path")
+        if vp and (cwd == vp or cwd.startswith(vp.rstrip("/") + "/")):
+            print(os.path.dirname(p))
+            sys.exit()
+    except Exception:
+        pass
+# fallback: pwd-derived key
+key = "".join(c if c.isalnum() else "-" for c in cwd)
+print(os.path.expanduser(f"~/.claude/projects/{key}"))
+' 2>/dev/null)
+PROJECT_KEY=$(basename "$PROJECT_DIR")
 CONFIG_FILE="$PROJECT_DIR/config.json"
 MEMORY_FILE="$PROJECT_DIR/memory/MEMORY.md"
 
 # Read is_simon feature flag. is_simon is a MACHINE property, not a per-vault
 # property — Simon's machine has it `true`; newcomers' machines have it `false`
-# (the starter template default). pwd-derived PROJECT_KEY can drift mid-session
-# (e.g. cwd moves to ~/repos/<repo> from the vault), missing the actual config.
-# Fix: try pwd-derived first, then fall back to a union scan of all configs
-# under ~/.claude/projects/. If ANY known vault config has is_simon=true, this
-# is Simon's machine. Newcomer machines union to false. Confirmed 2026-04-27:
-# /update run from inside ~/repos/mmf-claude-code returned is_simon=false on
-# Simon's machine because pwd-derived path didn't match the vault project dir.
+# (the starter template default). The PROJECT_DIR resolution above already
+# handles vault-subfolder drift; this union scan handles the OTHER drift mode
+# (cwd in ~/repos/<repo>, where no vault config will be an ancestor of pwd).
 IS_SIMON=false
-RESOLVED_PROJECT_DIR=""
 if [ -f "$CONFIG_FILE" ] && command -v python3 >/dev/null 2>&1; then
   IS_SIMON=$(python3 -c 'import json,sys; print(str(json.load(open(sys.argv[1])).get("features", {}).get("is_simon", False)).lower())' "$CONFIG_FILE" 2>/dev/null || echo false)
-  [ "$IS_SIMON" = "true" ] && RESOLVED_PROJECT_DIR="$PROJECT_DIR"
 fi
-# Union scan: if pwd-derived lookup didn't find an is_simon=true config (e.g. cwd
-# is a subfolder of the vault, or in ~/repos/<x>), scan all project configs and
-# also resolve PROJECT_DIR from the matched config so MEMORY_FILE points to a
-# real file. Confirmed 2026-04-29: pwd was a vault subfolder, union scan found
-# is_simon=true but MEMORY.md path stayed pwd-derived and missed the file.
-if [ -z "$RESOLVED_PROJECT_DIR" ] && command -v python3 >/dev/null 2>&1; then
-  read IS_SIMON RESOLVED_PROJECT_DIR <<< $(python3 -c '
+if [ "$IS_SIMON" = "false" ] && command -v python3 >/dev/null 2>&1; then
+  IS_SIMON=$(python3 -c '
 import json, glob, os
 for p in glob.glob(os.path.expanduser("~/.claude/projects/*/config.json")):
     try:
         if json.load(open(p)).get("features", {}).get("is_simon", False):
-            print("true", os.path.dirname(p)); raise SystemExit
+            print("true"); raise SystemExit
     except SystemExit: raise
     except Exception: pass
-print("false", "")
-' 2>/dev/null || echo "false ")
+print("false")
+' 2>/dev/null || echo false)
 fi
 echo "is_simon=$IS_SIMON"
-[ -n "$RESOLVED_PROJECT_DIR" ] && MEMORY_FILE="$RESOLVED_PROJECT_DIR/memory/MEMORY.md"
 
 [ -f "$MEMORY_FILE" ] || { echo "MEMORY.md not found at $MEMORY_FILE — skipping pre-flight"; }
 LINES=$([ -f "$MEMORY_FILE" ] && wc -l < "$MEMORY_FILE" || echo 0)
@@ -74,7 +82,7 @@ The `IS_SIMON` value above gates two Simon-personal sub-steps in step 9 (Code ba
 
 If `$LINES > 150` or `$BYTES > 20000`, warn the user: "MEMORY.md approaching loader cap — any new rules added this session should go in Tier 2 leaves (`memory/feedback_*.md`), not Tier 1 inline." See `Processes/CLAUDE.md and MEMORY.md Maintenance.md` for the two-tier convention.
 
-**Do not offer to /schedule a compression sweep.** Compression is ALREADY owned by two existing mechanisms: the nightly self-improvement loop (`self_improve.py`) and `/document` step 13 ("Distil to MEMORY.md"). /update only WARNS — it does not compress, and it does not need to invent new automation. If the warning fires repeatedly across sessions, that's a signal those existing mechanisms aren't keeping up; surface that observation to the user rather than offering a duplicate /schedule.
+**Do not offer to /schedule a compression sweep.** Compression is ALREADY owned by two existing mechanisms: the nightly self-improvement loop (`self_improve.py`) and `/document` step 12 ("Distil to MEMORY.md"). /update only WARNS — it does not compress, and it does not need to invent new automation. If the warning fires repeatedly across sessions, that's a signal those existing mechanisms aren't keeping up; surface that observation to the user rather than offering a duplicate /schedule.
 
 If within budget, proceed silently — no need to report the numbers unless asked.
 
@@ -228,17 +236,28 @@ If within budget, proceed silently — no need to report the numbers unless aske
    **Trigger gate — apply ALL three before routing:**
    1. **Classify the observation.** Is it a systemic pattern (recurring across sessions; affects an automation; suggests an investigation), or per-session detail (counts, "documents checked but not changed", confirmations that something specific worked)? Per-session details stay in the chat Summary; only systemic patterns get routed.
    2. **Mandatory dedupe — blocking check, not advisory.** Before routing ANY observation, grep Simon's `05_SYSTEM/OUTPUTS/Daily Log.md` `## System housekeeping — Claude-managed` section for an entry covering the same topic. If an entry already exists, even if its check-after date has passed: do NOT append a new entry. Either update the existing entry's date / status in place (matches the `[MEMORY.md compression mechanism diagnostic — RE-CHECKED 2026-05-17, still over budget — check after 2026-05-18]` pattern), or leave the existing entry alone. Duplicate entries pollute the housekeeping section and waste `/morning-briefing` review time.
-   3. **Mandatory entry quality.** New entries must use the exact format already established in the section:
+   3. **Mandatory entry quality + write via helper.** Call `daily_log_helper.append_system_housekeeping()` rather than raw-editing the Daily Log file. The helper produces the canonical entry format, includes the `[created: YYYY-MM-DD]` tag, AND acquires the Daily Log lock for serialised + atomic writes (per spec `2026-05-17-internal-loop-write-concurrency-safety.md`). Invocation:
+      ```bash
+      PYTHONPATH="$HOME/bin/obsidian_reviews" python3 -c "
+      from daily_log_helper import append_system_housekeeping
+      append_system_housekeeping(
+          topic_slug='<short-slug>',
+          check_after='YYYY-MM-DD',
+          description='Brief observation + why it matters',
+          check_action='named verification command + if-A-then-X else-escalate branch',
+      )
+      "
       ```
-      - **[<topic-slug> — check after YYYY-MM-DD]** Brief observation + why it matters. **Check action:** named verification command(s) + decision branches ("if A then mark Auto-fixed; if B then escalate to Friction Log"). [created: YYYY-MM-DD]
-      ```
-      Free-form prose entries lacking a named check action are below the bar — the existing entries (e.g. `[OD-11 path migration two-night verification gate]`, `[Domain expert sweep v1 health diagnostic]`) all name a concrete verification command and an Auto-fixed-vs-escalate branch. Match that level; do not append weaker entries.
+      Renders: `- **[<topic-slug> — check after YYYY-MM-DD]** description. **Check action:** ... [created: YYYY-MM-DD]`. Free-form prose entries lacking a named check action are below the bar — the existing entries (e.g. `[OD-11 path migration two-night verification gate]`, `[Domain expert sweep v1 health diagnostic]`) all name a concrete verification command and an Auto-fixed-vs-escalate branch. Match that level; do not append weaker entries. DO NOT use raw `Edit` on the Daily Log file for housekeeping appends — bypasses the lock + risks concurrent-write data loss with /document, /tomorrow, healthchecks, and the nightly.
 
    **Check-after date selection:** ~7 days for recurring patterns (next /morning-briefing cycle), ~30 days for stability-window observations, event-based ("check after next /verify-citations run") for trigger-conditional checks. Match the cadence of the underlying signal — don't pick a default.
 
    **Skip the step entirely** if the Summary contained no systemic observations (most routine /update runs). Most /update runs are routine.
 
-   **Concurrent-skill dedup with `/document`:** /document's step 12 verification subagent also routes housekeeping items by reading the conversation transcript. If /update Step 12 has already routed an observation to Daily Log, /document's subagent should find the existing entry via the same dedupe check and skip re-routing. The blocking dedupe in sub-step 2 above prevents both sides from creating duplicates.
+   **Concurrent-skill dedup with `/document`:** Two scenarios:
+
+   1. **Same Daily Log section (`## System housekeeping — Claude-managed`).** /document's step 11 verification subagent also routes housekeeping items by reading the conversation transcript. If /update Step 12 has already routed an observation to Daily Log, /document's subagent should find the existing entry via the same dedupe check and skip re-routing. The blocking dedupe in sub-step 2 above prevents both sides from creating duplicates.
+   2. **/document invokes /update via Skill tool (post 2026-05-17 refactor).** When /document runs as a close-out, it invokes `Skill("update")` as its new step 9 — meaning /update runs FIRST in the close-out flow, then /document's own subagent (step 11) sees /update's housekeeping entries and applies the cross-skill dedupe. The blocking dedupe in sub-step 2 above is sufficient; no additional caller-context hint is needed.
 
    Example entries the existing section uses as the quality bar: see `05_SYSTEM/OUTPUTS/Daily Log.md` under `## System housekeeping — Claude-managed` (entries dated 2026-05-16 and 2026-05-17) for format reference. Do not produce entries weaker than those.
 

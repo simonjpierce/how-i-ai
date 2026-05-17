@@ -38,15 +38,17 @@ Adjust the Pro-plan paragraph based on context:
 
 ## After they're added
 
-Send the README link with the three-step prompt:
+Send the README link. After the 2026-05-17 course pivot the README is the front door: it idea-file-explains the system (Karpathy-style — pasteable into any LLM for adaptive help), then points at a short video course (`course/lesson-01-the-hook.md` onwards). The course is the canonical onboarding path.
 
 > You should have a GitHub invite by email. Once you accept, the README is at:
 >
 > https://github.com/marinemegafauna/mmf-claude-code
 >
-> The whole setup is the three steps in the README — install Claude Desktop, click the Code tab, paste the prompt. Ping me if anything's unclear.
+> Read the README intro (~5 min), then start the short course at `course/lesson-01-the-hook.md`. The course is paired markdown lessons + short screencasts (videos are being added over time; the lessons read on their own meanwhile). Ping me if anything's unclear.
 
-That's it. The rest is on the README + `/onboard`.
+For users who already use Claude Code and prefer to skip the course (the **impatient path**): the README's bottom section has a one-prompt-paste install that runs `bootstrap.sh` + `/onboard` directly. Mention it only if they ask.
+
+That's it. The rest is on the README + course + `/onboard`.
 
 ## If they bounced before you saw this guide
 

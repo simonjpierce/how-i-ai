@@ -266,7 +266,7 @@ All with `intent` parameter. Use `minScore: 0.5`. Deduplicate. Read top 15–20 
 
 ### 2b: Graph expansion
 
-For top 10 results, extract `[[wikilinks]]` and follow:
+For top 10 results, extract `wikilinks` and follow:
 - Read each linked file, score relevance
 - If relevant, follow its links too (max 2 hops)
 - Track visited files (cycle detection)
@@ -642,7 +642,7 @@ This catches errors introduced by multi-pass enrichment (pipeline + external mod
 
 ### Wikilink validation
 
-If the output uses `[[wikilinks]]` (e.g., book chapters with cross-references):
+If the output uses `wikilinks` (e.g., book chapters with cross-references):
 
 1. Grep for all `[[` links in the file
 2. For each target, verify the file exists in the vault via Glob

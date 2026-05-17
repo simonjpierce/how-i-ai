@@ -156,10 +156,10 @@ for skill_dir in "$INSTALLED_DIR"/*/; do
   name="$(basename "$skill_dir")"
   # Skip starter skills (handled by universal sync above).
   is_starter=false
-  for s in "${STARTER[@]}"; do [[ "$s" == "$name" ]] && is_starter=true && break; done
+  for s in "${STARTER[@]}"; do  "$s" == "$name"  && is_starter=true && break; done
   $is_starter && continue
   # Skip skills that don't exist in the repo (user authored locally, not a fork).
-  [[ -f "$REPO_SKILLS/$name/SKILL.md" ]] || continue
+   -f "$REPO_SKILLS/$name/SKILL.md"  || continue
   # Skip skills with no diff.
   if diff -rq "$skill_dir" "$REPO_SKILLS/$name/" >/dev/null 2>&1; then
     continue
