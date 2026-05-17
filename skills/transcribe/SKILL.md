@@ -42,6 +42,22 @@ This is a different failure mode from the OMIN/Pomene case: there, the right ref
 
 **Mitigation #3 — review pattern:** during Step 3b-iii review, for every *proper-name* high-confidence correction AND every *proper-name* non-correction (i.e. a first name that matched a roster entry exactly), cross-reference the meeting-topic context against the roster entry's `context` field. If the topic doesn't match (e.g. a `Stefan` reference in an AIS/shipping context flags the roster's Stefan Bach as a Qatar oil contact), treat as ambiguous and surface for review.
 
+### Author-pass disambiguation rule — within-document phonetic cousins (Kando vs Komodo pattern)
+
+Observed 2026-05-18 (Kaikōura morning monologue). The corrector flagged `Goku` as ambiguous on line 3; while resolving it with Simon, the SAME line also had `Kando` ("thing blocked, whether I'm going to Kando"). I author-applied `Kando → Komodo` mechanically because `Komodo` appeared on a different line (line 30, "Komodo, I still have to claim for") in the same transcript — and assumed the two tokens shared a referent. Simon corrected: in a Sony / Byron / mid-year-travel context, `Kando` = **Sony Kando** (the annual Sony photographer/creator event), NOT Komodo. Both referents are real, both belonged in the roster, both ended up there with disambiguation context fields. But the author-pass auto-substitution was wrong, and it would have shipped without Simon's eyes on the transcript.
+
+This is a sibling failure to the corrector-pass Stefan/Steffen case but happens at the author layer rather than the corrector layer. When the same short token appears with multiple potential referents in different domain contexts within ONE transcript, frequency-of-cousin elsewhere in the transcript is NOT a reliable disambiguation signal.
+
+**Rule.** When `correct_transcript.py` flags a token as ambiguous AND the same transcript contains a phonetically-related token that matches a different roster entry (a "within-document phonetic cousin"), DO NOT auto-apply either substitution — even if the cousin appears confidently or frequently elsewhere in the same transcript. Surface both the flagged token AND the cousin context to Simon as a disambiguation pair. The cousin's apparent confidence is a property of the corrector's per-token decision, not evidence about the flagged token's referent.
+
+**Concrete pattern when this fires.** In Step 3b-iii review:
+1. Note the corrector's `ambiguous` list as usual.
+2. For each ambiguous token, scan the transcript verbatim for tokens that share a phonetic prefix/suffix or differ by a single phoneme.
+3. If any such cousin exists AND it matches a different roster entry, flag the *pair* to Simon — not just the ambiguous one.
+4. Numbered options should include "they're both X (resolve as same referent)", "they're different (X vs Y)", "leave the ambiguous one as [unclear] for now". Default to question rather than autonomous substitution.
+
+The "unverifiable-name surface" pattern that worked for `Manny at Shells` / `Ann` on the same transcript is the right model: flag ambiguous, name what's unverifiable, hand to Simon for disambiguation. Apply the same caution to ambiguous tokens that LOOK like they could be confidently resolved against a within-document cousin.
+
 ### Roster YAML failure on corrector load — quote multi-clause `context:` values
 
 Observed twice in one corrector run on 2026-04-29 (MMF board meeting). Symptom: `correct_transcript.py` exits 1 immediately with `yaml.scanner.ScannerError: mapping values are not allowed here` pointing at a `context:` value containing `: ` (colon-space). Root cause: any unquoted `context:` value with a colon in the prose parses as a nested mapping. The roster header has a "YAML gotcha" note that warns against this; even with the warning, it's an easy slip.
