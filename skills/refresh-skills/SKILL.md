@@ -1,15 +1,17 @@
 ---
 name: refresh-skills
-description: Pull contributor improvements from `mmf-claude-code` into the user's local `~/.claude/`. Two modes — `universal` syncs the 6 starter skills with conflict-walk; `review-installed` diffs each installed on-demand skill against the repo and writes per-skill review reports to the vault inbox (no auto-apply — user triages with their own LLM). Bare `/refresh-skills` runs both. Use when the user says "/refresh-skills", "pull updates", "check for upstream changes", "update my skills", or asks how to get the latest from the team repo.
+description: Pull contributor improvements from `mmf-claude-code` into the user's local `~/.claude/`. Two modes — `universal` syncs the 7 starter skills (plus templates and guides) with conflict-walk; `review-installed` diffs each installed on-demand skill against the repo and writes per-skill review reports to the vault inbox (no auto-apply — user triages with their own LLM). Bare `/refresh-skills` runs both. Use when the user says "/refresh-skills", "pull updates", "check for upstream changes", "update my skills", or asks how to get the latest from the team repo.
 allowed-tools: Read, Edit, Bash
 ---
 
 The user-side counterpart to `/onboard`: pull contributor improvements from the public `mmf-claude-code` repo. Two layers, two policies:
 
-- **Universal sync** (the 6 starter skills, plus templates and guides). These came from the same install as everyone else's; upstream improvements should usually land. Same interactive conflict-walk as before — never silently overwrite local edits.
+- **Universal sync** (the 7 starter skills, plus templates and guides). These came from the same install as everyone else's; upstream improvements should usually land. Same interactive conflict-walk as before — never silently overwrite local edits.
 - **Review-installed** (work-specific skills the user installed via `/install-skill`). These often get customised. Upstream changes here are *proposals*, not patches — the skill writes a per-skill diff report to the vault inbox so the user can triage with their own LLM, fold in selectively, and never lose a tweak they wanted to keep.
 
 This skill is a thin orchestrator over `sync-to-vault.sh --filter universal` plus a small diff-report writer for the work-specific side.
+
+The 7 starter skills: `/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`, `/install-skill`.
 
 ## When something goes wrong
 
@@ -63,7 +65,7 @@ If `git pull` fails (auth, network, divergent), surface the error and stop. Don'
 bash "$REPO/sync/sync-to-vault.sh" --filter universal
 ```
 
-This prints `[SKILLS]`, `[TEMPLATES]`, `[GUIDES]` sections with `Changed:` and `New:` mappings. SKILLS is narrowed to the starter set (6 skills); templates and guides still sync as usual. Capture the output.
+This prints `[SKILLS]`, `[TEMPLATES]`, `[GUIDES]` sections with `Changed:` and `New:` mappings. SKILLS is narrowed to the 7-skill starter set; templates and guides still sync as usual. Capture the output.
 
 ### 5. Triage the diff
 
@@ -113,7 +115,7 @@ The on-demand skills the user installed via `/install-skill` are often customise
 ### 7. Build the review reports
 
 ```bash
-STARTER=(onboard document session-start update review-friction refresh-skills)
+STARTER=(onboard document session-start update review-friction refresh-skills install-skill)
 INSTALLED_DIR="$HOME/.claude/skills"
 REPO_SKILLS="$REPO/skills"
 VAULT_INBOX=""   # populated from per-vault config — see step 7a
