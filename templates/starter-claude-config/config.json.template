@@ -49,6 +49,11 @@
     "self_improvement_followup_scheduled_for": "{{INSTALL_DATE_PLUS_14_DAYS}}"
   },
 
+  "_hooks_comment": "Per-vault hook behaviour. auto_open_obsidian: when true, edited .md files in this vault are popped open in Obsidian via the auto-open-obsidian.sh hook. Set to false if you find the pop-up disruptive (the hook reads this key on every Edit/Write).",
+  "hooks": {
+    "auto_open_obsidian": true
+  },
+
   "_features_comment": "Booleans below are real JSON booleans, not strings. /onboard substitutes {{TRUE_OR_FALSE}} placeholders with the literal token `true` or `false` (no quotes). For zero domains, write `\"domains\": []` and skip the placeholder block entirely. `is_simon` should always be false for newcomer installs — it gates Simon-personal behaviours in /document and /update (Things 3 calls, simonjpierce/claude-code-config commits, Daily Log housekeeping, voice references). Setting it true on any other machine will cause those skills to attempt operations against folders/repos/tools that don't exist there.",
   "features": {
     "auto_approval_mode_recommended": true,

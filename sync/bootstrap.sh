@@ -124,6 +124,48 @@ for skill in "${STARTER_SKILLS[@]}"; do
   install_path "$REPO_ROOT/skills/$skill" "$CLAUDE_CONFIG/skills/$skill" "skills/$skill"
 done
 
+# --- Hooks ---
+# Individual hook scripts installed file-by-file (rather than as a tree) so
+# users who have their own ~/.claude/hooks/ folder keep their existing scripts
+# untouched. Each script is copied via install_path and chmod +x.
+echo ""
+echo "Hooks:"
+[[ "$MODE" != "dry-run" ]] && mkdir -p "$CLAUDE_CONFIG/hooks"
+HOOK_SRC_DIR="$REPO_ROOT/templates/starter-claude-config/hooks"
+if [[ -d "$HOOK_SRC_DIR" ]]; then
+  for hook_src in "$HOOK_SRC_DIR"/*.sh; do
+    [[ -f "$hook_src" ]] || continue
+    hook_name="$(basename "$hook_src")"
+    install_path "$hook_src" "$CLAUDE_CONFIG/hooks/$hook_name" "hooks/$hook_name"
+    if [[ "$MODE" != "dry-run" && -e "$CLAUDE_CONFIG/hooks/$hook_name" ]]; then
+      chmod +x "$CLAUDE_CONFIG/hooks/$hook_name"
+    fi
+  done
+else
+  echo "  WARN: $HOOK_SRC_DIR missing, skipping hooks"
+fi
+
+# --- Settings (merge, not replace) ---
+# settings.json is merged (not overwritten) so users who already configured
+# their own plugins, statusLine, MCP servers, env vars, etc. keep all of that.
+# The merge helper handles deep-merge semantics for hooks (appending without
+# duplicating commands) and permissions (template values win for the keys
+# it sets; unrelated keys preserved).
+echo ""
+echo "Settings:"
+SETTINGS_TEMPLATE="$REPO_ROOT/templates/starter-claude-config/settings.json.template"
+MERGE_SCRIPT="$REPO_ROOT/templates/starter-claude-config/scripts/merge-settings-json.py"
+if [[ -f "$SETTINGS_TEMPLATE" && -f "$MERGE_SCRIPT" ]]; then
+  if [[ "$MODE" == "dry-run" ]]; then
+    echo "  [dry-run] would merge settings.json.template into $CLAUDE_CONFIG/settings.json"
+  else
+    python3 "$MERGE_SCRIPT" --template "$SETTINGS_TEMPLATE" \
+      --target "$CLAUDE_CONFIG/settings.json" 2>&1 | sed 's/^/  /'
+  fi
+else
+  echo "  WARN: settings.json.template or merge helper missing, skipping settings merge"
+fi
+
 echo ""
 case "$MODE" in
   dry-run) echo "Dry run complete. Re-run without --dry-run to apply." ;;
