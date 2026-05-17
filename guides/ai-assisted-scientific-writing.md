@@ -1071,7 +1071,7 @@ Review manuscripts accumulate new relevant literature between work sessions. Rat
 
 ### Status
 
-Design spec complete (`02_MARINE MEGAFAUNA/MANUSCRIPTS/Shark Photo-ID V3/SPEC — V3 Review Design.md`). Skill implementation planned once the V3 manuscript reaches stable draft stage.
+Design spec complete (`02_MARINE MEGAFAUNA/RESEARCH/MANUSCRIPTS/Shark Photo-ID V3/SPEC — V3 Review Design.md`). Skill implementation planned once the V3 manuscript reaches stable draft stage.
 
 ---
 
