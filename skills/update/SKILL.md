@@ -90,11 +90,11 @@ If within budget, proceed silently — no need to report the numbers unless aske
 
    **If an Artifacts section exists but seems incomplete** (e.g., the session created files not listed), update the Artifacts table first, then use the updated list.
 
-3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: try the starter-vault convention first (`<vault>/AI_WORKFLOW/CLAUDE/...`), fall back to Simon's numbering (`<vault>/05_SYSTEM/...`); take the first that exists.
+3. **Find associated documents** (fallback when no Artifacts section). Using the seeds from step 1, search for related docs across these categories. Path resolution: read `folders.logs_relative` from `~/.claude/projects/<key>/config.json` (default `05_SYSTEM`); paths below are relative to that resolved logs folder.
 
    | Category | Where to look | What to check |
    |----------|--------------|---------------|
-   | Process docs | `<logs>/Processes/` (Simon: `05_SYSTEM/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`) | Grep for seed keywords |
+   | Process docs | `<logs>/Processes/` (default `05_SYSTEM/Processes/`) | Grep for seed keywords |
    | Skills | Skill files Read at `~/.claude/skills/*/SKILL.md` | Grep for seed keywords |
    | Project notes | User's top-level domain folders (Simon: `02_MARINE MEGAFAUNA/`, `03_PLANET OCEAN/`, `01_PROJECTS/`; newcomer: whatever was created during `/onboard`'s domain pass) | QMD lex query or Grep |
    | CLAUDE.md files | Folder-level CLAUDE.md files in relevant domains | Read if domain was touched |

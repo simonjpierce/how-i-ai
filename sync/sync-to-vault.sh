@@ -21,7 +21,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-# Resolve VAULT_PATH and AI_WORKFLOW_DIR for guide-target mappings.
+# Resolve VAULT_PATH and SYSTEM_DIR for guide-target mappings.
 # Priority: env override > config.json discovery > Simon's hardcoded fallback.
 # This matters because guides land inside the user's vault, not under
 # ~/.claude/, so the script must know where the user's vault actually is.
@@ -35,30 +35,33 @@ if [[ -z "${VAULT_PATH:-}" ]]; then
     # One python3 call returns both fields tab-separated. Two-call version was
     # flagged in red-team Step 8 ecosystem review (efficiency #1) — single call
     # also avoids the partial-write race between two json.load() calls.
-    IFS=$'\t' read -r candidate candidate_aiwf < <(python3 -c '
+    # Reads new key `folders.system` (post-rename 2026-05-17); falls back to
+    # legacy `folders.ai_workflow` for backward-compat with pre-rename configs.
+    IFS=$'\t' read -r candidate candidate_sysdir < <(python3 -c '
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))
     v = d.get("vault", {}).get("path", "").strip()
-    a = d.get("folders", {}).get("ai_workflow", "AI_WORKFLOW").strip() or "AI_WORKFLOW"
-    print(f"{v}\t{a}")
+    folders = d.get("folders", {})
+    s = (folders.get("system") or folders.get("ai_workflow") or "05_SYSTEM").strip() or "05_SYSTEM"
+    print(f"{v}\t{s}")
 except Exception:
-    print("\tAI_WORKFLOW")
+    print("\t05_SYSTEM")
 ' "$cfg" 2>/dev/null) || true
     if [[ -n "${candidate:-}" ]]; then
       VAULT_PATH="$candidate"
-      AI_WORKFLOW_DIR="$candidate_aiwf"
+      SYSTEM_DIR="$candidate_sysdir"
       break
     fi
   done
   if [[ -z "${VAULT_PATH:-}" ]]; then
     VAULT_PATH="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Simon's Vault"
-    AI_WORKFLOW_DIR="05_AI WORKFLOW"
+    SYSTEM_DIR="05_SYSTEM"
     echo "Note: no config.json with vault.path found — falling back to Simon's vault layout." >&2
   fi
 fi
-AI_WORKFLOW_DIR="${AI_WORKFLOW_DIR:-05_AI WORKFLOW}"
-VAULT_PROCESSES="$VAULT_PATH/$AI_WORKFLOW_DIR/CLAUDE/Processes"
+SYSTEM_DIR="${SYSTEM_DIR:-05_SYSTEM}"
+VAULT_PROCESSES="$VAULT_PATH/$SYSTEM_DIR/Processes"
 
 CLAUDE_CONFIG="${CLAUDE_CONFIG:-$HOME/.claude}"
 MODE="${1:-dry-run}"

@@ -34,7 +34,7 @@ This skill ships ready-to-use but expects:
 - **Gemini CLI** (`npm i -g @google/gemini-cli`) with interactive login completed. If absent, the pipeline degrades to Claude + Codex. If both Codex and Gemini are absent, the pipeline runs single-model with explicit notice.
 - **QMD search** over your vault. Falls back to Glob/Grep if QMD is unavailable.
 - **Voice matching (Phase 6)** is gated on `features.is_simon` in your per-vault `config.json` AND on the existence of a voice reference under your vault. For standard installs, Phase 6 runs only if a voice reference file is present and named per the conventions in `guides/ai-assisted-writing.md`; otherwise it skips cleanly.
-- **Output location** comes from your per-vault config: `vault.path` + the research subfolder (default `<vault>/RESEARCH/` or `<vault>/AI_WORKFLOW/RESEARCH/`). Pick the location during /onboard or edit your config later.
+- **Output location** comes from your per-vault config: `vault.path` + the research subfolder (default `<vault>/RESEARCH/` or `<vault>/05_SYSTEM/RESEARCH/`). Pick the location during /onboard or edit your config later.
 - **Task creation** uses the bundled `/todo` skill, which routes to whichever task manager you configured during /onboard (Things 3, Todoist, Apple Reminders, or vault TODO.md).
 
 # Design principles
@@ -266,7 +266,7 @@ All with `intent` parameter. Use `minScore: 0.5`. Deduplicate. Read top 15–20 
 
 ### 2b: Graph expansion
 
-For top 10 results, extract `wikilinks` and follow:
+For top 10 results, extract `[[wikilinks]]` and follow:
 - Read each linked file, score relevance
 - If relevant, follow its links too (max 2 hops)
 - Track visited files (cycle detection)
@@ -583,7 +583,7 @@ Every time an external model output is integrated (Claude Desktop, ChatGPT, or a
 ### 6a: Locate voice reference
 
 Search for a voice reference file relevant to the output. Standard locations:
-- `<vault>/AI_WORKFLOW/CLAUDE/Voice References/Voice Reference — *.md`
+- `<vault>/05_SYSTEM/Voice References/Voice Reference — *.md`
 - `<project-folder>/Voice Reference — *.md`
 
 If multiple matches exist, pick the one whose filename or content best matches the research topic and audience.
@@ -642,7 +642,7 @@ This catches errors introduced by multi-pass enrichment (pipeline + external mod
 
 ### Wikilink validation
 
-If the output uses `wikilinks` (e.g., book chapters with cross-references):
+If the output uses `[[wikilinks]]` (e.g., book chapters with cross-references):
 
 1. Grep for all `[[` links in the file
 2. For each target, verify the file exists in the vault via Glob
@@ -656,7 +656,7 @@ Print: `[7/9] Polished — {N} fixes applied`
 
 ### Save report
 
-Read `vault.path` from `~/.claude/projects/<project-key>/config.json`. Write the report to a `RESEARCH/` subfolder of the vault — typically `<vault>/RESEARCH/` or `<vault>/AI_WORKFLOW/RESEARCH/` depending on the user's layout. Create the folder if missing:
+Read `vault.path` from `~/.claude/projects/<project-key>/config.json`. Write the report to a `RESEARCH/` subfolder of the vault — typically `<vault>/RESEARCH/` or `<vault>/05_SYSTEM/RESEARCH/` depending on the user's layout. Create the folder if missing:
 
 ```bash
 mkdir -p "<vault>/RESEARCH"

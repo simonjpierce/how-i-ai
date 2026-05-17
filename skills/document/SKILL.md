@@ -71,11 +71,9 @@ If within budget, proceed silently — no need to report the numbers.
 
 1. **Locate the logs folder and read the current logs.**
 
-   Determine the logs folder by trying these in order — first that exists wins:
-   - `<vault>/AI_WORKFLOW/CLAUDE/` (starter-vault convention)
-   - `<vault>/05_SYSTEM/` (Simon's vault numbering)
+   Read `~/.claude/projects/<project-key>/config.json` and resolve the logs folder from `folders.logs_relative` (default `05_SYSTEM`). The logs folder is `<vault>/<logs_relative>/`. If the config doesn't exist or the folder doesn't exist, this isn't a CLAUDE-managed vault — flag and stop.
 
-   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_SYSTEM/` (Simon's prefix) or any other numbered prefix in subagent prompts or substeps — pass the resolved path through. If neither folder exists, this isn't a CLAUDE-managed vault — flag and stop.
+   Reuse this resolved path (referred to below as the **logs folder**) for every log read/write in this skill. Don't hardcode `05_SYSTEM/` or any other prefix in subagent prompts or substeps — pass the resolved path through.
 
    Read the three current logs to understand their format and latest entries: `Session Handoff Log.md`, `Friction Log.md`, `Decision Log.md` (each inside the logs folder).
 
@@ -161,7 +159,7 @@ If within budget, proceed silently — no need to report the numbers.
 
 9. **Update relevant process docs and skills**:
    - Identify 3–5 keywords from the session's work (tools used, workflows touched, domain topics).
-   - Grep `<logs folder>/Processes/` for those keywords (Simon: `05_SYSTEM/Processes/`; newcomer: `AI_WORKFLOW/CLAUDE/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
+   - Grep `<logs folder>/Processes/` for those keywords (resolved from config; default `05_SYSTEM/Processes/`). Also check folder CLAUDE.md files in the user's top-level domain folders if the session touched those domains.
    - For each match, read the doc and check whether the session's work **changes, refines, or invalidates** anything in it. Update in place if so.
    - **Proactively flag improvements**: After checking for invalidation, also ask: "Did this session produce any reusable workflow patterns, conventions, or lessons learned that should be added to an existing process doc or skill?" Examples: a new convention discovered (e.g., unpublished data citation rules), a workflow step that proved valuable (e.g., citation quality audit), a tool integration pattern (e.g., checking org emails for authoritative figures). Flag these to the user with the specific doc/skill that should be updated and what should be added.
    - Don't create new process docs during handover — just flag if one should be created.
@@ -325,18 +323,55 @@ If within budget, proceed silently — no need to report the numbers.
 
    Add a one-line offer at the end: "Reply with a number to apply, or `none` to skip all." This is the easy-pick mechanism — Simon should be able to act on a recommendation without having to retype anything.
 
-16c. **Lightweight self-improvement sweep — scan `[OPEN]` friction entries for now-obvious fixes.** Distinct from 16b: 16b generates *new* improvement ideas; 16c looks at the *existing* Friction Log for entries that have become mechanically fixable since they were logged.
+16c. **Autonomous-fix gate — close the friction-log loop.** This is the closure mechanism that prevents the Friction Log from becoming write-only. Replaces the older surface-proposed-fixes pattern: instead of reporting proposed fixes for Simon to act on later, this step *applies* mechanical fixes silently and walks judgement items with the user one-at-a-time in-session.
 
-   Read the Friction Log. For each entry tagged `[OPEN]` (or unmarked) that is older than this session, ask:
-   - Is the root cause now understood (e.g. logged with a workaround that has since stabilised)?
-   - Is the fix mechanical and non-detrimental (a path correction, a docs update, a guardrail, a one-line skill edit)?
-   - Does an existing skill/script/process now cover it (so the entry can be marked `✓` and closed)?
+   Read the Friction Log. For each entry tagged `[OPEN]` or `[STUCK]` that is older than this session (skip entries just written in step 7 to avoid double-handling), classify:
 
-   Cap the sweep at 5 entries — this is a lightweight pass, not a full friction review (use `/review-friction` for that). Skip entries that need Simon's judgement (design choices, scope decisions) or that aren't yet fixable (waiting on external state, missing tool).
+   - **Mechanical** — entry contains enough information to fix without judgement:
+     - Stale path / file reference with the corrected path stated (or trivially inferable)
+     - Single-file typo, config update, or rename
+     - Known dependency missing with a known install command
+     - Workaround documented + the workaround IS the actual fix that should land in the source per the #1 rule
+     - Reference to a renamed file/function (mechanical search-replace)
+   - **Judgement** — anything affecting scope, design, voice, content, or that needs Simon's call. **Default to JUDGEMENT when uncertain** — never auto-fix on ambiguous classification.
 
-   **Action per surviving entry**: include in the Step 17 report under a `## Open friction — mechanical fixes available` subsection, with the entry number/title, a one-line proposed fix, and a verdict (`Apply now` / `Apply soon` / `Cut — already resolved`). Simon's reply applies the chosen fixes; "none" skips.
+   **For each Mechanical entry:**
 
-   **Skip threshold**: If the Friction Log has fewer than 5 `[OPEN]` entries total, or if all open entries are recently logged this session, skip 16c entirely (nothing to sweep).
+   1. Apply the fix using available tools (Edit, Bash). Auto mode is on, no prompts.
+   2. Retag the entry's H2 heading from `## [OPEN]` (or `## [STUCK]`) to `## [RESOLVED]` and append a brief note inline: `Auto-fixed YYYY-MM-DD — see Self-Improvement Changelog.` Move the entry under the `## Resolved` section per step 7's convention.
+   3. Append a one-line entry to the Self-Improvement Changelog at `<vault>/<logs_relative>/Self-Improvement Changelog.md` (create the file with a brief header if missing):
+      ```
+      ## YYYY-MM-DD
+      - **Friction:** *<entry title>* — auto-fixed in /document. <one-line summary of what changed>. Source: `<file:line>`.
+      ```
+
+   **For each Judgement entry:**
+
+   1. Surface to the user one-at-a-time. Present:
+      - Entry title, age (days since the entry's date), current status tag (`[OPEN]`/`[STUCK]`)
+      - 1–2 sentence recap of the symptom and any fix-plan already noted in the entry
+      - **Proposed action** — best-guess fix you'd apply if user approves, or "no clear fix — your call" if the entry is purely a decision
+      - **Numbered options:**
+        ```
+        1. Resolved — apply the proposed fix (or describe an alternative)
+        2. Defer — leave [OPEN], revisit on YYYY-MM-DD (provide a date)
+        3. Won't fix — accepted limitation, mark [WONTFIX]
+        4. Skip — leave [OPEN], we'll see it again next /document
+        ```
+   2. Wait for the user's reply.
+   3. Apply the chosen action:
+      - **Resolved**: apply the fix (or user-specified alternative), retag entry to `[RESOLVED]`, move under `## Resolved`, append to Self-Improvement Changelog as above.
+      - **Defer**: append `**Defer to:** YYYY-MM-DD` line to the entry body. `/session-start` will skip deferred entries until the date.
+      - **Won't fix**: retag to `[WONTFIX]`. Move under `## Resolved` (terminal status).
+      - **Skip**: leave entry unchanged.
+   4. **Kill switch**: if the user says "done", "stop", "enough", or signals fatigue mid-list, exit cleanly. Remaining judgement entries stay `[OPEN]` for the next `/document` run.
+
+   **Cap**: no per-session cap on mechanical fixes (they're silent and git-reversible). No hard cap on judgement walks — the kill switch is always available. The autonomous-fix gate is *intentionally* willing to do a lot of work when there's a lot of accumulated friction.
+
+   **Skip threshold**: if no eligible `[OPEN]` or `[STUCK]` entries exist (older than this session), skip 16c entirely.
+
+   **Append summary line** to the Step 17 report:
+   `Friction sweep: auto-fixed N; resolved M with you; deferred D; wontfix W; skipped S.` Skip the line if no entries were processed.
 
 17. **Report to the user**: **IMPORTANT: Do not run this step until ALL background subagents (verification, archival) have completed and their findings have been acted on.** Never declare "handover complete" while agents are still running — present interim status ("steps 1–N done, waiting on X") instead.
 

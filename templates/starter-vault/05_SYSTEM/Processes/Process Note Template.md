@@ -1,6 +1,6 @@
 # Process Note Template
 
-> **Delete this template when adding your first real process doc**, or copy it as a starting point. Process docs live alongside this file in `AI_WORKFLOW/CLAUDE/Processes/`.
+> **Delete this template when adding your first real process doc**, or copy it as a starting point. Process docs live alongside this file in `05_SYSTEM/Processes/`.
 
 A *process doc* is a written record of how you (or you and Claude) handle a recurring kind of work. It's lighter than a skill — no slash command, no auto-discovery — but heavier than a one-line memory entry. Process docs answer "what's the right way to do X around here?" so the answer doesn't get lost between sessions.
 

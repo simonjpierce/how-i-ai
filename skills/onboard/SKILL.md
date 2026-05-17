@@ -166,16 +166,18 @@ Map the task-manager part of Q7 to one of: `things3`, `todoist`, `apple_reminder
 
 **Q8.** *"Last one. What's the most pressing thing on your plate this week — a paper draft, a literature search, a report due, a manuscript awaiting review, a research question you've been chewing on? Doesn't have to be polished; just tell me what's on your mind. I'll suggest a concrete first task to anchor your Day 1 with the system."*
 
-Q8 maps to a `{{DAY_1_TASK}}` block in the kickoff note (filled at step 8b after the domain pass). Map the user's answer to one of these patterns:
+Q8 maps to a `{{DAY_1_TASK}}` block in the kickoff note (filled at step 8b after the domain pass). Map the user's answer to one of these patterns.
+
+**Skill-install note**: starter install ships only the universal session/system skills (`/onboard`, `/document`, `/session-start`, `/update`, `/review-friction`, `/refresh-skills`). Skills marked `*` below are work-specific and need installing first via `cp -R ~/.claude/repos/mmf-claude-code/skills/<name> ~/.claude/skills/` then restarting Claude Code. Include the install line in the kickoff recommendation when you use them.
 
 | User mentions | Day-1 recommendation |
 |---|---|
-| paper, draft, manuscript, writing up | "Drop your existing draft (or skeleton) into `<vault>/<domain-folder>/` and run `/science-paper` — it'll set up a lab notebook + manuscript pair and walk you through completing the next analytical step or section." |
-| research, find, investigate, literature search, what's known about X | "Run `/research` with your question. It'll launch Claude + Codex + Gemini in parallel and deliver a formal report with verified citations." |
-| review, peer review, feedback, co-author, before submission | "Drop the manuscript into `<vault>/<domain-folder>/` and run `/red-team` (after installing it via `/refresh-skills`) — pre-submission three-model adversarial critique. See `guides/pre-submission-manuscript-review.md`." |
-| citations, references, verify | "Run `/verify-citations` against your manuscript. It checks each reference against Semantic Scholar, CrossRef, and OpenAlex." |
-| meeting recording, audio, transcribe, voice memo | "Drop the audio file into `<vault>/INBOX/` and ask Claude to transcribe and format it. Claude handles audio natively." |
-| TODO list, tasks, things to do | "Tell Claude `/todo <task description>` for each item. It routes to your task manager (configured during this onboarding)." |
+| paper, draft, manuscript, writing up | "Drop your existing draft (or skeleton) into `<vault>/<domain-folder>/`. The `/science-paper`* skill sets up a lab notebook + manuscript pair and walks you through the next step. Or just ask Claude to help with the draft directly — the skill is a structured workflow, not the only path." |
+| research, find, investigate, literature search, what's known about X | "Install `/research`* and run it with your question — three-model deep research (Claude + Codex + Gemini) with verified citations. For a quicker lookup, ask Claude directly without the skill." |
+| review, peer review, feedback, co-author, before submission | "Drop the manuscript into `<vault>/<domain-folder>/`. Install `/red-team`* and run it — pre-submission three-model adversarial critique. See `guides/pre-submission-manuscript-review.md`." |
+| citations, references, verify | "Install `/verify-citations`* and run it against your manuscript. Checks each reference against Semantic Scholar, CrossRef, and OpenAlex." |
+| meeting recording, audio, transcribe, voice memo | "Drop the audio file into `<vault>/INBOX/` and ask Claude to transcribe and format it. Claude handles audio natively. (The `/transcribe`* skill adds whisper-cli speaker diarization + structured output if you install it.)" |
+| TODO list, tasks, things to do | "Tell Claude to add the task to your task manager (recorded during this onboarding). The `/todo`* skill is a shorthand that routes to Things 3 / Todoist / Reminders — install it if you want the slash command, but plain English to Claude works too." |
 | vague, "I'm not sure", skipped, "lots of things" | Default fallback: "Drop one note about something you're working on into `<vault>/<domain-folder>/`. Ask Claude something simple about it — 'summarise this', 'what would I need to do next', 'who else has written about this?' — to feel out the loop. Then come back and ask for help with the actual pressing thing once you've seen Claude has access." |
 
 If the user names something not covered above (e.g. "I'm building a website" / "I need to plan a trip"), pick the closest match or use the default fallback. Substitute the chosen recommendation as `{{DAY_1_TASK}}` in step 8b.
@@ -212,7 +214,7 @@ For each template file, do **placeholder substitution then write**:
 - `{{USER_NAME}}` → from Q1 (extract a clear name; if user gave a description, infer or ask)
 - `{{USER_BIO}}` → from Q1 (the full description)
 - `{{USER_PREFERENCES}}` → from Q3 + Q4 (compose a paragraph)
-- `{{VAULT_STRUCTURE}}` → list of folders being created (filled from Q2 + the AI_WORKFLOW + INBOX defaults)
+- `{{VAULT_STRUCTURE}}` → list of folders being created (filled from Q2 + the 05_SYSTEM + INBOX defaults)
 - `{{ADDITIONAL_PREFERENCES}}` → from Q5 (voice sample → distilled rule, e.g. "match the conversational-but-informed tone of the sample") + Q6 (anything else)
 - `{{INSTALL_DATE}}` → today's ISO date
 
@@ -224,18 +226,19 @@ Write to `<vault>/CLAUDE.md`.
 mkdir -p "<vault>/INBOX"
 ```
 
-**6c. AI_WORKFLOW folder + log files.**
+**6c. 05_SYSTEM folder + log files.**
 
 ```bash
-mkdir -p "<vault>/AI_WORKFLOW/CLAUDE/Processes" "<vault>/AI_WORKFLOW/templates"
+mkdir -p "<vault>/05_SYSTEM/Processes" "<vault>/05_SYSTEM/templates"
 ```
 
 Copy from templates:
-- `Session Handoff Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Session Handoff Log.md`
-- `Decision Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Decision Log.md`
-- `Friction Log.md` → `<vault>/AI_WORKFLOW/CLAUDE/Friction Log.md`
-- `Processes/Process Note Template.md` → `<vault>/AI_WORKFLOW/CLAUDE/Processes/Process Note Template.md`
-- `folder-CLAUDE.template.md` → `<vault>/AI_WORKFLOW/templates/folder-CLAUDE.template.md`
+- `Session Handoff Log.md` → `<vault>/05_SYSTEM/Session Handoff Log.md`
+- `Decision Log.md` → `<vault>/05_SYSTEM/Decision Log.md`
+- `Friction Log.md` → `<vault>/05_SYSTEM/Friction Log.md`
+- `Self-Improvement Changelog.md` → `<vault>/05_SYSTEM/Self-Improvement Changelog.md`
+- `Processes/Process Note Template.md` → `<vault>/05_SYSTEM/Processes/Process Note Template.md`
+- `folder-CLAUDE.template.md` → `<vault>/05_SYSTEM/templates/folder-CLAUDE.template.md`
 
 Each is template content as-is — examples included to show shape; user deletes when adding their first real entry.
 
@@ -375,7 +378,7 @@ If yes (1 or 2), for each chosen domain:
 > *D2. Key people, tools, terminology, or conventions specific to this domain?*
 > *D3. Anything different from your general writing voice here — more formal, more technical, more playful?"*
 
-After their answer, generate the folder + folder-level CLAUDE.md by substituting into `~/.claude/templates/starter-vault/AI_WORKFLOW/templates/folder-CLAUDE.template.md`:
+After their answer, generate the folder + folder-level CLAUDE.md by substituting into `~/.claude/templates/starter-vault/05_SYSTEM/templates/folder-CLAUDE.template.md`:
 
 - `{{DOMAIN_NAME}}` → user's chosen folder name
 - `{{ONE_PARAGRAPH_DESCRIPTION}}` → from D1
@@ -467,7 +470,7 @@ Setup complete.
 Vault: <path>
 Root CLAUDE.md: written
 Folder CLAUDE.md: <count> domains
-Logs: ready at AI_WORKFLOW/CLAUDE/
+Logs: ready at 05_SYSTEM/
 Skills installed: /onboard, /document, /session-start, /update, /review-friction, /refresh-skills, /todo, /science-paper, /research, /verify-citations
 Two-week follow-up note: INBOX/Onboarding follow-up — <date>.md
 

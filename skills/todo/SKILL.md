@@ -43,7 +43,7 @@ Extract the task title and details from the user's message (args or preceding co
 
 ### 3. Find relevant documentation
 
-Search the vault for the most relevant file(s) using Glob/Grep. Prefer files in the user's domain folders (whatever they set up during `/onboard`) and `<vault>/AI_WORKFLOW/CLAUDE/Processes/` for process docs.
+Search the vault for the most relevant file(s) using Glob/Grep. Prefer files in the user's domain folders (whatever they set up during `/onboard`) and `<vault>/05_SYSTEM/Processes/` for process docs.
 
 If the task relates to something in the current conversation, reuse the files already referenced.
 

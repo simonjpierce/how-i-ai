@@ -22,7 +22,7 @@ If `/Applications/Ghostty.app` exists, set the tab title. Otherwise skip — thi
 
 ### 1. Locate the Friction Log
 
-Read `~/.claude/projects/<vault-key>/config.json` to find the vault path and the logs folder. Friction Log is at `<vault>/<logs_relative>/Friction Log.md` (default `<vault>/AI_WORKFLOW/CLAUDE/Friction Log.md`).
+Read `~/.claude/projects/<vault-key>/config.json` to find the vault path and the logs folder. Friction Log is at `<vault>/<logs_relative>/Friction Log.md` (default `<vault>/05_SYSTEM/Friction Log.md`).
 
 If the config doesn't exist, ask the user where the Friction Log lives and offer to create the config.
 

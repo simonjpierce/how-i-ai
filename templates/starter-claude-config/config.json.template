@@ -9,10 +9,10 @@
 
   "folders": {
     "inbox": "INBOX",
-    "ai_workflow": "AI_WORKFLOW",
-    "logs_relative": "AI_WORKFLOW/CLAUDE",
-    "specs_relative": "AI_WORKFLOW/SPECS",
-    "templates_relative": "AI_WORKFLOW/templates"
+    "system": "05_SYSTEM",
+    "logs_relative": "05_SYSTEM",
+    "specs_relative": "05_SYSTEM/SPECS",
+    "templates_relative": "05_SYSTEM/templates"
   },
 
   "logs": {
