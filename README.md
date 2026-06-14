@@ -122,10 +122,11 @@ This is the full map. The simplest way in is to read the on-ramp (section 1) in 
 
 ### 3. Advanced workflows — these need the terminal
 
-- [Move to the terminal](./workflows/move-to-the-terminal.md) — the gateway: run the AI in the terminal (Ghostty, context monitoring, notifications), which unlocks hooks and automation. Start here before the other three.
+- [Move to the terminal](./workflows/move-to-the-terminal.md) — the gateway: run the AI in the terminal (Ghostty, context monitoring, notifications), which unlocks hooks and automation. Start here before the others.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
+- [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
 ---
 
