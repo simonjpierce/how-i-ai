@@ -118,6 +118,7 @@ This is the full map. The simplest way in is to read the on-ramp (section 1) in 
 - [Reviewing someone else's manuscript](./workflows/reviewing-others-work.md) — review a paper twice over, verify the numbers, hand the author a warm write-up.
 - [Transcription](./workflows/transcription.md) — talk → clean notes + action items.
 - [PDF to markdown](./workflows/pdf-to-markdown.md) — papers → clean text in your notes.
+- [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
 
 ### 3. Advanced workflows — these need the terminal
 
