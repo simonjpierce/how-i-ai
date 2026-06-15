@@ -1,6 +1,6 @@
-# The trust spine
+# Can we trust the machines? Avoiding the T-1000 scenario
 
-The discipline that makes it safe to let an AI do real scientific work — so you can hand it bigger jobs and actually trust what comes back, instead of re-checking everything by hand or quietly not believing any of it.
+The challenge: how can we trust an AI to do real scientific work? The idea is always to verify. Eventually, hopefully, we'll be able to hand these systems bigger and more complex jobs, and to be able to have a high level of confidence in the results. I don't think we're completely 'there' yet – at least, I'm not – but we're also closer than most people think. 
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (which second model, which databases) in collaboration with you. It's also the concept the science workflows all lean on, so it's worth reading even if you build it piecemeal through them rather than all at once.
 

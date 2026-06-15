@@ -123,7 +123,7 @@ Set these up first — they're what turn a generic assistant into one that knows
 
 The centre of gravity: getting research *out*, from data to a paper you can trust, with verification built into every stage. Start with the trust spine and the analysis notebook; add the later stages as a project moves toward submission.
 
-- [The trust spine](./workflows/the-trust-spine.md) — **read this one first.** The discipline that makes AI autonomy safe: a different model checks the one that did the work, every number is re-verified, every citation checked against the real record. Everything below is an instance of it.
+- [Can we trust the machines?](./workflows/the-trust-spine.md) — **read this one first.** *The trust spine* — the discipline that makes AI autonomy safe: a different model checks the one that did the work, every number is re-verified, every citation checked against the real record. Everything below is an instance of it.
 - [The science workflow](./workflows/the-science-workflow.md) — the overview that ties the arc together (read it next for the whole shape), plus the manuscript-drafting stage; building starts with the analysis notebook below.
 - [Lab-notebook analysis](./workflows/lab-notebook-analysis.md) — run an analysis like a lab book: every step logged and independently checked, before and after. The foundation the paper rests on.
 - [Citation verification](./workflows/citation-verification.md) — check every reference against the scholarly record, because AI invents real-looking papers that don't exist.
