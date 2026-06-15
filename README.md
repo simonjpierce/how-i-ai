@@ -29,6 +29,12 @@ Because your knowledge lives in *your* files rather than inside any one AI's mem
 
 Everything else here is detail that makes this run smoothly.
 
+## The future is almost now
+
+None of this is a new idea. In 1987, Apple made a concept film of a researcher talking to a knowledgeable assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, most of what's described below is that film, finally buildable.
+
+[![Apple's Knowledge Navigator concept video (1987)](https://img.youtube.com/vi/-jiBLQyUi38/hqdefault.jpg)](https://www.youtube.com/watch?v=-jiBLQyUi38)
+
 ## At a glance
 
 ```
@@ -179,14 +185,6 @@ This setup evolves. If something looks broken, stale, or contradicts another doc
 ## Licence
 
 Shared under [CC-BY-4.0](./LICENSE-CC-BY-4.0) (Creative Commons Attribution) — use and adapt it freely, with credit.
-
----
-
-## The future is almost now
-
-In 1987, Apple made a concept film of a researcher talking to a knowledgeable assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, most of what this repo describes is that film, finally buildable.
-
-[![Apple's Knowledge Navigator concept video (1987)](https://img.youtube.com/vi/-jiBLQyUi38/hqdefault.jpg)](https://www.youtube.com/watch?v=-jiBLQyUi38)
 
 ---
 
