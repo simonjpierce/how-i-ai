@@ -1,6 +1,6 @@
 # How I use AI
 
-A working system for doing real research, writing, and operations work *with* AI — where the work doesn't vanish at the end of a chat, but accumulates into a body of notes you and the AI both build on over time. It's the setup that I (Simon Pierce, a marine biologist) use in my own work. Hopefully you can take some of these ideas and adapt them to your own.
+A working system for doing real research, writing, and operations work *with* AI — where the work doesn't vanish at the end of a chat, but accumulates into a body of notes you and the AI both build on over time. It's the setup that I (Simon Pierce, a marine biologist) use in my own work. Hopefully you can take some of these ideas and adapt them to your own processes.
 
 ---
 
@@ -16,16 +16,16 @@ Those files live in **Obsidian** — a free, friendly editor for plain-text note
 
 Where this earns its keep, for me, is getting science *out.* A paper has a regular structure, and once you've written a few you know *your* preferred recipe: my introductions tend to run four or five paragraphs — a broad opener, then narrowing toward the question, then the previous work on it, then the aims of the study. My Discussion text also has a regular structure. Much of what we call expertise is really a stack of rules applied consistently. Write that into your vault once, and the AI can then draft using your existing mental model, instead of reinventing the wheel every time — and it keeps the production honest as it goes, checking that the numbers in the manuscript still match the analysis and that every citation points to a paper that actually exists.
 
-AI isn't doing work that I *can't* do myself; what it's doing is **getting me to the end result faster.** The version I submit is the version I'd have written — I just arrive at it by editing, rather than starting from a blank page. (That said, for some things, coding especially, it's plainly better than me.) The point is to externalise enough of my knowledge that the AI can at least match my own standard — so my time can be spent on science and conservation.
+AI isn't doing work that I *can't* do myself (though it's plainly better at coding than I am); what it's doing is **getting me to the end result faster.** The version I submit is the version I'd have written anyway — I just arrive at it by iteratively working with AI and editing the outputs, rather than starting from a blank page and a vague sense of existential dread. The point is to externalise enough of my knowledge that the AI can at least match my own standard — so my time can be spent on doing more science and conservation.
 
-So that's the "trick": ensure your AI-augmented work is retained in durable files instead of a disposable chat, so you can always come back to it, improve it, and expand on it. Today's note is next week's starting point.
+So that's the main "trick": ensure your AI-augmented work is retained in durable files instead of a disposable chat, so you can always come back to it, improve it, and expand on it. Today's note is next week's starting point – knowledge and experience is captured and expanded upon.
 
 **Two things make it work:**
 
-- **Claude Code** — an AI that can read and write the files on your computer, not just talk in a chat window. This is the part that matters: it's how the AI can actually *do* the work and keep the record, rather than handing you text to copy out yourself. A plain chat assistant — ChatGPT, Gemini, or Claude in a browser — can't do this. **Claude Code is what I use, and what this guide is written for.** (I also keep OpenAI's **Codex** on hand as a second, independent model for cross-checking my work — that comes later, and it's not something you need to start.)
-- **Obsidian** — a free editor for those files. They're plain markdown, so any tool can read them; Obsidian is an easy way for a human to read and write them. Either you or the AI can read and edit the same files.
+- **Claude Code** — an AI that can read and write the files on your computer, not just talk in a chat window. This is the part that matters: it's how the AI can actually *do* the work and keep the record, rather than handing you text to copy out yourself. A plain chat assistant — ChatGPT, Gemini, or Claude in a browser — can't do this. **Claude Code is what I use, and what this guide is written for.** (I also keep OpenAI's **Codex** and Google **Gemini** on hand as independent models for cross-checking my work — we'll come to that later, it's not something you need to get started.)
+- **Obsidian** — a free editor for those files. They're plain markdown, so any tool can read them. Obsidian is an easy way for both humans and AI to read and write notes.
 
-Because your knowledge lives in *your* files rather than inside any one AI's memory, **you're never locked in.** I use Claude Code today; if something better comes along tomorrow, I switch to it and lose nothing — my notes, decisions, and context all sit on my own computer, not inside the tool. The AI is a commodity; your vault is your own knowledge base. (That's also why this guide just names Claude Code rather than hedging every step with alternatives — it's what I actually use, and the vault is what keeps you free to change engines later.)
+Because your knowledge lives in *your* files rather than inside any one AI's memory, **you're never locked in.** I use Claude Code today; if something better comes along tomorrow, I can switch to it and lose nothing — my notes, decisions, and context all sit on my own computer, not inside the AI's proprietary memory system. The AI model is a commodity; your vault is your own knowledge base. (That's also why this guide just names Claude Code — it's what I actually use, for now. The Obsidian vault is what makes it easy to change engines later if you want to.)
 
 Everything else here is detail that makes this run smoothly.
 
@@ -46,7 +46,7 @@ Everything else here is detail that makes this run smoothly.
                     │                             │
               ┌─────▼──────┐               ┌──────▼──────────┐
               │  OBSIDIAN  │               │  CLAUDE CODE    │
-              │  (human)   │               │  or CODEX  (AI) │
+              │  (human)   │               │      (AI)       │
               └────────────┘               └──────┬──────────┘
                                                   │
                           The AI also auto-loads each session:
@@ -69,7 +69,7 @@ The vault is the shared substrate — you and the AI both read and write the sam
 
 ## The four customisation layers
 
-The system gets more useful over time through four layers — and here's the part that puts people off needlessly: **the AI does most of the building, not you.** Many people hesitate because they assume they'll have to write and maintain all of this themselves. You don't — Claude Code creates and updates these files as it works, and asks you when it needs something:
+The system gets more useful over time through four layers. **The AI does the building, not you.** Many people hesitate because they assume they'll have to write and maintain all of this themselves. You don't — Claude Code creates and updates these files as it works, and asks you when it needs something:
 
 1. **Instruction files (`CLAUDE.md`).** Plain markdown files that load automatically when the AI works in a folder. A root file holds your cross-cutting preferences (*"I write in UK English", "I'm a marine biologist", "be measured in your claims"*). Domain folders can have their own with team names, terminology, project context. Write once, applies forever.
 
@@ -79,13 +79,13 @@ The system gets more useful over time through four layers — and here's the par
 
 4. **Hooks and automations** *(advanced)*. Things that run on a schedule or in response to events. You don't need these on day one.
 
-You don't build all of this up front. **You start by handing the AI one real task and letting it document the work into a note as it goes** — and that note becomes the memory you both build on next time. The rest grows underneath you as you notice friction and let the system improve itself.
+You don't build all of this up front. **You start by handing the AI real tasks and having it document the work into a note as it goes** — and that note becomes the memory you both build on next time. The rest grows underneath you as you notice friction and let the system improve itself.
 
 ---
 
 ## What's in this repo
 
-This repo is **descriptions, not code.** It deliberately doesn't ship a big pile of someone else's finished skills for you to copy — those get bloated and over-fitted to the person who wrote them, and dropping one into your setup tends to drag in baggage that doesn't fit your work. Instead, each **workflow** is a plain-language description of one capability: what it does, how it works, and enough detail that you can paste it into Claude Code and have it *build that capability for you*, shaped to your own setup. You get the idea, cleanly; your AI builds the version that fits you.
+This repo is **descriptions, not code.** It deliberately doesn't ship a big pile of my current skills for you to copy — these get bloated and over-fitted to the person who wrote them, so dropping one into your setup will just drag in baggage that creates confusion. Instead, each **workflow** is a plain-language description of one capability: what it does, how it works, and enough detail that you can paste it into Claude Code and have it *build that capability for you*, shaped to your own setup. You get the idea; your AI works with you to build a personalised version that fits your own workflow.
 
 ```
 how-i-ai/
@@ -94,7 +94,7 @@ how-i-ai/
 
 ## The workflows, in order
 
-This is the full map. The simplest way in is to read the on-ramp (section 1) in order — each of those pages points you to the next — then pick up the everyday and advanced workflows from the lists below as you need them. Each workflow is short and self-contained: read it, or paste it into Claude Code and have it build that capability on your machine, adapted to your work.
+This is the full map. Read the on-ramp (section 1) in order — each page points you to the next — then build from the sections below as you need them. The heart of the collection is the **science and scholarship core** (section 3); the rest is the foundation it stands on and the capabilities that support it. Each workflow is short and self-contained: read it, or paste it into Claude Code and have it build that capability on your machine, adapted to your work.
 
 ### 1. Start here — read these in order
 
@@ -103,29 +103,45 @@ This is the full map. The simplest way in is to read the on-ramp (section 1) in 
 - [Set up the stack](./workflows/01-set-up-the-stack.md) — Obsidian + a file-capable AI; the foundation everything else builds on.
 - [Teach it who you are](./workflows/02-teach-it-who-you-are.md) — the onboarding interview that fills in your standing-instructions file and sets up your vault folders.
 
-### 2. Getting-started workflows — all run in the Claude desktop app, no terminal needed
+### 2. The foundation — make the AI know you *(desktop app, no terminal needed)*
 
-*Set these up first — they're what make the AI actually know you:*
+Set these up first — they're what turn a generic assistant into one that knows your work:
 - [Memory and context](./workflows/memory-and-context.md) — the personalisation loop: the AI learns how you work and stops repeating mistakes.
 - [The session loop](./workflows/the-session-loop.md) — orient, capture as you go, hand off cleanly; keeps the AI current on what you're doing.
 - [Surfacing conflicts](./workflows/surfacing-conflicts.md) — flag what's unresolved instead of letting the AI smooth a disagreement into false confidence.
 
-*Everyday capabilities — grab what you need:*
-- [The science workflow](./workflows/the-science-workflow.md) — analysis and a paper, with the numbers traceable and the references checked.
-- [Deep research](./workflows/deep-research.md) — point the AI at a question, get a verified, cited report.
-- [The reference library](./workflows/the-reference-library.md) — mirror your curated literature into the vault so the AI searches it first, and keep it from going stale.
-- [Writing and review](./workflows/writing-and-review.md) — draft, get an independent critique, polish.
+### 3. The science & scholarship core — the spine
+
+The centre of gravity: getting research *out*, from data to a paper you can trust, with verification built into every stage. Start with the trust spine and the analysis notebook; add the later stages as a project moves toward submission.
+
+- [The trust spine](./workflows/the-trust-spine.md) — **read this one first.** The discipline that makes AI autonomy safe: a different model checks the one that did the work, every number is re-verified, every citation checked against the real record. Everything below is an instance of it.
+- [The science workflow](./workflows/the-science-workflow.md) — the overview that ties the arc together (read it next for the whole shape), plus the manuscript-drafting stage; building starts with the analysis notebook below.
+- [Lab-notebook analysis](./workflows/lab-notebook-analysis.md) — run an analysis like a lab book: every step logged and independently checked, before and after. The foundation the paper rests on.
+- [Citation verification](./workflows/citation-verification.md) — check every reference against the scholarly record, because AI invents real-looking papers that don't exist.
+- [Writing in your voice](./workflows/writing-in-your-voice.md) — make AI prose sound like you (from the measurable features of your own writing), and rework it without the meaning drifting. Useful for anything you write, not just papers.
+- [Reviewing your own manuscript](./workflows/reviewing-your-own-manuscript.md) — put your paper through a hostile, independent review before you submit it, and fold the fixes in.
+- [The replication audit](./workflows/the-replication-audit.md) — check that your study is genuinely set up to be re-run: every figure and number traceable to runnable code and data in the repository.
 - [Reviewing someone else's manuscript](./workflows/reviewing-others-work.md) — review a paper twice over, verify the numbers, hand the author a warm write-up.
+- [The reference library](./workflows/the-reference-library.md) — mirror your curated literature into the vault so the AI searches it first, and keep it from going stale.
+- [Deep research](./workflows/deep-research.md) — point the AI at a question and get back a verified, cited report.
+
+### 4. Supporting capabilities — feed and surround the science *(desktop app)*
+
+The breadth that keeps a working life running, framed as support for the output above:
+- [The intake loop](./workflows/the-intake-loop.md) — get the firehose of incoming material (papers, articles, voice notes, thoughts) into the vault and filed where you'll find it.
+- [Writing and review](./workflows/writing-and-review.md) — draft serious non-paper writing (a grant, an update, an essay), get an independent critique, polish.
 - [Transcription](./workflows/transcription.md) — talk → clean notes + action items.
 - [PDF to markdown](./workflows/pdf-to-markdown.md) — papers → clean text in your notes.
 - [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
 
-### 3. Advanced workflows — these need the terminal
+### 5. How the system runs itself — *(these need the terminal)*
 
+The autonomy layer — worth it once you have enough going on that planning the work and waiting on it are themselves a cost:
 - [Move to the terminal](./workflows/move-to-the-terminal.md) — the gateway: run the AI in the terminal (Ghostty, context monitoring, notifications), which unlocks hooks and automation. Start here before the others.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
+- [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
 - [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
 ---
