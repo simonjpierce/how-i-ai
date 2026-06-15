@@ -182,6 +182,14 @@ Shared under [CC-BY-4.0](./LICENSE-CC-BY-4.0) (Creative Commons Attribution) —
 
 ---
 
+## The future is almost now
+
+In 1987, Apple made a concept film of a researcher talking to a knowledgeable assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, most of what this repo describes is that film, finally buildable.
+
+[![Apple's Knowledge Navigator concept video (1987)](https://img.youtube.com/vi/-jiBLQyUi38/hqdefault.jpg)](https://www.youtube.com/watch?v=-jiBLQyUi38)
+
+---
+
 ## Next step
 
 **→ [The philosophy](./workflows/00-the-philosophy.md)** — the one idea everything is built on. Read that first; the on-ramp pages each point you to the next, and after that the map above is your guide.
