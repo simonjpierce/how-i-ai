@@ -4,7 +4,16 @@ A working system for doing real research, writing, and operations work *with* AI
 
 ---
 
-## The idea
+## The future is (almost) now
+
+In 1987, Apple made a concept film of a researcher talking to an AI assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, we're still not quite there – but we're pretty close, and that's pretty much the system we're building here. 
+
+Worth a watch!
+
+[![Apple's Knowledge Navigator concept video (1987)](https://img.youtube.com/vi/-jiBLQyUi38/hqdefault.jpg)](https://www.youtube.com/watch?v=-jiBLQyUi38)
+
+
+## Found AI both exciting, and slightly underwhelming, at the same time?
 
 A lot of people have already found platforms like ChatGPT or Claude genuinely transformative for their work. The challenge is that **you start from scratch each chat.** Yes, there's some built-in memory, and you can use Projects to provide access to resources, but typically you'll be spending at least some of your time re-briefing the model instead of working, especially as you progress to complicated tasks.
 
@@ -28,12 +37,6 @@ So that's the main "trick": ensure your AI-augmented work is retained in durable
 Because your knowledge lives in *your* files rather than inside any one AI's memory, **you're never locked in.** I use Claude Code today; if something better comes along tomorrow, I can switch to it and lose nothing — my notes, decisions, and context all sit on my own computer, not inside the AI's proprietary memory system. The AI model is a commodity; your vault is your own knowledge base. (That's also why this guide just names Claude Code — it's what I actually use, for now. The Obsidian vault is what makes it easy to change engines later if you want to.)
 
 Everything else here is detail that makes this run smoothly.
-
-## The future is almost now
-
-None of this is a new idea. In 1987, Apple made a concept film of a researcher talking to a knowledgeable assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, most of what's described below is that film, finally buildable.
-
-[![Apple's Knowledge Navigator concept video (1987)](https://img.youtube.com/vi/-jiBLQyUi38/hqdefault.jpg)](https://www.youtube.com/watch?v=-jiBLQyUi38)
 
 ## At a glance
 
