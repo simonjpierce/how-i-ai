@@ -131,6 +131,7 @@ The centre of gravity: getting research *out*, from data to a paper you can trus
 - [Reviewing your own manuscript](./workflows/reviewing-your-own-manuscript.md) — put your paper through a hostile, independent review before you submit it, and fold the fixes in.
 - [The replication audit](./workflows/the-replication-audit.md) — check that your study is genuinely set up to be re-run: every figure and number traceable to runnable code and data in the repository.
 - [Reviewing someone else's manuscript](./workflows/reviewing-others-work.md) — review a paper twice over, verify the numbers, hand the author a warm write-up.
+- [Searching your vault](./workflows/searching-your-vault.md) — give the AI a way to find anything in your notes by meaning, not just exact words; the retrieval layer the reference library and deep research both lean on.
 - [The reference library](./workflows/the-reference-library.md) — mirror your curated literature into the vault so the AI searches it first, and keep it from going stale.
 - [Deep research](./workflows/deep-research.md) — point the AI at a question and get back a verified, cited report.
 
