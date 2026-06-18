@@ -28,4 +28,4 @@ This repo is **hand-authored and maintained with plain git** — there is no vau
 
 ## Voice (for authoring or editing workflows)
 
-Openly AI-assisted, clear, warm, plain. Audience: smart readers who aren't necessarily technical. Do **not** write as Simon (no first-person impersonation). Gloss or avoid jargon. Every workflow follows the shape in `workflows/_template.md`; match `workflows/the-science-workflow.md` as the exemplar.
+Openly AI-assisted, clear, warm, plain. Audience: smart readers who aren't necessarily technical. Do **not** write as Simon (no first-person impersonation). Gloss or avoid jargon. Every workflow follows the shape in `workflows/_template.md`; match `workflows/the-science-workflow.md` as the exemplar. **Name the real tools** the maintainer uses (QMD, Unpaywall, the Codex CLI, whisper, pdftotext…) so a reader or new AI gets a concrete starting point — the convention cuts flags/paths/scripts, not tool names; see the CONCRETENESS note in `workflows/_template.md`. Leave only genuinely conceptual docs (philosophy, trust-spine) tool-free.

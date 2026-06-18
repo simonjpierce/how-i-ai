@@ -15,6 +15,18 @@ Conventions (from the locked exemplars `the-science-workflow.md` + `00-the-philo
 - LENGTH: ~45-70 source lines for a single capability — a workflow with a first-class
   trust/verification layer can run longer; the system map longer still. The thing to cut
   is maintainer-specific plumbing (exact flags, paths, account specifics), not substance.
+- CONCRETENESS: NAME the actual tools/services the maintainer uses — QMD, Unpaywall, the
+  Codex CLI, whisper, pdftotext, etc. — so a reader or new AI gets a real starting point,
+  not a guessing game. A capability left as "a local search tool" or "a second model on
+  the command line" is too abstract: the tool NAME is substance and stays; only the
+  plumbing AROUND it (flags, paths, scripts, account specifics) gets cut. Where it helps,
+  give a realistic expectation too (e.g. "~5% of paywalled refs have a free OA copy").
+  Two exceptions: (1) genuinely conceptual/philosophy docs (00-the-philosophy, the-trust-
+  spine) where the point is the idea, not a tool — don't force names there; (2) when the
+  concrete tool already has its own workflow doc, link out to it rather than re-naming
+  inline. NOTE: a doc can satisfy the LENGTH "cut plumbing" rule and STILL be too generic
+  — this is the separate check that catches that. (Added 2026-06-18 after an audit found
+  ~6 docs that said "do X" without naming how the maintainer actually does it.)
 - Delete this comment block in real workflows.
 -->
 
