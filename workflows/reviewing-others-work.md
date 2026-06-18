@@ -4,7 +4,7 @@ When you're asked to review a paper — a student's thesis chapter, a collaborat
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (folder names, exact tools) in collaboration with you. (It has to be an agent that can run tools and create files on your machine — a plain chat assistant can't wire up the review passes or fetch the document.)
 
-*What you'll need: the second, independent reviewer — the heart of this — needs a second AI model reachable on the command line, which is a separate install and account. With only one model you can still get a fresh, hostile-prompted pass in a clean context, but weight it less.*
+*What you'll need: the second, independent reviewer — the heart of this — needs a second AI model reachable on the command line (the maintainer uses the Codex CLI or the Gemini CLI), which is a separate install and account. With only one model you can still get a fresh, hostile-prompted pass in a clean context, but weight it less.*
 
 ## The core idea
 

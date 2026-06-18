@@ -4,7 +4,7 @@ Give the AI a way to find anything in your notes by *meaning*, not just by the e
 
 This is an idea file. Paste it into your AI agent — Claude Code or Codex — to build a version for your own work; it'll fill in the specifics (which search tool, where the index lives) in collaboration with you. (It has to be an agent that can run tools on your machine.)
 
-*What you'll need: a local search tool your AI installs once and points at your notes folder. The keyword part works immediately; the search-by-meaning part needs a small language model that runs on your own machine to do the indexing — a one-time setup your AI can handle, and everything stays local, nothing uploaded.*
+*What you'll need: a local search tool your AI installs once and points at your notes folder — the maintainer uses [QMD](https://www.npmjs.com/package/@tobilu/qmd), a local markdown search engine. The keyword part works immediately; the search-by-meaning part needs a small embedding model that runs on your own machine to do the indexing (QMD uses Google's [EmbeddingGemma-300M](https://huggingface.co/ggml-org/embeddinggemma-300M-GGUF), a few hundred MB) — a one-time setup your AI can handle, and everything stays local, nothing uploaded.*
 
 ## The core idea
 
@@ -32,4 +32,4 @@ Externalising your knowledge into a vault only pays off if you can get it back o
 
 ## Note
 
-This is a pattern, not a fixed tool. The parts that are yours to shape: which search tool you use, whether you run the search-by-meaning layer at all or start with plain keyword search and add it later, how you split your notes into collections, and how aggressively you tell the AI to reach for it. The durable idea is: *a vault you can't search by meaning is a vault you'll outgrow — give the AI a retrieval layer over your own knowledge and make using it the default.* Paste this to your AI and build the version that fits how you keep your notes.
+This is a pattern, not a fixed tool. The parts that are yours to shape: which search tool you use (the maintainer runs QMD), whether you run the search-by-meaning layer at all or start with plain keyword search and add it later, how you split your notes into collections, and how aggressively you tell the AI to reach for it. The durable idea is: *a vault you can't search by meaning is a vault you'll outgrow — give the AI a retrieval layer over your own knowledge and make using it the default.* Paste this to your AI and build the version that fits how you keep your notes.

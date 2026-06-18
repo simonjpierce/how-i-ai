@@ -4,7 +4,7 @@ Get the AI to write things that actually sound like *you* — built from the mea
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (which of your writing to learn from, where the guide lives) in collaboration with you.
 
-*What you'll need: a sample of your own writing for the AI to learn from — papers, essays, past emails, whatever format you're targeting. The fidelity check that protects meaning during a rewrite leans on a second AI model on the command line, run read-only; worth setting up, but you can start with just the voice guide and add the check later.*
+*What you'll need: a sample of your own writing for the AI to learn from — papers, essays, past emails, whatever format you're targeting. The fidelity check that protects meaning during a rewrite leans on a second AI model on the command line, run read-only (the maintainer uses the Codex CLI or the Gemini CLI); worth setting up, but you can start with just the voice guide and add the check later.*
 
 ## The core idea
 

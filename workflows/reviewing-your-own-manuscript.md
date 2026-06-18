@@ -4,7 +4,7 @@ Put your own paper through a hostile, independent review *before* you submit it 
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (folder layout, which models) in collaboration with you. It's the mirror of [reviewing someone else's manuscript](./reviewing-others-work.md) — same machinery, pointed at yourself — and the last gate of [the science workflow](./the-science-workflow.md) before a paper goes out.
 
-*What you'll need: the independent reviewers — the heart of this — need a second AI model (ideally two) reachable on the command line, run read-only. A separate install and account. With only your main model you still get a fresh hostile pass in a clean context, but weight it less and lean harder on the number and citation checks.*
+*What you'll need: the independent reviewers — the heart of this — need a second AI model (ideally two) reachable on the command line, run read-only — the maintainer uses the Codex CLI and the Gemini CLI. A separate install and account. With only your main model you still get a fresh hostile pass in a clean context, but weight it less and lean harder on the number and citation checks.*
 
 ## The core idea
 
