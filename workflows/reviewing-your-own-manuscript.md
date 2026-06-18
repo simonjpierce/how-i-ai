@@ -28,7 +28,7 @@ So you borrow independence you don't have. Different AI models, run separately a
 
 **Apply a house-conventions pass.** Run the draft past your field's manuscript conventions — citation density, where the discussion should open, what the abstract must carry, calibrating claims to the evidence, keeping interpretation out of the figures. This catches craft issues the correctness passes don't.
 
-**Fold the fixes in — don't staple reviews together.** Because this is your own paper, the accepted fixes go *into* the manuscript, not into a note for someone else. The mechanical and clearly-correct ones the AI applies directly; the genuine judgement calls — a contested interpretation, a framing choice, how hard to defend a result — it brings to you to settle. Reject what you disagree with, with a reason; this is still your paper.
+**Fold the fixes in — don't staple reviews together.** Because this is your own paper, the accepted fixes go *into* the manuscript, not into a note for someone else. The mechanical and clearly-correct ones the AI applies directly; the genuine judgement calls — a contested interpretation, a framing choice, how hard to defend a result — it brings to you to settle. Reject what you disagree with, with a reason; this is still your paper. And when a fix calls for a *different* method, pull worked examples just as the [external review](./reviewing-others-work.md) does — two or three published papers that applied that method in a comparable setting, verified, and used as recipes for your own revision instead of reconstructing the implementation from scratch.
 
 ## What this does *not* do
 
