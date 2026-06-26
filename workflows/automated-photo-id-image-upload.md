@@ -1,4 +1,4 @@
-# Feeding a photo-ID database
+# Automated photo-ID image upload
 
 Turn a folder of edited field photos into properly-formatted records in a shared research database — tagged, de-duplicated, and uploaded in the background — with the AI building the whole pipeline, including the part the platform never gave you an easy door for.
 
