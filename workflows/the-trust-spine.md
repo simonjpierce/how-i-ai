@@ -53,3 +53,7 @@ Self-review is structurally weak, not just lazy: a system that just produced an 
 ## Note
 
 This is a pattern, not a fixed tool. The parts that are yours to shape: which second model you reach for, how many checks you wire in, how hard you lean on them for a given piece of work. The one vertebra worth not skipping is the independent second model — it's the piece that turns "the AI says so" into "a different AI, with no stake in the answer, agrees." The durable idea is: *the thing that did the work can't be the thing that checks it — so verify from somewhere independent, every time it matters, and never fake a check you couldn't run.* Paste this to your AI and build the version that fits the work you need to trust.
+
+---
+
+*Want the actual method? [The reference](../reference/the-trust-spine.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

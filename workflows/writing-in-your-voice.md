@@ -37,3 +37,7 @@ It doesn't invent a voice for you — it learns the one you already have, so it 
 ## Note
 
 This is a pattern, not a fixed tool. The parts that are yours to shape: how many voice guides you keep and for which formats, how you build them, whether a given piece needs the fidelity loop or just a light pass. The load-bearing ideas are two: *a voice guide is a measurable spec, not an adjective*, and *a rewrite that touches meaning needs an independent check that it didn't.* The durable idea is: *learn your real voice from your real writing, write to that target, and guard the meaning whenever the words get reworked.* Paste this to your AI and build the version that fits how you write.
+
+---
+
+*Want the actual method? [The reference](../reference/writing-in-your-voice.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

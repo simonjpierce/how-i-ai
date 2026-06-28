@@ -31,3 +31,7 @@ It doesn't decide *for* you — it surfaces and sequences; you choose. It isn't 
 ## Note
 
 This is a pattern, not a fixed team. Your domains are yours; the number of agents is yours; how hands-on the chief of staff is, is yours. The durable idea is: *specialists that each keep their own picture of one area, and one coordinator that hands you work one piece at a time.* Paste this to your AI and shape it to how your work is actually divided.
+
+---
+
+*Want the actual method? [The reference](../reference/the-agent-fleet.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

@@ -41,3 +41,7 @@ The failure it guards against is invisible to every other kind of review — a f
 ## Note
 
 This is a pattern, not a fixed tool. The parts that are yours to shape: which databases you query, whether you consult a local library first, how the decision queue is presented. The load-bearing rule is the one about never auto-acting — *flag for a human, with evidence; never silently delete or silently keep.* The durable idea is: *a fabricated citation looks exactly like a real one, so check every reference against the actual record — and let a person make the call on anything that doesn't check out.* Paste this to your AI and build the small version that your other workflows can lean on.
+
+---
+
+*Want the actual method? [The reference](../reference/citation-verification.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

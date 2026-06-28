@@ -50,3 +50,7 @@ Self-review is weak — a model that just wrote a claim is the worst-placed to d
 ## Note
 
 This is a pattern, not a fixed pipeline. The parts that are yours to shape: which sources you trust enough to gather from first; whether you wire in a second AI model for breadth and an independent read of the synthesis, or run it with one model and lean harder on the database checks; how deep you let it dig; and what the finished report looks like. It assumes an agent that can search your notes and write files; if your trusted sources include published literature, the reference-check against Semantic Scholar / CrossRef / OpenAlex is the piece most worth not skipping. The durable idea is: *gather widely, verify what matters against real sources, flag what you can't confirm, and write it down where it lasts.* Paste this to your AI and build the version that fits your field.
+
+---
+
+*Want the actual method? [The reference](../reference/deep-research.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

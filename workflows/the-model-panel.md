@@ -41,3 +41,7 @@ Two independent things stack. First, different model families genuinely catch di
 ## Note
 
 This is a pattern, not a fixed tool. What's yours to shape: which second and third models you add (or whether you start with just your main model run twice), whether you bother with the convergence loop or only ever use the one-shot panel, and where you set the bar for "this is high-stakes enough to convene the panel." It pairs naturally with [reviewing someone else's work](./reviewing-others-work.md), [drafting and review](./writing-and-review.md), and [surfacing conflicts](./surfacing-conflicts.md) — all of which are really this engine pointed at a specific job. The durable idea is: *on anything that matters, ask several independent models, reconcile them deliberately, and — for a document you're improving — keep looping until it stops finding real problems.* Paste this to your AI and build the version that fits how you work.
+
+---
+
+*Want the actual method? [The reference](../reference/the-model-panel.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

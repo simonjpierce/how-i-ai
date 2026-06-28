@@ -37,3 +37,7 @@ The vault only compounds if material actually reaches it, and material only reac
 ## Note
 
 This is a pattern, not a fixed toolchain. The parts that are yours to shape: which capture channels you actually use, where each kind of thing is routed, how much you automate versus file by hand. Start with one channel — quick capture, or voice notes — and add the others as the inflow they handle starts to pile up. The durable idea is: *make getting things in nearly effortless and getting them filed reliable, so your vault stays current as a by-product of working, not as a chore.* Paste this to your AI and build the version that fits what flows into your day.
+
+---
+
+*Want the actual method? [The reference](../reference/the-intake-loop.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

@@ -43,3 +43,7 @@ Self-review is weak — a model that just made an error is the worst-placed to c
 ## Note
 
 This is a pattern, not a fixed implementation. The parts that are yours to shape: where projects live and how you back up analysis code; whether the work involves code at all; which second model and CLI you use for the independent check; and how heavily to lean on the rigour. It assumes Claude Code as the main driver. The durable idea is: *the notebook is the record, written as you go; a second model checks the first, before and after each step; and nothing unverified is allowed in.* Paste this to your AI and build the version that fits how you work. Once the notebook is solid, [the science workflow](./the-science-workflow.md) drafts the paper from it.
+
+---
+
+*Want the actual method? [The reference](../reference/lab-notebook-analysis.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

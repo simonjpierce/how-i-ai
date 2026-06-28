@@ -96,9 +96,12 @@ You don't build all of this up front. **You start by handing the AI real tasks a
 
 This repo is **descriptions, not code.** It deliberately doesn't ship a big pile of my current skills for you to copy — these get bloated and over-fitted to the person who wrote them, so dropping one into your setup will just drag in baggage that creates confusion. Instead, each **workflow** is a plain-language description of one capability: what it does, how it works, and enough detail that you can paste it into Claude Code and have it *build that capability for you*, shaped to your own setup. You get the idea; your AI works with you to build a personalised version that fits your own workflow.
 
+Most of the substantial capabilities also have a deeper **reference** companion — the actual cleaned-up *method* behind the workflow (the concrete steps, the guardrails, the failure modes I hit), with my personal specifics stripped out. It's still something to adapt, not a skill to drop in — but when you want the *how* rather than just the *what*, it's a far more concrete starting point than the description alone. The workflow orients; the reference goes deep. (That stripping-out is itself one of the workflows here — *clearing clutter from your workflows* — which is what makes sharing the method honest.)
+
 ```
 how-i-ai/
-└── workflows/   The descriptions — start here. On-ramp, one per capability, + a system map.
+├── workflows/   The descriptions — start here. On-ramp, one per capability, + a system map.
+└── reference/   The deeper companions — the actual sanitised method behind a workflow.
 ```
 
 ## The workflows, in order
@@ -117,6 +120,7 @@ This is the full map. Read the on-ramp (section 1) in order — each page points
 Set these up first — they're what turn a generic assistant into one that knows your work:
 - [Memory and context](./workflows/memory-and-context.md) — the personalisation loop: the AI learns how you work and stops repeating mistakes.
 - [The session loop](./workflows/the-session-loop.md) — orient, capture as you go, hand off cleanly; keeps the AI current on what you're doing.
+- [The daily coach](./workflows/the-daily-coach.md) — plan the day from your real inputs, then get walked through it one task at a time, and clear your inbox to zero the same way. For when the to-do pile is the thing stopping you from starting.
 - [Surfacing conflicts](./workflows/surfacing-conflicts.md) — flag what's unresolved instead of letting the AI smooth a disagreement into false confidence.
 
 ### 3. The science & scholarship core — the spine
@@ -152,6 +156,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
 - [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
+- [Clearing clutter from your workflows](./workflows/clearing-clutter-from-your-workflows.md) — the counterpart to growing: prune the cruft your commands accrete over time, with a check that proves nothing load-bearing was lost.
 - [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
 ---
@@ -178,7 +183,7 @@ It'll read the workflows, set up your vault and a starter config, and get you to
 Reading this because someone pasted the link and asked for help getting started? This part is for you. Build them *their own* version, adapted to their operating system, the tools they already have, and the work they actually do — don't hand them text to copy out:
 
 - **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (dictate into ChatGPT's chat box with the mic icon, then paste the transcript) as a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. That upfront context is what makes everything downstream work.
-- **Build, don't ship.** There are no skills or templates to copy from this repo — that's deliberate. *Create* the starter vault, the standing-instructions file (`CLAUDE.md`), and the memory file (`MEMORY.md`) together with them, and build each capability from its workflow description, shaped to their work — not copied verbatim.
+- **Build, don't ship.** There are no drop-in skills or templates to copy from this repo — that's deliberate. *Create* the starter vault, the standing-instructions file (`CLAUDE.md`), and the memory file (`MEMORY.md`) together with them, and build each capability from its workflow description — and its deeper `reference/` companion where one exists, for the concrete method — shaped to their work, not pasted in verbatim.
 - **Check prerequisites first, and hand-hold the installs.** Several capabilities need external tools — a local transcription engine, PDF extractors, a second AI model on the command line. Before you build one, check what's already on their machine, install what's missing *for* them (with their OK, adapted to their OS — don't assume macOS), and name the genuinely fiddly steps up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account) so a non-technical reader knows which bits are the hard ones. When a tool isn't there, say so plainly and offer to install it — never leave them staring at a `command not found` wondering whether the whole thing is broken.
 - **One thing at a time.** Get the foundation working and one real task done before adding capabilities. Don't try to build the whole system in a single sitting — it's meant to accrete one piece at a time.
 

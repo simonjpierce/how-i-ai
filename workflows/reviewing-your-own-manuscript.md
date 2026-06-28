@@ -41,3 +41,7 @@ The hardest draft to review honestly is your own, for a structural reason that h
 ## Note
 
 This is a pattern, not a fixed tool. The parts that are yours to shape: how many models you run and how adversarial you make them, whether you add the conventions pass, how much you let the AI fold directly versus bring to you. The one piece worth not skipping is the second independent model — it's the only thing that supplies the distance you structurally can't have on your own work. The durable idea is: *you can't review your own paper honestly, so borrow independence — different models attacking it, every number and citation re-checked — and fold the fixes in before a real reviewer finds them.* Paste this to your AI and shape it to how your field submits.
+
+---
+
+*Want the actual method? [The reference](../reference/reviewing-your-own-manuscript.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

@@ -44,3 +44,7 @@ The work people skip under time pressure — logging a decision, writing down wh
 ## Note
 
 This is a pattern, not a fixed routine. The parts that are yours to shape: where the handoff log and the logs live, what counts as worth capturing, how formal the closing pass is, and which marker token you use for open questions. It assumes an AI agent that can read and write files on your machine, with Claude Code as the driver. The durable idea is: *start from where you left off, capture as you go, hand off cleanly — so the work is continuous and nothing you learned is lost.* Paste this to your AI and build the version you'll actually keep up.
+
+---
+
+*Want the actual method? [The reference](../reference/the-session-loop.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

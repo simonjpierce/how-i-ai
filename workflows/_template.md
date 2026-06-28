@@ -9,9 +9,12 @@ Conventions (from the locked exemplars `the-science-workflow.md` + `00-the-philo
 - SHAPE: prose, not a tutorial. The WHOLE document is the paste-able artifact —
   there is NO separate fenced "paste this block". A short top note does that job.
 - LINKS: GitHub-relative only (./other-workflow.md), and ONLY to files that actually exist
-  in the repo. No absolute local paths. NOTE: this repo ships DESCRIPTIONS, not code —
-  there are no ../skills/ or ../guides/ targets to link. Describe the capability fully
-  enough that the reader's agent can build it; don't point at a shipped implementation.
+  in the repo. No absolute local paths. A workflow MAY link to its deeper companion in
+  ../reference/<same-slug>.md (the sanitised actual method) — add that as a footer link at
+  the end of the doc. There are still no ../skills/ targets: even a reference is a
+  DESCRIPTION to adapt, not a shipped skill to copy. The workflow itself stays self-contained
+  (describe the capability fully enough that the reader's agent can build it from the workflow
+  alone); the reference is an optional deeper layer, not a dependency.
 - LENGTH: ~45-70 source lines for a single capability — a workflow with a first-class
   trust/verification layer can run longer; the system map longer still. The thing to cut
   is maintainer-specific plumbing (exact flags, paths, account specifics), not substance.

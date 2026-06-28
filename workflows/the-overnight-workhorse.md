@@ -32,3 +32,7 @@ It's not hands-off autonomy you can't see. You decide everything that goes in th
 ## Note
 
 This is a pattern, not a fixed tool. How you trigger the run, where the queue lives, how much you queue, how unattended you let it be — all yours. The durable idea is: *the work that doesn't need you watching shouldn't cost you daytime; queue it, sleep, review.* Paste this to your AI and build the version you'll actually trust.
+
+---
+
+*Want the actual method? [The reference](../reference/the-overnight-workhorse.md) lays out the real, cleaned-up version — the concrete steps, the guardrails, the failure modes — minus the personal specifics. A starting point to adapt, not a drop-in.*

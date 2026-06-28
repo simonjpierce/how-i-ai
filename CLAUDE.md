@@ -2,7 +2,9 @@
 
 This is `CLAUDE.md` at the root of the `how-i-ai` repo (`github.com/simonjpierce/how-i-ai`). It's Simon Pierce's *"how I use AI"* system, shared so others can adapt it to their own work.
 
-**The repo is descriptions, not code.** Each file under `workflows/` describes one capability in plain language — detailed enough that you (Claude Code or Codex) can *build* that capability for the reader, adapted to their setup. It deliberately does **not** ship finished skills to copy: real skill files accrete personal, brittle cruft that misfits someone else's work, so this repo ships the clean intent instead.
+**The repo is descriptions, not code — at two levels of concreteness.** Each capability has a narrative file under `workflows/` that describes it in plain language: the *why* and *when*, the on-ramp. Most of the substantial capabilities also have a companion under `reference/` that gives the *actual method* — the *how*: the concrete steps, the real guardrails, the failure modes — sanitised of the maintainer's personal specifics. Read them as a pair: the workflow orients, the reference goes deep.
+
+Both layers are still **descriptions to adapt, not finished skills to copy.** Even a `reference/` doc is a cleaned, generalised starting point you build *your* version from, not a drop-in — your system is wired differently. The reason the repo ships sanitised *method* rather than raw skill files is that real skill files accrete personal, brittle cruft that misfits someone else's work; the `reference/` docs are what's left after that cruft is distilled out. (That distillation is itself a capability here — see `workflows/clearing-clutter-from-your-workflows.md` and its reference — which is what makes shipping the method honest and safe.)
 
 ## If a user pasted the README (or a workflow) and asked for help setting up
 
@@ -10,14 +12,15 @@ The README is self-contained. Help them build *their own* version, adapted to th
 
 - Start with `workflows/00-the-philosophy.md` and `workflows/01-set-up-the-stack.md` (the on-ramp).
 - Then whichever capability workflow they need — read it *with* them and build the skill/config to fit their work. The workflow is a brief you implement adaptively, not text to copy verbatim.
-- **There are no skills to install from this repo — that's deliberate.** You build each capability from its description.
+- **There are no drop-in skills to install from this repo — that's deliberate.** You build each capability from its description. Where a `reference/` companion exists, read it alongside the workflow for the concrete method — but still adapt it to their setup, don't paste it in.
 - **There's no starter template to copy either** — *create* the starter vault structure and a starter `CLAUDE.md`/`MEMORY.md` together with them, adapted to their work (the `01-set-up-the-stack` and `memory-and-context` workflows describe what to build).
 - **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (dictate into ChatGPT's chat box with the mic icon, then paste the transcript) in a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. Onboarding can take a while; that upfront context is what makes everything downstream work.
 - **Check prerequisites and hand-hold the installs.** Several capabilities need external command-line tools (a local transcription engine, PDF extractors, a second AI model on the command line). Before building one, check what's already installed, install what's missing *for* them adapted to their OS (don't assume macOS), and flag the genuinely fiddly ones up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account). Never leave a non-technical reader staring at a `command not found`. This guidance also lives in the README so it travels when only the link is pasted — keep the two in step.
 
 ## Structure
 
-- `workflows/` — the capability descriptions (the whole point). On-ramp (`00-the-philosophy`, `01-set-up-the-stack`), one file per capability, three "advanced pattern" notes, and `how-it-all-fits-together` (the system map). `_template.md` is the house shape for authoring new ones.
+- `workflows/` — the narrative capability descriptions (the on-ramp). Includes the on-ramp pair (`00-the-philosophy`, `01-set-up-the-stack`), one file per capability, the advanced-pattern notes, and `how-it-all-fits-together` (the system map). `_template.md` is the house shape for authoring new ones.
+- `reference/` — the deeper companion docs: the *actual method* behind a workflow (concrete steps, guardrails, failure modes), sanitised of personal specifics. One per substantial capability, same filename as its workflow, linked from the workflow's footer. Still descriptions to adapt, not drop-in skills.
 - `README.md` — the front door (for humans and AI).
 
 ## Maintaining the repo
