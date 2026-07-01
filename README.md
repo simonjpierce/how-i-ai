@@ -144,6 +144,7 @@ The centre of gravity: getting research *out*, from data to a paper you can trus
 The breadth that keeps a working life running, framed as support for the output above:
 - [The intake loop](./workflows/the-intake-loop.md) — get the firehose of incoming material (papers, articles, voice notes, thoughts) into the vault and filed where you'll find it.
 - [Writing and review](./workflows/writing-and-review.md) — draft serious non-paper writing (a grant, an update, an essay), get an independent critique, polish.
+- [Sharing a note as a web page](./workflows/sharing-notes-as-web-pages.md) — turn any note into a clean, shareable link for free, in one step, without it leaving your control.
 - [Transcription](./workflows/transcription.md) — talk → clean notes + action items.
 - [PDF to markdown](./workflows/pdf-to-markdown.md) — papers → clean text in your notes.
 - [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
