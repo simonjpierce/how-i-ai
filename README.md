@@ -154,6 +154,7 @@ The breadth that keeps a working life running, framed as support for the output 
 The autonomy layer — worth it once you have enough going on that planning the work and waiting on it are themselves a cost:
 - [Move to the terminal](./workflows/move-to-the-terminal.md) — the gateway: run the AI in the terminal (Ghostty, context monitoring, notifications), which unlocks hooks and automation. Start here before the others.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
+- [The interview loop](./workflows/the-interview-loop.md) — let those specialists ask *you* what they can't work out, and answer by talking on a walk.
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
 - [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
