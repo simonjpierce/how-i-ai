@@ -148,6 +148,7 @@ The breadth that keeps a working life running, framed as support for the output 
 - [Transcription](./workflows/transcription.md) — talk → clean notes + action items.
 - [PDF to markdown](./workflows/pdf-to-markdown.md) — papers → clean text in your notes.
 - [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
+- [Automated photo-ID image upload](./workflows/automated-photo-id-image-upload.md) — turn a folder of tagged field photos into properly-formatted records in a shared research database, uploaded in the background; the human supplies the judgement, the AI builds the plumbing.
 
 ### 5. How the system runs itself — *(these need the terminal)*
 
