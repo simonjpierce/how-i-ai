@@ -4,7 +4,7 @@ Run an analysis session the way a careful scientist keeps a lab book — every s
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (folder layout, which second model) in collaboration with you. It's the first stage of [the science workflow](./the-science-workflow.md) — the analysis that a manuscript is later drafted from — and it's where [the trust spine](./the-trust-spine.md) does its most important work.
 
-*What you'll need: the per-step cross-check leans on a second AI model on the command line (the Codex CLI or the Gemini CLI), run read-only — a separate install and account, and central here rather than optional. Without one you still get the notebook discipline and the citation checks, but not the independent check that answers "how do I know it's right," and a faithful build says so plainly rather than faking it.*
+*What you'll need: the per-step cross-check leans on a second AI model on the command line (the maintainer uses the Codex CLI), run read-only — a separate install and account, and central here rather than optional. Without one you still get the notebook discipline and the citation checks, but not the independent check that answers "how do I know it's right," and a faithful build says so plainly rather than faking it.*
 
 ## The core idea
 

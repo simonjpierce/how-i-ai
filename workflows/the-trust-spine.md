@@ -4,7 +4,7 @@ The challenge: how can we trust an AI to do real scientific work? The idea is al
 
 This is an idea file. Paste it into Claude Code to build a version for your own work; it'll fill in the specifics (which second model, which databases) in collaboration with you. It's also the concept the science workflows all lean on, so it's worth reading even if you build it piecemeal through them rather than all at once.
 
-*What you'll need: the independent-second-model check — the backbone of the whole thing — needs a second AI model reachable on the command line (the Codex CLI or the Gemini CLI), which is a separate install and account. The citation and number checks work with one model. Set the second model up before you lean on any of this for work headed out the door.*
+*What you'll need: the independent-second-model check — the backbone of the whole thing — needs a second AI model reachable on the command line (the maintainer uses the Codex CLI), which is a separate install and account. The citation and number checks work with one model. Set the second model up before you lean on any of this for work headed out the door.*
 
 ## The core idea
 

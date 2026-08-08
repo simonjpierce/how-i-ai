@@ -2,7 +2,7 @@
 
 > **What this is.** The actual method behind [the *Model panel* workflow](../workflows/the-model-panel.md), cleaned of the maintainer's personal specifics (real paths, names, machine state). It's a **starting point to adapt, not a drop-in command** — your tools and your work are shaped differently, so read it *with* your AI and build the version that fits. The narrative workflow says *why* and *when*; this says *how*, concretely enough that your agent doesn't have to reinvent the hard parts.
 >
-> Throughout, "your main model" is the agent driving the run (the maintainer uses Claude/Opus); "the panel members" are independent models reachable from the command line (here, OpenAI's Codex CLI and Google's Gemini CLI, each run read-only on its own account); "the synthesiser" is one model — usually your main one — that reads all the answers and reconciles them.
+> Throughout, "your main model" is the agent driving the run (the maintainer uses Claude/Opus); "the panel members" are independent reviewers blind to each other — at least one from a different model family reachable from the command line (here, OpenAI's Codex CLI, run read-only on its own account), with further seats filled by fresh, independent instances of the main model; "the synthesiser" is one model — usually your main one — that reads all the answers and reconciles them.
 
 ## The two modes — and when each is right
 

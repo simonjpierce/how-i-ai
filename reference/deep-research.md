@@ -2,7 +2,7 @@
 
 > **What this is.** The actual method behind [the *Deep research* workflow](../workflows/deep-research.md), cleaned of the maintainer's personal specifics (real paths, names, machine state). It's a **starting point to adapt, not a drop-in command** — your sources, your field, and your tools are shaped differently, so read it *with* your AI and build the version that fits. The narrative workflow says *why* and *when*; this says *how*, concretely enough that your agent doesn't have to reinvent the hard parts.
 >
-> Throughout, "your reference library" means your own curated collection of saved papers/sources (the maintainer uses Paperpile, but Zotero or any manager works the same way); "your notes" means whatever knowledge base your AI can search (a local semantic search over markdown, here QMD); "a second model" means an independent AI you can call from the command line (Semantic Scholar and the open citation databases need no account; the maintainer also wires in OpenAI's Codex CLI and Google's Gemini CLI, run read-only).
+> Throughout, "your reference library" means your own curated collection of saved papers/sources (the maintainer uses Paperpile, but Zotero or any manager works the same way); "your notes" means whatever knowledge base your AI can search (a local semantic search over markdown, here QMD); "a second model" means an independent AI you can call from the command line (Semantic Scholar and the open citation databases need no account; the maintainer also wires in OpenAI's Codex CLI, run read-only).
 
 ## The shape of the run
 
@@ -31,6 +31,8 @@ Run several searches in parallel, one per sub-question, **fetching and reading t
 
 - **Tie every claim to its source** as it's recorded — no free-floating assertions. A short structured "claim → source" registry per thread is the source of truth that synthesis reads from later.
 - **Let an independent model take its own pass** where you have one available on the command line, run **read-only** so it can't change anything. Two architecturally different models catch each other's blind spots; where they agree it's a useful cue (not proof). If no second model is available, the run still works — it leans harder on the citation-database checks below, and says so plainly. It never pretends a second pass happened.
+
+A third source of breadth needs no command-line setup: the **browser-based deep-research products** (Gemini, ChatGPT, and Claude each offer one). The pattern that works: after the internal report is drafted, the run offers to build a self-contained research brief — the sub-questions plus a list of what's already well-covered, so the external product spends its effort on the gaps — for you to paste into one or more of those apps. What comes back is reconciled against the internal findings, and **every externally-sourced claim and citation goes through the same verification as everything else** (these products hallucinate references too; treat their "corrections" with the same suspicion as their claims). Two guardrails: it's an explicit yes/no offer, never automatic — nothing leaves your machine without your say-so — and the brief is scrubbed of private material before it's handed over.
 
 ## Cite everything, flag what you couldn't verify
 

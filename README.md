@@ -31,7 +31,7 @@ So that's the main "trick": ensure your AI-augmented work is retained in durable
 
 **Two things make it work:**
 
-- **Claude Code** — an AI that can read and write the files on your computer, not just talk in a chat window. This is the part that matters: it's how the AI can actually *do* the work and keep the record, rather than handing you text to copy out yourself. A plain chat assistant — ChatGPT, Gemini, or Claude in a browser — can't do this. **Claude Code is what I use, and what this guide is written for.** (I also keep OpenAI's **Codex** and Google **Gemini** on hand as independent models for cross-checking my work — we'll come to that later, it's not something you need to get started.)
+- **Claude Code** — an AI that can read and write the files on your computer, not just talk in a chat window. This is the part that matters: it's how the AI can actually *do* the work and keep the record, rather than handing you text to copy out yourself. A plain chat assistant — ChatGPT, Gemini, or Claude in a browser — can't do this. **Claude Code is what I use, and what this guide is written for.** (I also keep OpenAI's **Codex** on hand as an independent model for cross-checking my work — we'll come to that later, it's not something you need to get started.)
 - **Obsidian** — a free editor for those files. They're plain markdown, so any tool can read them. Obsidian is an easy way for both humans and AI to read and write notes.
 
 Because your knowledge lives in *your* files rather than inside any one AI's memory, **you're never locked in.** I use Claude Code today; if something better comes along tomorrow, I can switch to it and lose nothing — my notes, decisions, and context all sit on my own computer, not inside the AI's proprietary memory system. The AI model is a commodity; your vault is your own knowledge base. (That's also why this guide just names Claude Code — it's what I actually use, for now. The Obsidian vault is what makes it easy to change engines later if you want to.)
@@ -169,7 +169,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - **[Claude Code](https://docs.claude.com/claude-code)** — desktop app (start here) or CLI (later, for hooks and automation). This is what the guide is written for. (Prefer a different file-capable agent, like OpenAI's [Codex](https://github.com/openai/codex)? The workflows are plain descriptions, so your agent can adapt them.)
 - **[Obsidian](https://obsidian.md)** — where the notes live.
 
-*Optional, when a workflow asks for it:* the [Codex CLI](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli) — used as an independent *second* model for the cross-checks in the research and writing workflows (a different model checking the first one's work).
+*Optional, when a workflow asks for it:* the [Codex CLI](https://github.com/openai/codex) — used as an independent *second* model for the cross-checks in the research and writing workflows (a different model checking the first one's work).
 
 ## Who this is for
 

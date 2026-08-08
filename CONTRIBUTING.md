@@ -17,7 +17,7 @@ Small fixes land fast. For a larger change (a whole new workflow), a quick note 
 ## What belongs here
 
 **In scope:**
-- New or improved **workflows** — plain-language descriptions of a capability that works with the stack (Claude Code or Codex + Obsidian, optionally Codex/Gemini CLI as a second model).
+- New or improved **workflows** — plain-language descriptions of a capability that works with the stack (Claude Code or Codex + Obsidian, optionally the Codex CLI as a second model).
 - Fixes to anything already here: unclear wording, stale references, broken links, a description that doesn't actually build.
 
 **Out of scope:**

@@ -2,7 +2,7 @@
 
 > **What this is.** The actual method behind [the *Writing in your voice* workflow](../workflows/writing-in-your-voice.md), cleaned of the maintainer's personal specifics (real paths, names, the exact set of voice guides). It's a **starting point to adapt, not a drop-in command** — your writing and your formats are your own, so read it *with* your AI and build the version that fits. The narrative workflow says *why* and *when*; this says *how*, concretely enough that your agent doesn't have to reinvent the hard parts.
 >
-> Throughout, a **voice guide** means a short written spec that describes how you write for one context; "a second model" means an independent AI you can call from the command line, run read-only (the maintainer uses OpenAI's Codex CLI or Google's Gemini CLI), used here only to check that a rewrite changed nothing it shouldn't.
+> Throughout, a **voice guide** means a short written spec that describes how you write for one context; "a second model" means an independent AI you can call from the command line, run read-only (the maintainer uses OpenAI's Codex CLI), used here only to check that a rewrite changed nothing it shouldn't.
 
 ## Why a voice guide beats "write like me"
 
