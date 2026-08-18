@@ -44,6 +44,17 @@ You don't need the top tier of anything to begin — find your *actual* limits b
 
 *(Plan names and prices change — treat these as a rough guide and check current pricing.)*
 
+## Which model — and how to change it
+
+<!-- model-box model=claude-fable-5 effort=medium as_of=2026-08-19 -->
+This matters more than it looks. Claude Code picks a default model for you, and in my experience the current default (Opus 5) is not the one that gives the best first impression — it can be a poor communicator, wordy and prone to skating past instructions. The difference between models is large enough that a newcomer on the wrong one may conclude the whole approach doesn't work.
+
+**What I use (as of 2026-08-19):** **Claude Fable 5, at *medium* effort**, for all my interactive work — it's the smartest and clearest communicator I've used, and medium effort is plenty for everyday work. Background and overnight jobs run on Opus at high effort; my independent second model is OpenAI's Codex. If Fable isn't in your model picker, your plan may not include it — pick the most capable model your plan offers.
+
+**How to change it:** in the desktop app, use the model picker next to the prompt box. In the terminal, type `/model` and choose the model and effort level there. To make it stick, put `"model"` and `"effortLevel"` in your settings file — or just ask your AI to set its own default model and effort for you.
+
+This block is kept current: I'll update it if my daily driver changes. Model names churn quickly, so treat this as "the best available Claude, at moderate effort" if the names here have moved on.
+
 ## What this does *not* require
 
 It doesn't require the terminal, a specific AI vendor, or any particular operating system. It doesn't require you to be technical — the AI does the fiddly parts if you let it. And it doesn't require committing to the whole system up front: the foundation is enough to be useful on day one, and you add the rest (the workflows) when a need shows up.

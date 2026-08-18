@@ -7,6 +7,7 @@ A working system for doing real research, writing, and operations work *with* AI
 > 1. Install the free [Claude desktop app](https://claude.ai/download) and open its **Claude Code** tab. (Claude Code is the version of Claude that can read and write files on your computer — that's the whole difference from a chat window.)
 > 2. Paste this link into it — `github.com/simonjpierce/how-i-ai` — and say: *"Read this repo and help me set it up for my work."*
 > 3. It'll ask you some questions. Answer by talking (hold the mic button), as loosely as you like — it does the writing.
+> 4. One setting worth changing straight away: the model. The default isn't the best communicator — see [which model I use and how to switch](./workflows/01-set-up-the-stack.md#which-model--and-how-to-change-it).
 >
 > That's it. You don't need to read the rest of this page first; the AI will. Everything below is here for when you want to understand *why* it works, or want to see what becomes possible once the foundation is in place.
 
