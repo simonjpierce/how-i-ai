@@ -118,7 +118,7 @@ The map below is the whole system, and it looks like a lot. You don't build it i
 
 - **Week 1 — the foundation.** Install the stack, let the AI interview you and write your standing-instructions file, set up a couple of vault folders, and do *one real task* end to end (a document you need to write, a transcript to tidy). Then the [session loop](./workflows/the-session-loop.md), so the next session starts where this one ended. Desktop app, entry-level plan, no second model needed.
 - **Month 1 — make it know you.** [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
-- **Later, when the need shows up.** A second AI model for independent cross-checks, the terminal, the agent fleet, the overnight workhorse. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
+- **Later, when the need shows up.** A second AI model for independent cross-checks, the agent fleet, the overnight workhorse. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
 
 ## The workflows, in order
 
@@ -166,10 +166,10 @@ The breadth that keeps a working life running, framed as support for the output 
 - [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
 - [Automated photo-ID image upload](./workflows/automated-photo-id-image-upload.md) — turn a folder of tagged field photos into properly-formatted records in a shared research database, uploaded in the background; the human supplies the judgement, the AI builds the plumbing.
 
-### 5. How the system runs itself — *(these need the terminal)*
+### 5. How the system runs itself — *(these need scheduling — the desktop app's Routines page does it; the terminal is optional)*
 
 The autonomy layer — worth it once you have enough going on that planning the work and waiting on it are themselves a cost:
-- [Move to the terminal](./workflows/move-to-the-terminal.md) — the gateway: run the AI in the terminal (Ghostty, context monitoring, notifications), which unlocks hooks and automation. Start here before the others.
+- [The terminal (optional)](./workflows/move-to-the-terminal.md) — you probably don't need it: the desktop app now runs hooks, skills, and scheduled tasks. What the terminal is still for, plus how to think about your context window.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
 - [The interview loop](./workflows/the-interview-loop.md) — let those specialists ask *you* what they can't work out, and answer by talking on a walk.
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
@@ -204,7 +204,7 @@ Reading this because someone pasted the link and asked for help getting started?
 - **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (dictate into ChatGPT's chat box with the mic icon, then paste the transcript) as a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. That upfront context is what makes everything downstream work.
 - **Build, don't ship.** There are no drop-in skills or templates to copy from this repo — that's deliberate. *Create* the starter vault, the standing-instructions file (`CLAUDE.md`), and the memory file (`MEMORY.md`) together with them, and build each capability from its workflow description — and its deeper `reference/` companion where one exists, for the concrete method — shaped to their work, not pasted in verbatim.
 - **Check prerequisites first, and hand-hold the installs.** Several capabilities need external tools — a local transcription engine, PDF extractors, a second AI model on the command line. Before you build one, check what's already on their machine, install what's missing *for* them (with their OK, adapted to their OS — don't assume macOS), and name the genuinely fiddly steps up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account) so a non-technical reader knows which bits are the hard ones. When a tool isn't there, say so plainly and offer to install it — never leave them staring at a `command not found` wondering whether the whole thing is broken.
-- **One thing at a time — and in the order under "What to build first" above.** Get the foundation working and one real task done before adding capabilities; don't propose the second model, the terminal, the fleet, or the overnight workhorse in the first session. Don't try to build the whole system in a single sitting — it's meant to accrete one piece at a time.
+- **One thing at a time — and in the order under "What to build first" above.** Get the foundation working and one real task done before adding capabilities; don't propose the second model, the fleet, or the overnight workhorse in the first session. Don't try to build the whole system in a single sitting — it's meant to accrete one piece at a time.
 
 ## Living repo
 
