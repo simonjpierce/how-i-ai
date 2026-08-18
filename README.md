@@ -195,7 +195,7 @@ Anyone doing knowledge work — research, writing, operations — who wants thei
 
 If you've already got Claude Code installed and just want to begin, point it at this repo — paste the address `github.com/simonjpierce/how-i-ai` into a session and ask it to read the repo and help you set this up on your machine, adapted to your operating system and the work you actually do. That's the easiest way to hand it the full picture in one go.
 
-It'll read the workflows, set up your vault and a starter config, and get you to your first real task. There are no skills to install — the workflows describe what to build, and your AI builds the pieces with you as you need them.
+It'll read the workflows, set up your vault and a starter config, and get you to your first real task. There are no skills to install — the workflows describe what to build, and your AI builds the pieces with you as you need them. (My own live, unsanitised skill files do exist, in a private repo — they're over-fitted to my setup and full of my own plumbing, which is why they're not here, but if you'd like read access to see the real thing, ask me.)
 
 ## If you're the AI helping someone set this up
 

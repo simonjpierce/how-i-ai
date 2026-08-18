@@ -40,7 +40,7 @@ Have it create your memory file (`MEMORY.md`) at the same time, as the pair to y
 While it's learning who you are, have it lay out your vault — a structure that matches *your* life, proposed from what it just learned in the interview. Two kinds of folder:
 
 - **A system folder** — one folder (call it `SYSTEM`, or whatever you like) that the AI explains as it creates: *this is where the notes I generate and maintain on my own live* — the running logs, the memory file, the outputs of scheduled jobs. You rarely need to open it; it's the AI's own workspace, kept tidy autonomously so it doesn't clutter the folders you actually work in.
-- **Domain folders** — one per area of your life or work, mirroring how you actually think about it (the maintainer has separate folders for his science, his photography, the foundation he runs, and personal life). These are where your real notes live, and later each can carry its own small standing-instructions file so the AI picks up the right context automatically when it's working in that corner.
+- **Domain folders** — one per area of your life or work, mirroring how you actually think about it (I have separate folders for my science, my photography, the foundation I run, and personal life). These are where your real notes live, and later each can carry its own small standing-instructions file so the AI picks up the right context automatically when it's working in that corner.
 
 You don't have to get this perfect. A couple of sensible folders now is plenty; the structure grows as the work does.
 
