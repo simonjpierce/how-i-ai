@@ -4,7 +4,7 @@ Once the stack is running, the next step is to teach the AI who you are — so i
 
 This is an idea file. Paste it into Claude Code and it'll run this as an interview with you, writing the files as it goes — you don't fill anything in by hand.
 
-**One setup tweak first.** So the AI can actually create those files without stopping to ask permission at every step, switch it to its most autonomous mode — in the Claude desktop app, press **Shift-Tab** to cycle the permission setting until it shows **Auto**. Otherwise the interview keeps halting on yes/no prompts and feels broken when it's really just being cautious. You can switch it back any time.
+**One setup tweak first.** So the AI can actually create those files without stopping to ask permission at every step, switch it to its most autonomous mode — in the Claude desktop app, use the permission-mode selector in the prompt box and choose **Auto** (in the terminal version, press **Shift-Tab** to cycle to it). Otherwise the interview keeps halting on yes/no prompts and feels broken when it's really just being cautious. You can switch it back any time.
 
 ## The core idea
 
