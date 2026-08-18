@@ -2,6 +2,14 @@
 
 A working system for doing real research, writing, and operations work *with* AI — where the work doesn't vanish at the end of a chat, but accumulates into a body of notes you and the AI both build on over time. It's the setup that I (Simon Pierce, a marine biologist) use in my own work. Hopefully you can take some of these ideas and adapt them to your own processes.
 
+> **How to use this repo — the short version**
+>
+> 1. Install the free [Claude desktop app](https://claude.ai/download) and open its **Claude Code** tab. (Claude Code is the version of Claude that can read and write files on your computer — that's the whole difference from a chat window.)
+> 2. Paste this link into it — `github.com/simonjpierce/how-i-ai` — and say: *"Read this repo and help me set it up for my work."*
+> 3. It'll ask you some questions. Answer by talking (hold the mic button), as loosely as you like — it does the writing.
+>
+> That's it. You don't need to read the rest of this page first; the AI will. Everything below is here for when you want to understand *why* it works, or want to see what becomes possible once the foundation is in place.
+
 ---
 
 ## The future is (almost) now
