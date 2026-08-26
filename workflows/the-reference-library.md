@@ -37,3 +37,5 @@ The most valuable thing in a research library isn't the papers — it's the fact
 ## Note
 
 This is a pattern, not a fixed toolchain. The parts that are yours to shape: which reference manager you mirror, how the notes are structured, whether you bother with full-text sidecars or live on abstracts, and how much living-document enrichment you do. The curation principle is the load-bearing one — *your AI works from the literature you've vetted, not from whatever the web turns up.* Paste this to your AI and build the version that fits how you keep your literature.
+
+*Want the actual method? [The reference](../reference/the-reference-library.md) lays out the real, as-built version — Paperpile → Google Drive → local notes with full-text sidecars — concretely enough to replicate step by step, gotchas included. A starting point to adapt, not a drop-in.*
