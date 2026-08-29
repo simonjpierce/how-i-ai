@@ -46,10 +46,10 @@ You don't need the top tier of anything to begin — find your *actual* limits b
 
 ## Which model — and how to change it
 
-<!-- model-box model=claude-fable-5 effort=medium as_of=2026-08-19 -->
+<!-- model-box model=claude-fable-5 effort=low as_of=2026-08-29 -->
 This matters more than it looks. Claude Code picks a default model for you, and in my experience the current default (Opus 5) is not the one that gives the best first impression — it can be a poor communicator, wordy and prone to skating past instructions. The difference between models is large enough that a newcomer on the wrong one may conclude the whole approach doesn't work.
 
-**What I use (as of 2026-08-19):** **Claude Fable 5, at *medium* effort**, for all my interactive work — it's the smartest and clearest communicator I've used, and medium effort is plenty for everyday work. Background and overnight jobs run on Opus at high effort; my independent second model is OpenAI's Codex. If Fable isn't in your model picker, your plan may not include it — pick the most capable model your plan offers.
+**What I use (as of 2026-08-29):** **Claude Fable 5, at *low* effort**, for all my interactive work — it's the smartest and clearest communicator I've used, and low effort is plenty for everyday work. Background and overnight jobs run on Opus at high effort; my independent second model is OpenAI's Codex. If Fable isn't in your model picker, your plan may not include it — pick the most capable model your plan offers.
 
 **How to change it:** in the desktop app, use the model picker next to the prompt box. In the terminal, type `/model` and choose the model and effort level there. To make it stick, put `"model"` and `"effortLevel"` in your settings file — or just ask your AI to set its own default model and effort for you.
 
