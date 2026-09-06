@@ -30,11 +30,25 @@ A good build handles each of these clean-up problems explicitly rather than hopi
 
 **Two extractions, not one.** The most useful trick here is to run *two* extractors and use one to check the other. A layout-aware extractor (tools like *marker* or *nougat*, or a cloud extraction service) does the smart reconstruction of tables, columns, and structure. Alongside it, run a plain, dumb text dump that preserves the raw layout (the `pdftotext` utility from the *poppler* toolkit, in its layout-preserving mode, does this well). The plain dump is ugly but faithful — it becomes the ground truth you check the polished version against, especially for tables, where the smart extractor is most likely to invent or drop a cell.
 
+The division of labour is sharpest on tables, and it isn't "tables are hard, use the smart tool". On **structured** tables — a few columns of prose, like a plan's action matrix — the layout-aware extractor is far better than the plain dump and worth the wait. On **dense reference** tables — long species lists, numeric data grids — it is the *less* trustworthy of the two: it duplicates rows, scrambles columns, and occasionally invents entries that read plausibly. Rebuild those from the plain layout-preserving dump instead. Knowing which kind of table you're looking at before you choose is most of the battle.
+
 **Scanned PDFs need a text layer first.** If a PDF is just images of pages with no underlying text (old papers, photographed book pages), there's nothing to extract until you add a text layer with an OCR step (a tool like *ocrmypdf*). The agent can detect this case and run that step before converting.
 
 **Whole books, chapter by chapter.** A 400-page book is too much to convert in one pass and easy to lose your place in. The cleaner approach is to split it into chapters by page range first (the `qpdf` utility does this), convert and clean each chapter on its own, then verify each — work that can run in parallel if your setup allows, or one chapter at a time if not. Same result either way.
 
 **A quick check before it's done.** Because the plain text dump is faithful, the agent can compare the cleaned markdown back against it to catch anything dropped, duplicated, or mangled — and it flags the hard spots (dense tables, equations, multi-column scans) for your eye rather than pretending they came out perfect. This is a fidelity check, not a fact-check: the concern is that the markdown faithfully matches the source, not whether the source is correct.
+
+**Checking a conversion you already have.** Worth building as its own mode: the markdown exists, and the question is simply *did anything get lost?* Having the AI read the two versions side by side is slow, expensive, and — on a long document — not even reliable. A ladder of cheap mechanical checks, run first, is faster and catches more:
+
+- **Pin the page mapping** between the printed page numbers and the PDF's own page numbers, and verify it at the front *and* the back — unnumbered plates shift it mid-book.
+- **Compare word counts**, whole-document first and then per chapter against that chapter's page range. Per-chapter is the highest-value check, because it localises the loss. Expect the markdown to land slightly *below* the raw dump — the clean-up strips running headers and page numbers — so a count coming in *above* the raw dump is a duplication signal.
+- **Scan for leftover artefacts**: stray page numbers on their own line, invisible soft hyphens, dangling line-end hyphens, running headers that survived the strip.
+- **Diff the figure and table numbers** found on each side. One trap: a caption set in small capitals can extract from the PDF as a single stray character, so a chapter with four tables can audit as having none — which looks exactly like the AI invented them. Confirm by searching for a distinctive value *inside* the table before concluding anything is missing or fabricated.
+- **Sample sentences** from the source and search the markdown for a distinctive ten-word window from the *middle* of each — not the whole sentence, which won't survive legitimate hyphen and caption repairs. Expect a handful of apparent misses and chase every one individually; in practice nearly all turn out to be artefacts of the test rather than real loss, and reporting them unchecked destroys trust in the check itself.
+- **Check the end of each chapter**, where truncation hides — losing the last few paragraphs barely moves a word count.
+- **Do one cell-by-cell check** on the hardest table in the document. If that one is right, spot-checking the easy ones has little yield.
+
+Only where a check flags something is close reading worth it, and then only on the flagged part. Write the verdict to a short dated note that records the page mapping, so the next check starts from it instead of re-deriving it.
 
 ## What this does *not* do
 
@@ -42,7 +56,7 @@ It's not flawless on hard layouts — multi-column scans, heavy tables, and equa
 
 ## Why this works
 
-The reason a naive copy-paste produces garbage is that a PDF describes where ink goes on a page, not what the text *means* — so the structure you read effortlessly (this is a heading, that's a footnote, these cells form a row) has to be reconstructed, and a single tool guessing alone gets it wrong in ways you won't notice until you quote a broken table back to a colleague. Running a smart extractor against a faithful plain dump turns "trust the conversion" into "check the conversion," cheaply and every time. The clean-up is tedious, repetitive work — exactly the kind a person skips under time pressure and an AI does the same way on the thousandth page as the first.
+The reason a naive copy-paste produces garbage is that a PDF describes where ink goes on a page, not what the text *means* — so the structure you read effortlessly (this is a heading, that's a footnote, these cells form a row) has to be reconstructed, and a single tool guessing alone gets it wrong in ways you won't notice until you quote a broken table back to a colleague. Running a smart extractor against a faithful plain dump turns "trust the conversion" into "check the conversion," cheaply and every time. The clean-up is tedious, repetitive work — exactly the kind a person skips under time pressure and an AI does the same way on the thousandth page as the first. And the checks that catch real loss are counting exercises, not reading exercises, which is why they're worth running before anyone opens the document at all.
 
 ## Note
 
