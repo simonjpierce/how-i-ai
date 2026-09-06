@@ -33,6 +33,8 @@ It's trying to learn the things it would otherwise get wrong every session:
 
 As you answer, it writes the standing-instructions file. You can read it, change anything, and keep going — and it'll keep growing as you correct the AI over the following weeks (that ongoing learning is the [memory and context](./memory-and-context.md) loop, the next step).
 
+If you already have a standing-instructions file from earlier experimenting, it won't quietly overwrite it. It reads what's there first, tells you in a sentence what it found, and asks whether to fold the new material into your existing file or set the old one aside as a saved copy and start fresh. Wording you wrote is never replaced without you choosing it — worth knowing, because the alternative is losing rules you'd forgotten you'd written.
+
 Have it create your memory file (`MEMORY.md`) at the same time, as the pair to your standing-instructions file — your AI knows where its own memory file needs to live, so let it put the file there rather than guessing a location yourself. Nothing goes in it yet — but it's where the AI will start saving what it learns from your very next session, so it's worth creating now rather than arriving at the next step without one.
 
 ## Set up your vault folders
