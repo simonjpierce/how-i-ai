@@ -25,6 +25,10 @@ In the evening you review the day and queue what's worth doing overnight — cle
 
 Because the tasks have to be self-contained (no one's there to clarify at 2am), writing a good queue entry is a skill in itself — say exactly what you want, where the inputs are, and what "done" looks like. Your AI can help you write them.
 
+Write that "done" as one concrete, checkable sentence, and keep it as a field on the task rather than burying it in the prose. It earns its keep twice: the runner hands it to the worker as an explicit stop condition, and afterwards a separate pass checks the output against it before the task counts as finished. Without it, both the doing and the checking fall back to guessing what you meant — which is how you end up with tasks marked complete and nothing useful behind them.
+
+Two silent failures are worth designing against, because neither announces itself. A malformed queue entry can be invisible to the runner: it sits in the queue looking perfectly fine and is simply never picked up, so check that a newly-queued task actually registers as runnable before you trust it to the night. And the overnight run should be owned by your machine rather than by the chat session you started it from — a run that is a child of that session dies when the session does, often hours in, with nothing in the logs to say why.
+
 ## What this does *not* do
 
 It's not hands-off autonomy you can't see. You decide everything that goes in the queue, and you review everything that comes out — nothing ships without you. It also won't do work that genuinely needs your judgement *as it happens* (a delicate email, a real analytical decision) — those belong in your day, not the queue. Treat it as a tireless junior that does the legwork and hands you drafts.
