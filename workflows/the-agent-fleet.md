@@ -24,6 +24,12 @@ You start the day by saying what's on your mind (typed, or spoken and pasted in)
 
 Underneath, each agent reads and writes the same vault (see [the philosophy](./00-the-philosophy.md)) — so a specialist's "knowledge of its domain" is just notes in your files, getting richer over time, not a black box.
 
+## When the ranking starves a domain
+
+Any fixed priority order will, over a long enough busy stretch, push one kind of work permanently to the bottom — often the work you'd choose for yourself if the urgent things ever stopped. The fix isn't to weaken the ordering; it's to add a **floor**. Keep track of when each protected area last had real work done on it, and if nothing has happened there for a few working days, the coordinator promotes exactly one item from it into that day's plan until something does. On weeks where that work happens naturally the floor never fires, so it doesn't fight the ordering — it only catches neglect.
+
+Two details decide whether it helps or annoys. The "last done" marker has to be updated by *every* route that can do that kind of work, not just the daily coaching session — otherwise the floor announces weeks of neglect right after a week you spent doing exactly that. And it's an offer, not a mandate: skip it and it simply comes back tomorrow, with no guilt attached.
+
 ## What this does *not* do
 
 It doesn't decide *for* you — it surfaces and sequences; you choose. It isn't a fixed org chart you have to adopt: start with **one or two** agents for your busiest areas and add more only when you feel the generalist getting stretched. And it doesn't require a big system — the same "specialist with its own notes + something that hands you one thing at a time" shape works with two agents or ten.
