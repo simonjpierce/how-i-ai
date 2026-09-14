@@ -179,6 +179,11 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
 - [Clearing clutter from your workflows](./workflows/clearing-clutter-from-your-workflows.md) — the counterpart to growing: prune the cruft your commands accrete over time, with a check that proves nothing load-bearing was lost.
 - [Managing your token budget](./workflows/managing-your-token-budget.md) — the AI re-reads everything on every turn; see the size, keep bulk out, reset on purpose — how to run all this on a fixed subscription without hitting the ceiling.
+- [When a rule should be code](./workflows/when-a-rule-should-be-code.md) — judgement stays prose; mechanics the AI keeps getting wrong becomes a small script that fires at the moment of the mistake, with a reason, a target and a fail-open guarantee.
+- [Knowing when your automations broke](./workflows/knowing-when-your-automations-broke.md) — one intake page every job reports to, a session-start pre-flight that keeps new failures apart from known ones, and health checks that test the outcome rather than the run.
+- [Nothing rots](./workflows/nothing-rots.md) — every deferral names an owner, a surface and a trigger, or it's a loss dressed as a plan; dated decisions get walked.
+- [Parking a thread](./workflows/parking-a-thread.md) — stop working on something for weeks and let a cold session resume it in one move: one living doc with a pickup prompt, plus a reminder that fires.
+- [Running many sessions at once](./workflows/running-many-sessions-at-once.md) — five conversations on the same files: make the others visible, build in worktrees, lock what's shared, re-verify parked steps.
 - [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
 ---
