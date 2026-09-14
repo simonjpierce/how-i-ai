@@ -28,7 +28,7 @@ The maintainer still lives in a terminal (a terminal app called [Ghostty](https:
 
 Wherever you run it, the AI can only hold so much of the conversation at once. When it fills, the AI **compacts** — summarising older turns to make room. A few things are worth knowing (current as of mid-2026; this area changes fast):
 
-- **Auto-compaction is good now.** It's fast, it keeps your actual requests and key material, and it has a safeguard against looping. You don't need to hover over it or compact pre-emptively.
+- **Auto-compaction is good now.** It's fast, it keeps your actual requests and key material, and it has a safeguard against looping. You don't need to hover over it. (Once you're running long sessions against a subscription ceiling, a *deliberate* save-then-compact partway through does start to pay — that's covered in [Managing your token budget](./managing-your-token-budget.md).)
 - **The real lever isn't compaction — it's your files.** What gets lost in a compaction is older *conversation* detail; what survives is anything written down — your vault notes and your standing-instructions file (it auto-loads every session). So when context gets tight, the move that matters is **capturing the work into your notes** (if you've set up a session-handoff step, run it), *not* manually compacting. The files outlive the conversation — which is the whole point of this system.
 - **Use `/compact focus on <thing>`** only when you have something specific you know must survive the next compaction.
 - **If a session feels degraded** after a compaction, just start a fresh one — because your notes and standing-instructions carry the context, you lose nothing.

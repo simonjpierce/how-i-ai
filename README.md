@@ -178,6 +178,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
 - [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
 - [Clearing clutter from your workflows](./workflows/clearing-clutter-from-your-workflows.md) — the counterpart to growing: prune the cruft your commands accrete over time, with a check that proves nothing load-bearing was lost.
+- [Managing your token budget](./workflows/managing-your-token-budget.md) — the AI re-reads everything on every turn; see the size, keep bulk out, reset on purpose — how to run all this on a fixed subscription without hitting the ceiling.
 - [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
 ---
