@@ -15,7 +15,7 @@ The important discipline: the workhorse runs **what you queued, and only that.**
 ## The pieces
 
 - **The evening review** — a short end-of-day pass where you look at what got done, what's coming, and what's worth the overnight compute. In the maintainer's setup this is a command (`/tonight`) that walks through it and writes the night's priorities down.
-- **The queue** — a simple list of tasks for the workhorse, each with enough instruction to be done without you there to answer questions.
+- **The queue** — a simple list of tasks for the workhorse, each with enough instruction to be done without you there to answer questions. Some entries are parked on purpose — shaped for a moment you can't hand off yet — so mark those as parked with a reason, or they read as work the runner kept failing to reach and you end up promoting them on a false premise.
 - **The workhorse** — the unattended runner. It picks up the queue and works through it; when the queue is empty it stops (or waits for more), rather than freelancing.
 - **The morning review** — you read the drafts and results, keep what's good, redirect what isn't.
 
@@ -26,6 +26,8 @@ In the evening you review the day and queue what's worth doing overnight — cle
 Because the tasks have to be self-contained (no one's there to clarify at 2am), writing a good queue entry is a skill in itself — say exactly what you want, where the inputs are, and what "done" looks like. Your AI can help you write them.
 
 Write that "done" as one concrete, checkable sentence, and keep it as a field on the task rather than burying it in the prose. It earns its keep twice: the runner hands it to the worker as an explicit stop condition, and afterwards a separate pass checks the output against it before the task counts as finished. Without it, both the doing and the checking fall back to guessing what you meant — which is how you end up with tasks marked complete and nothing useful behind them.
+
+Give every unattended run a hard stop time — including the ad-hoc ones you kick off mid-afternoon. An overnight run has a natural edge (morning), but a run you start on a whim has none, and a stuck one will happily keep re-planning for ten hours, burning quota while you assume it finished long ago. Make a generous cutoff the default rather than something you remember to set, with an explicit opt-out for the rare run you genuinely want open-ended. When the cutoff passes, no new work starts, whatever is in flight is allowed to wrap up cleanly, and a record is written even if nothing got done — an empty record tells you the run happened and produced nothing, which is exactly what you need to know.
 
 Two silent failures are worth designing against, because neither announces itself. A malformed queue entry can be invisible to the runner: it sits in the queue looking perfectly fine and is simply never picked up, so check that a newly-queued task actually registers as runnable before you trust it to the night. And the overnight run should be owned by your machine rather than by the chat session you started it from — a run that is a child of that session dies when the session does, often hours in, with nothing in the logs to say why.
 
