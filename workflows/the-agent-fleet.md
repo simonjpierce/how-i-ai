@@ -24,6 +24,16 @@ You start the day by saying what's on your mind (typed, or spoken and pasted in)
 
 Underneath, each agent reads and writes the same vault (see [the philosophy](./00-the-philosophy.md)) — so a specialist's "knowledge of its domain" is just notes in your files, getting richer over time, not a black box.
 
+## Give the day a fixed shape
+
+Left to itself, a coordinator with several specialists reporting in produces a long flat ranking — everything sorted, nothing distinguished. It works much better if the day has a shape the coordinator must fill:
+
+- **A few quick wins** — around five small but genuinely forward-moving actions, each doable in about fifteen minutes from something that already exists (a draft, a one-line decision), and each one *your* action rather than a thread you're only copied into.
+- **One big thing** — a single substantial block of focused work with the AI, picked on stakes and deadline, with its first concrete step named. Exactly one: the runner-up waits for another day, and if nothing qualifies the plan says so rather than promoting something small into the slot.
+- **Everything else, below the fold** — remaining action items, replies owed, what's on the radar, specialist output. This tier is *reference*, not a queue. The coordinator doesn't walk you through it and only goes there if you ask.
+
+The coordinator then coaches in that order and stops when the top two tiers are done — any ranking or scoring it does happens *within* a tier, never across them. One escape hatch keeps the shape honest: work from a lower-priority area can claim a top-tier slot when it carries a dated deadline in the next few days. Without a deadline it waits for the session that owns it.
+
 ## When the ranking starves a domain
 
 Any fixed priority order will, over a long enough busy stretch, push one kind of work permanently to the bottom — often the work you'd choose for yourself if the urgent things ever stopped. The fix isn't to weaken the ordering; it's to add a **floor**. Keep track of when each protected area last had real work done on it, and if nothing has happened there for a few working days, the coordinator promotes exactly one item from it into that day's plan until something does. On weeks where that work happens naturally the floor never fires, so it doesn't fight the ordering — it only catches neglect.
