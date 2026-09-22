@@ -43,6 +43,18 @@ In practice this is wired as one shared capability that the more specific workfl
 
 Two independent things stack. First, different model families genuinely catch different errors, so a panel covers more of the failure space than any one model run harder. Second — and this is the surprising part — the *reconciling* step adds value on its own: forcing the disagreements into the open and weighing them is where a lot of the gain comes from, which is why even one model run twice and merged beats one run once. You're not just buying more horsepower; you're buying a structured second look.
 
+## Which model does what — how the maintainer runs it (as of 2026-09-23)
+
+The pattern above is deliberately model-agnostic, but people keep asking what the split actually looks like in practice, so here is the current one, dated because it changes with each release. Treat it as an example of *shape*, not a recommendation of names.
+
+- **The driver: Claude Opus 5.5 at high effort.** Every interactive session, plus judgement, writing in my voice, final calls and the reconciling step of the panel. It also runs the background and overnight jobs and the Claude-side review seats.
+- **The execution lane: OpenAI's Codex (GPT-6 Sol) at high effort.** Anything I can hand off with a clear brief: building from a spec, code review, verification, research legwork. It runs on its own account and quota, so a heavy day there doesn't drain the driver. A small script steps its effort down to medium if the week's usage is running ahead of pace.
+- **The specialist seat: GPT-6 Astra.** Only in the scientific-analysis and science-writing workflows, where it currently scores best on agentic research. Elsewhere I run an Astra pass by hand when I want one rather than wiring it in.
+- **The escalation model: Claude Fable 5.1.** No longer the everyday driver. It sits at the two heavy review gates (the final adversarial check on a spec and the keystone panelist seat), where a second model *family* is the point, and it's the fallback when Opus 5.5 at high visibly falls short on a hard task.
+- **The cheap tier: Claude Sonnet.** Mechanical unattended jobs, bulk reading, extraction and file summarising. Anything that doesn't need judgement.
+
+The principle underneath: **one driver, one different-family execution lane on a separate quota, a premium model reserved for the gates where a different family matters, and a cheap tier for the mechanical bulk.** When a new model arrives, the question is which of those five seats it takes, not whether to add a sixth.
+
 ## Note
 
 This is a pattern, not a fixed tool. What's yours to shape: which second and third models you add (or whether you start with just your main model run twice), whether you bother with the convergence loop or only ever use the one-shot panel, and where you set the bar for "this is high-stakes enough to convene the panel." It pairs naturally with [reviewing someone else's work](./reviewing-others-work.md), [drafting and review](./writing-and-review.md), and [surfacing conflicts](./surfacing-conflicts.md) — all of which are really this engine pointed at a specific job. The durable idea is: *on anything that matters, ask several independent models, reconcile them deliberately, and — for a document you're improving — keep looping until it stops finding real problems.* Paste this to your AI and build the version that fits how you work.
