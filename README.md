@@ -167,6 +167,7 @@ The breadth that keeps a working life running, framed as support for the output 
 - [PDF to markdown](./workflows/pdf-to-markdown.md) — papers → clean text in your notes.
 - [Translating documents](./workflows/translating-documents.md) — a long foreign-language document → a faithful, cross-checked English version you can trust on the details.
 - [Automated photo-ID image upload](./workflows/automated-photo-id-image-upload.md) — turn a folder of tagged field photos into properly-formatted records in a shared research database, uploaded in the background; the human supplies the judgement, the AI builds the plumbing.
+- [Matching a photo-ID catalogue](./workflows/matching-a-photo-id-catalogue.md) — check a season of sightings against the site, the region and the ocean basin at once, with a tested rule for how far to trust a match; the AI shortlists and keeps the books, a person confirms every identity by eye.
 
 ### 5. How the system runs itself — *(these need scheduling — the desktop app's Routines page does it; the terminal is optional)*
 
