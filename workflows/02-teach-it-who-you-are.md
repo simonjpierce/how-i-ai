@@ -48,7 +48,7 @@ You don't have to get this perfect. A couple of sensible folders now is plenty; 
 
 ## What this does *not* do
 
-It doesn't lock anything in — the standing-instructions file and the folder layout are living things you and the AI revise constantly. It doesn't require the imported chatbot summary; that's a shortcut, not a dependency. And nothing here is sent anywhere: it's all plain files on your own machine.
+It doesn't lock anything in — the standing-instructions file and the folder layout are living things you and the AI revise constantly. It doesn't require the imported chatbot summary; that's a shortcut, not a dependency. And the files you create stay on your own machine — though, like any AI tool, Claude Code sends your prompts and the file content it needs to the model provider to process them.
 
 ## Note
 

@@ -31,7 +31,7 @@ A single task has to be small enough to **finish in a bounded time** — think r
 
 Two split patterns cover almost everything:
 
-- **One section per task for anything multi-section.** A report with named sections (summary, highlights, finances, risks…), a proposal with parts — each section is its own entry with its own worker. Never bundle several into one task; bundled sections are the classic over-scope.
+- **One section per task for anything multi-section.** A report with named sections (summary, highlights, finances, risks…), a proposal with parts — each section gets its own worker and its own checkable output — as separate queue entries, or one entry that explicitly tracks the sections as separate units. Never ask one worker to do several sections; bundled sections are the classic over-scope. For a large research report, keep the shared brief in one plan note and run the synthesis as its own task after the chapters.
 - **Read-then-write for heavy synthesis.** When a task has to digest more than a handful of source files before writing, split it in two: a **gather** task that reads everything and produces a plain outline (no prose), then a **draft** task that writes from *that outline only* and never re-opens the originals. Name them so the pairing is obvious. This keeps each half inside the time bound and stops the worker drowning in sources.
 
 ## What NOT to send

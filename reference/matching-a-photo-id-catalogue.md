@@ -39,11 +39,11 @@ Galleries are cached on disk with a record of when and what was pulled, so a re-
 | Class | Rule | What it means |
 |---|---|---|
 | Likely | `s1 ≥ 0.45` and margin `≥ 0.10` | Top animal right 98% of the time; fires for about 3% of animals absent from the gallery |
-| Possible | margin 0.05–0.10, or `s1 ≥ 0.55` | Worth a look; right about 95% of the time; fires for about 11% of absent animals |
+| Possible | not likely, and either (`s1 ≥ 0.45` and margin `≥ 0.05`) or `s1 ≥ 0.55` | Worth a visual review (see the note below the table) |
 | Too few animals | only one animal in the gallery | No margin exists, so never called a match |
 | Nothing | anything else | **Not** evidence of a new animal: the likely rule catches only about half of true re-sightings |
 
-These numbers were measured on about 35,000 sightings of known animals from 27 Indian Ocean sites. The left and right sides agree within a couple of points. Treat them as descriptive, not held-out, because the thresholds were chosen on the same data. Re-test on your own catalogue, and re-test whenever the matcher version changes. The platform shows its own score on a different scale: its on-screen score is `(cosine + 1) / 2`, so 0.75 on screen is 0.50 here.
+These numbers were measured on about 35,000 sightings of known animals from 27 Indian Ocean sites. The left and right sides agree within a couple of points. Treat them as descriptive, not held-out, because the thresholds were chosen on the same data. The "possible" row has no separate measurement: the roughly 95% precision and 11% absent-animal flag rate were measured for the broader rule `s1 ≥ 0.45` and margin `≥ 0.05` *including* likely matches, so don't read them as the accuracy of the leftover possible cases. Re-test on your own catalogue, and re-test whenever the matcher version changes. The platform shows its own score on a different scale: its on-screen score is `(cosine + 1) / 2`, so 0.75 on screen is 0.50 here.
 
 Two extra flags travel with each result:
 

@@ -43,7 +43,7 @@ What went wrong before the rule (one day, four sessions on one main): a revert w
 
 ## The branch check and the push rules
 
-- **Before any commit, in any repo**, check `git branch --show-current`. Multi-session repos are routinely left on stale feature branches by background work; a commit there never reaches `origin/main`. If not on main: cherry-pick to main, push main, then `git reset --hard HEAD~1` on the feature branch *only if* that commit wasn't pushed there (`git log origin/<branch>..HEAD` non-empty). A `PreToolUse Bash` hook on `git commit` can enforce the check.
+- **Before any commit, in any repo**, check `git branch --show-current`. Commits on a planned feature branch (in its own worktree) are legitimate. The trap is a shared tree left on a stale branch by background work: a commit there never reaches `origin/main`. If a commit landed on a branch it wasn't meant for, inspect the commits and any uncommitted changes, cherry-pick yours to main and push main; remove the stray commit from the stale branch (`git reset --hard HEAD~1`) *only* after confirming it's yours and wasn't pushed there (`git log origin/<branch>..HEAD` shows it). Never reset a branch merely because it differs from main. A `PreToolUse Bash` hook on `git commit` can enforce the check.
 - **Never suppress a push's stderr, never chain a fallback onto a push**: `git push -q … 2>/dev/null || git push <alt>` ate a double non-fast-forward rejection and the session reported "pushed". After any push that matters, verify the remote head advanced (`git rev-parse origin/main` after `git fetch`). A hook flags the suppressed-push shape.
 
 ## Stale parked instructions

@@ -26,7 +26,7 @@ Because almost everything you write that cites literature wants this same check,
 - **Found** — a real paper, metadata matches. Nothing to do.
 - **Found, but the details are off** — the paper exists, but the author, year, title, or journal in the citation doesn't match the record. A transcription slip, usually — but it still needs fixing, and the corrected metadata is offered.
 - **Ambiguous** — a partial or uncertain match; can't be confirmed or ruled out. Flagged for your eye.
-- **Not found** — no matching paper anywhere. This means *possibly fabricated*, and it's the one that matters most.
+- **Not found** — no matching paper returned. After ruling out a parsing slip or a database request that simply failed (which can look identical to a search that found nothing), this means *possibly fabricated*, and it's the one that matters most.
 
 **Never auto-act — flag for a human.** A not-found or mismatched citation is surfaced for *your* decision, with the evidence (what was searched, what came back). It is **never silently deleted** (it might be a real paper the databases don't index — a book chapter, a very new preprint, grey literature) and **never silently kept** (it might be invented). Both silent moves are failures; the check's job is to hand you a clear decision queue, not to resolve it for you.
 

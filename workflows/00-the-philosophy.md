@@ -8,7 +8,7 @@ This is a short read, not a setup task — but like the other workflows it's fin
 
 If you've used ChatGPT or Claude for any length of time, you know the pattern: every conversation starts from zero. Yesterday's three-hour session leaves nothing behind but a chat window you'll never scroll back to. You have to routinely re-brief the model on who you are and what you're working on. Personalisation hits a ceiling fast, and your conversations don't become *evergreen documents* you can build on – they go stale, because nothing ever refreshes them.
 
-The model has limited memory. "I'll remember this for next time" is a promise no chatbot can currently keep.
+The model's built-in memory is limited. A chatbot may remember a few of your preferences, but "I'll remember this for next time" — every decision, every source, every next step — is a promise no chatbot can currently keep, and you can't open its memory to check or correct it.
 
 So, split the job in two: 
 

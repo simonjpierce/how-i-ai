@@ -25,7 +25,7 @@ Keep the repository's front page accurate as a map: what each folder is, what th
 
 **Record the working calls in short stretches and feed each one in while you're still talking.** See [Transcription](./transcription.md) — the segment-by-segment pattern turns a call into a working session where the AI reads back a plan, you both correct it, and you say "yes" out loud before moving on. Each decision lands in the notebook with the speaker and the date.
 
-**Tell the assistant what it must not decide.** When it's classifying or correcting records on your behalf, give it a hard boundary: don't look at images, don't guess when the text is ambiguous, and "unsure" is a correct answer that costs nothing. An assistant that resolves ambiguity to be helpful quietly manufactures data. The hard cases come to a person, with a link to the source record so checking is one click.
+**Tell the assistant what it must not decide.** When it's classifying or correcting records on your behalf, give it a hard boundary: define which evidence it may use and which decisions need a person (for a text-only classification, that might mean not consulting images), never guess when the record is ambiguous, and treat "unsure" as a correct answer that costs nothing. An assistant that resolves ambiguity to be helpful quietly manufactures data. The hard cases come to a person, with a link to the source record so checking is one click.
 
 ## Sharing the method without sharing the paper
 

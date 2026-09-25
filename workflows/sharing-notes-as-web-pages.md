@@ -8,7 +8,7 @@ This is an idea file. Paste it into your AI agent — Claude Code or Codex — t
 
 You finish something worth sharing — a review of a collaborator's grant, an explainer of a process, a short briefing — and now you want to *hand it to one person*. The usual routes all have friction. A file attachment is clunky and unversioned. A Google Doc drags the thing into someone's Drive, invites permission faff, and signals "please edit me." Pasting into an email loses the formatting. What you actually want is a plain link: they click, they read, done.
 
-Your notes are already markdown, which is already the web's native format — so the gap between "a note on your machine" and "a web page with a URL" is tiny. A **static-site host** closes it for free: it takes plain files and serves them as web pages at a public address, with no server to run or pay for. The maintainer uses **Cloudflare Pages** (GitHub Pages and Netlify are equivalent free options); the page is built with **Astro**, a lightweight static-site generator, so each note comes out styled to match the maintainer's other sites instead of looking like a raw text dump.
+Your notes are already markdown — plain text with simple formatting — so the gap between "a note on your machine" and "a web page with a URL" is small: a generator turns the text into a web page, and a host puts it at a shareable address. A **static-site host** closes it for free: it takes plain files and serves them as web pages at a public address, with no server to run or pay for. The maintainer uses **Cloudflare Pages** (GitHub Pages and Netlify are equivalent free options); the page is built with **Astro**, a lightweight static-site generator, so each note comes out styled to match the maintainer's other sites instead of looking like a raw text dump.
 
 The principle the whole thing rests on: **the note is the artifact, and publishing it should be one instruction, not a chore.** You say "publish this note"; the AI does the packaging, hosting, and bookkeeping, and hands you back a link.
 
@@ -16,7 +16,7 @@ The principle the whole thing rests on: **the note is the artifact, and publishi
 
 - **One instruction to publish.** You point the AI at a note and say publish it. It picks a short, readable address from the title (a "slug" — the last part of the URL), builds the page, deploys it to the host, and reports the live link. What was a note a moment ago is now a URL you can paste into a message.
 
-- **These pages are openly AI-assisted, and that's the point.** The maintainer uses them mostly to share work that was *done with AI* — a review, an analysis, a briefing — transparently, as assistant-written output rather than something dressed up as hand-crafted prose. So the design stays plain and the pages are set to **`noindex`** (a small instruction that tells search engines to ignore them): they're for sending to a specific person, not for being found by strangers. Anyone with the link can read it, but it won't surface in a search.
+- **These pages are openly AI-assisted, and that's the point.** The maintainer uses them mostly to share work that was *done with AI* — a review, an analysis, a briefing — transparently, as assistant-written output rather than something dressed up as hand-crafted prose. So the design stays plain and the pages are set to **`noindex`** (a small instruction that tells search engines to ignore them): they're for sending to a specific person, not for being found by strangers. Anyone with the link can read or pass it on. The page asks search engines not to index it, but that's a request, not access control or a guarantee against discovery.
 
 - **It keeps a record of what's live.** Publishing tags the source note as published and files it in a "published" folder, so you always know what's out in the world. Ask for a status check and the AI lists every published note and flags any whose source you've edited since — so you can re-publish the ones that have drifted. Updating is just re-publishing (same link); unpublishing removes the page.
 
@@ -26,7 +26,7 @@ The principle the whole thing rests on: **the note is the artifact, and publishi
 
 ## What this does *not* do
 
-It's not a blog or a public website, and it's not a discovery channel — the pages are deliberately unlisted and unsearchable, meant for one-to-one sharing by link. It doesn't manage access: there's no password, so anyone you give the link to can read it (and could pass it on) — which is exactly why the pre-publish sensitive-content check matters, and why anything genuinely private shouldn't go here at all. And it doesn't decide *what's* worth sharing or write it for you; it packages and ships a note you've already decided to hand over.
+It's not a blog or a public website, and it's not a discovery channel — the pages are meant for sharing by link and ask search engines not to index them. It doesn't manage access: there's no password, so anyone you give the link to can read it (and could pass it on) — which is exactly why the pre-publish sensitive-content check matters, and why anything genuinely private shouldn't go here at all. And it doesn't decide *what's* worth sharing or write it for you; it packages and ships a note you've already decided to hand over.
 
 ## Why this works
 

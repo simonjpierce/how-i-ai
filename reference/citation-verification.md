@@ -20,13 +20,13 @@ So the verification step does **no** language-model reasoning about whether a pa
 
 **Match on durable identifiers, not on the citation string.** Prefer the DOI; absent that, match on title plus authors plus year. Never match on how the citation is *formatted* — formatting varies harmlessly, and a fabricated reference is formatted identically to a real one.
 
-**Check that the details actually agree.** Existence isn't enough. For each found paper, confirm the cited title, first author, year, and journal match the database record. A real DOI attached to the *wrong* paper, or a real paper cited with the wrong year, is a distinct and common error — usually a transcription slip, but one that still has to be fixed.
+**Check that the details actually agree.** Existence isn't enough. For each found paper, confirm the cited title, first author, year, journal and DOI match the database record. Be clear about what your automated pass actually compares — the maintainer's checks the DOI, first author and year for library matches, and approximate title plus author and year for external ones — and treat anything it doesn't compare as still to confirm. A real DOI attached to the *wrong* paper, or a real paper cited with the wrong year, is a distinct and common error — usually a transcription slip, but one that still has to be fixed.
 
 **Return a verdict per reference, with the evidence:**
 - **Found, matches** — a real paper, metadata agrees. Nothing to do.
 - **Found, details off** — the paper exists but author/year/title/journal disagrees with the record. Offer the corrected metadata.
 - **Ambiguous** — a partial or low-confidence match that can't be confirmed or ruled out. Flag it.
-- **Not found in any database** — no match anywhere. This is the one that matters most: *possibly fabricated.*
+- **No match returned** — the checker didn't confirm the reference. Rule out a parsing problem or a failed database request (a lookup that errors out can look identical to a search that found nothing), then search by hand. Only then treat it as the one that matters most: *possibly fabricated.*
 
 ## The rule that makes it safe
 

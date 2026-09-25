@@ -10,7 +10,7 @@ Give a specialist agent its own domain and it will, sooner or later, hit the edg
 
 The fix is to build a **question channel that runs the other way**. Early each morning, each agent looks at its current priorities and asks: what would let this move if I had your view on it? It first tries to answer each question from your own notes and drops any it can. Only questions that need your opinion, direction or taste survive — not facts you'd have to look up, and nothing that needs a screen — and they wait in one shared place, tagged with which agent asked and what answering would unblock. An agent can also add one mid-task when it hits a decision only you can make, rather than guessing.
 
-Then they get asked at the one moment you can answer them richly and at no cost to your day: **when you're out walking.** The questions are read out to you on a walk, and you answer them the easy way — by talking. A rambling two-minute spoken answer carries far more than a desk-bound yes/no: the reasoning, the caveats, the "well, it depends on…". That spoken answer starts the work it unblocks right away, while you keep walking, and gets filed into the asking agent's notes, so its judgement compounds in *your* voice — and next time it can ask a sharper follow-up. It's a slow, asynchronous conversation between you and your own assistants.
+Then they get asked at the one moment you can answer them richly without eating into your working day: **when you're out walking**, and you answer the easy way — by talking. A rambling two-minute spoken answer carries far more than a desk-bound yes/no: the reasoning, the caveats, the "well, it depends on…". That spoken answer starts the work it unblocks right away, while you keep walking, and gets filed into the asking agent's notes, so its judgement compounds in *your* voice — and next time it can ask a sharper follow-up. It's a slow, asynchronous conversation between you and your own assistants.
 
 ## How it runs
 
@@ -26,7 +26,7 @@ It doesn't let the agents interrupt you. The whole point is that questions *wait
 
 ## Why this works
 
-The bottleneck in teaching an assistant about your work isn't the assistant's memory — it's *your* time and attention to explain things. This pattern spends neither: it batches the questions until they're worth a single pass, and it collects the answers during time you were spending anyway (walking), in the lowest-effort form there is (talking). The knowledge transfer rides along on something you were doing regardless — the same trick that makes [the self-improvement loop](./the-self-improvement-loop.md) work.
+The bottleneck in teaching an assistant about your work isn't the assistant's memory — it's *your* time and attention to explain things. This pattern makes that effort much easier to fit in: it batches the questions until they're worth a single pass, and collects the answers during time you were spending anyway (walking), in the lowest-effort form there is (talking). The transfer rides along on something you were doing regardless — the same trick that makes [the self-improvement loop](./the-self-improvement-loop.md) work.
 
 ## Note
 

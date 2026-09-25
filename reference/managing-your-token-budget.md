@@ -6,7 +6,7 @@
 
 ## The cost model — measure this first
 
-Before building anything, get the picture from your own session logs. Claude Code keeps every session as a JSONL transcript under `~/.claude/projects/`, and every assistant message carries a `usage` block: `input_tokens`, `cache_creation_input_tokens`, `cache_read_input_tokens`, `output_tokens`. Sum them per session and you have the bill.
+Before building anything, get the picture from your own session logs. Claude Code keeps every session as a JSONL transcript under `~/.claude/projects/`, and every assistant message carries a `usage` block: `input_tokens`, `cache_creation_input_tokens`, `cache_read_input_tokens`, `output_tokens`. Sum each field per session to measure the workload. Keep the raw totals alongside a weighted estimate (cache reads, cache writes, fresh input and output don't count equally against a plan) and compare both with your plan's own usage meter — the raw total is a measure, not a bill.
 
 What the maintainer's numbers looked like when this work started, one week:
 

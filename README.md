@@ -191,7 +191,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 
 ## The stack
 
-- **[Claude Code](https://docs.claude.com/claude-code)** — desktop app (start here) or CLI (later, for hooks and automation). This is what the guide is written for. (Prefer a different file-capable agent, like OpenAI's [Codex](https://github.com/openai/codex)? The workflows are plain descriptions, so your agent can adapt them.)
+- **[Claude Code](https://docs.claude.com/claude-code)** — desktop app (start here) or the terminal, if you prefer it — both run hooks and scheduled tasks. This is what the guide is written for. (Prefer a different file-capable agent, like OpenAI's [Codex](https://github.com/openai/codex)? The workflows are plain descriptions, so your agent can adapt them.)
 - **[Obsidian](https://obsidian.md)** — where the notes live.
 
 *Optional, when a workflow asks for it:* the [Codex CLI](https://github.com/openai/codex) — used as an independent *second* model for the cross-checks in the research and writing workflows (a different model checking the first one's work).

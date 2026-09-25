@@ -29,6 +29,8 @@ The raw material is *you*, thinking out loud — a voice memo, a dictated stream
 
 ### Rewrite — an existing draft, re-voiced with the content frozen
 
+(Not for journal manuscripts: a paper follows its target journal and exemplar papers, not a personal voice guide, and its Methods and Results get only precision-preserving tightening.)
+
 Here the draft already exists and says what you mean; the job is to make it *sound* like you without letting the meaning drift. This is the move that needs a guard, because re-voicing prose silently nudges content — a "may" hardens to a "does", a caveat drops off a sentence's end, a number shifts — and the result reads *better*, which is exactly when you stop checking.
 
 ## The content-freeze discipline (what makes rewrite safe)

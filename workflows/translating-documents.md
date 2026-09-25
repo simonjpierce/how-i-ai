@@ -8,7 +8,7 @@ This is an idea file. Paste it into your AI agent — Claude Code or Codex — t
 
 Ask an AI to "translate this 100-page document" in one go and it will hand you something that reads beautifully and is quietly wrong in three predictable ways. **It drops things** — whole sentences or sections vanish, and because what remains is fluent, you never notice. **Its terms drift** — the same source word becomes "enforcement" on page 4 and "surveillance" on page 40, so a reader can't tell whether one thing is meant or two. And **it mistranslates the bits that matter most** — a legal clause, a number, a date, a species name — with the same confident tone as the rest.
 
-The fix is to stop treating translation as one big act and treat it as a disciplined process with a verification layer. Three moves do most of the work. **Translate section by section**, never in a single pass — chunking is what kills silent omission, because a missing section is obvious when you're checking one at a time. **Lock a glossary before you start** — fix one agreed English rendering for every recurring term, every acronym (keep institutional acronyms as-is and gloss them once), every proper noun, and never translate things that shouldn't be (Latin species names, legal instrument titles). Feed that glossary to every translator and every checker so nothing drifts. And **cross-check with a second and third independent model** — not re-translating, just reviewing the translation against the source for omissions, wrong numbers, and mistranslations.
+The fix is to stop treating translation as one big act and treat it as a disciplined process with a verification layer. Three moves do most of the work. **Translate section by section**, never in a single pass — short sections make a missing passage far easier to spot — though you still compare the finished translation against the source to confirm every section, table and passage survived. **Lock a glossary before you start** — fix one agreed English rendering for every recurring term, every acronym (keep institutional acronyms as-is and gloss them once), every proper noun, and never translate things that shouldn't be (Latin species names, legal instrument titles). Feed that glossary to every translator and every checker so nothing drifts. And **cross-check with a second and third independent model** — not re-translating, just reviewing the translation against the source for omissions, wrong numbers, and mistranslations.
 
 ## How it runs
 
@@ -26,7 +26,7 @@ It does not produce a legally authoritative text. A careful AI translation is a 
 
 ## Why this works
 
-Each move attacks one specific failure. Section-by-section kills omission. The locked glossary kills drift. The independent cross-check, plus treating the source as the final word, catches the confident-but-wrong mistranslations that a single pass — however good — produces and cannot see in itself.
+Each move attacks one specific failure. Working section by section makes missing content easy to detect. The locked glossary keeps recurring terms consistent. The independent cross-check, plus treating the source as the final word, catches the confident-but-wrong mistranslations that a single pass — however good — produces and cannot see in itself.
 
 ## Note
 

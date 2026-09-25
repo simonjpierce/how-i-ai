@@ -14,7 +14,7 @@ This matters more with an AI in the loop, not less. A model asked to integrate a
 
 ## How it runs
 
-- **Flag, don't resolve.** The moment something is unverified or two sources clash, drop the marker — inline for a single fact, a "Conflicts / needs review" section for a real disagreement. Describe what's uncertain in plain language and cite the sources in tension. Don't attempt resolution yet.
+- **Flag first, then check.** The moment something is unverified or two sources clash, drop the marker — inline for a single fact, a "Conflicts / needs review" section for a real disagreement. Describe what's uncertain in plain language and cite the sources in tension. Then check the original evidence where you can: if it settles the question, record how and clear the marker; if it doesn't, leave the uncertainty visible rather than picking a side.
 - **Write conservatively in the meantime.** If the text has to be updated before the question closes, use cautious, *attributed* language — "Smith et al. (2024) suggest…", "appears to", "evidence is mixed" — rather than a flat assertion. Never delete an earlier claim without saying why.
 - **Let time pass.** "Park it and wait for better evidence" is a valid, often correct outcome. Don't force convergence just to make a note look finished.
 - **Revisit before anything ships.** Open markers get reviewed at the natural checkpoints — before a submission, a report, a talk — so an unverified fact never rides out into a high-stakes document.
