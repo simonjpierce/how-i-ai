@@ -60,6 +60,7 @@ Naming conventions the maintainer follows for whale sharks:
 - New names continue the site's series. In the Seychelles that's S-465 onwards as of September 2026.
 - An encounter is **approved** only once reviewed; "unidentifiable" is also a reviewed, final state.
 - The reviewer makes the assignment and approval in the platform after the decision, never before.
+- **Note scars in the same pass.** While each animal is on screen, the reviewer also records its scars: *none seen*, with the body regions the photos actually show (usually one flank), or each scar in plain words. The words are kept verbatim and coded into the scar-classification categories later (cause, severity, body region), so the naming pass also feeds a scarring dataset at almost no extra cost. A "none seen" row matters as much as a scar, because it's the denominator.
 
 ## 6. Keep the books
 
