@@ -40,7 +40,7 @@ One carve-out worth copying: **a gap in an observer is not a deferrable loop.** 
 | Other deferred build | overnight worker | queue entry / spec status | nightly run; weekly backstop |
 | Pending decision | you | ask *now*; else a pending-decisions note | this turn, else the evening review |
 | Waiting on external | external + chaser | a "waiting" line in the agent backlog or a dated to-do | chase date — only with evidence they're stuck |
-| Parked thread | you + AI | State of Play doc | evening review (full mode) + weekly walk |
+| Parked thread | you + AI | State of Play doc | evening review if parked for it; otherwise the weekly walk |
 | Verify-later flag created this session | per content | the note itself + a line in the close-out | next session on that topic, or "standing flag" |
 
 Deviations allowed; must be stated.
@@ -59,7 +59,7 @@ The maintainer's log holds ~900 revisit dates; the walk is what makes them real.
 
 Prose names the *right* owner and surface — no hook can supply that. Code ensures *some* path was named:
 
-- **L1 — Stop hook.** Reads the model's final message each turn. A first-person deferral (`I'll … later`, `worth picking up`, `parked`) with no owner/surface/trigger pattern nearby → block once with "name the resurfacing path". Every deferral seen, pathless or not, is appended to a per-session JSONL ledger (`open-loop-ledger.jsonl`: timestamp, session, excerpt, path-named yes/no). Honest limit: it sees only each turn's *final* message; a deferral stated mid-turn and never repeated is invisible to it.
+- **L1 — Stop hook.** Reads the model's final message each turn. A first-person deferral (`I'll … later`, `worth picking up`, `parked`) with no owner/surface/trigger pattern nearby → block once with "name the resurfacing path". Every deferral seen, pathless or not, is appended to a per-session JSONL ledger (`open-loop-ledger.jsonl`: timestamp, session, excerpt, path-named yes/no). Known limit: it sees only each turn's *final* message; a deferral stated mid-turn and never repeated is invisible to it.
 - **L2 — close-out.** The session-end command reads the session's ledger rows and merges them into its "what's next" disposition walk, so a mid-session deferral reaches the gate even if memory missed it. It also reconciles *named* against *routed*: a claimed "queued" is checked against the real queue entry.
 - **L3 — weekly backstop.** A script gathers ledger rows still pathless after 48 hours and surfaces each as one obligation in the weekly system walk.
 - **L4 — the convention doc.** This table, in your process docs, is what L1–L3 point to.

@@ -2,6 +2,8 @@
 
 *When two people write a paper and both have an AI, the shared repository becomes the paper's home base. This is how to set the ground rules so the two assistants help each other instead of overwriting each other.*
 
+This is an idea file. Paste it into your AI agent — Claude Code or Codex — to build a version for your own collaboration; it'll draft the shared brief and the repository layout with you.
+
 ## The core idea
 
 The moment a second person joins a paper, the usual setup breaks. You have a copy, they have a copy, and both of your AI assistants are confidently working from whichever version happens to be on that laptop. Nobody is lying; the record has just forked.
@@ -15,11 +17,11 @@ Four rules cover almost everything:
 - **Add, don't overwrite.** Your assistant writes its own files and edits the shared ones you've agreed on. It does not silently change the other author's data, scripts, or notes.
 - **Nothing is deleted — superseded material moves to an archive folder.** When a corrected dataset replaces the old one, the old one stays, clearly marked as not the working version. A collaborator coming back in a month needs to see what changed, not find a hole.
 
-Keep the repository's front page honest as a map: what each folder is, what the current working file is, what's in flight. It's the first thing the other person's AI reads.
+Keep the repository's front page accurate as a map: what each folder is, what the current working file is, what's in flight. It's the first thing the other person's AI reads.
 
 ## How it runs
 
-**Write the brief down and put it in the repository.** Telling your co-author on a call how their assistant should behave doesn't survive the call. Have your AI write them a short setup file — what home base is, what to install, what to run at the start and end of a session, what it should never do on its own — and commit it alongside the work. They paste it into their assistant once and ask it to keep the standing parts; from then on both assistants are running the same rules. It's also the honest test of whether your own setup is teachable: if you can't write it down, it isn't a system yet.
+**Write the brief down and put it in the repository.** Telling your co-author on a call how their assistant should behave doesn't survive the call. Have your AI write them a short setup file — what home base is, what to install, what to run at the start and end of a session, what it should never do on its own — and commit it alongside the work. They paste it into their assistant once and ask it to keep the standing parts; from then on both assistants are running the same rules. It's also a good test of whether your own setup is teachable: if you can't write it down, it isn't a system yet.
 
 **Record the working calls in short stretches and feed each one in while you're still talking.** See [Transcription](./transcription.md) — the segment-by-segment pattern turns a call into a working session where the AI reads back a plan, you both correct it, and you say "yes" out loud before moving on. Each decision lands in the notebook with the speaker and the date.
 
@@ -27,12 +29,16 @@ Keep the repository's front page honest as a map: what each folder is, what the 
 
 ## Sharing the method without sharing the paper
 
-Collaborators will ask to see work well before it's ready, and the honest answer — "not yet" — costs you goodwill and repeat conversations. There's a better third option: split the *method* out from the *paper*.
+Collaborators will ask to see work well before it's ready, and "not yet" costs you goodwill and repeat conversations. There's a better third option: split the *method* out from the *paper*.
 
 While the analysis is still in progress, have your AI build a small, separate, public repository that carries just the reusable part: the classification scheme or protocol, how to enter data, worked examples, and what to report. Write it site-neutral — for anyone in your field, not tuned to your own study area — and assume the reader may not use AI at all, while telling them how to if they want to. Then point people at that, and keep the working repository private.
 
-It pays three ways. Your collaborators can start straight away instead of waiting for you. Their feedback comes back while you can still act on it, which makes the published method better. And when the paper does come out, the thing people actually need in order to use it already exists, is already tested by real users, and is already the natural home for whatever protocol or tool you build next. Every rule you settle in the main analysis gets copied across as a dated change to the public version — that's the loop that keeps it honest.
+It pays three ways. Your collaborators can start straight away instead of waiting for you. Their feedback comes back while you can still act on it, which makes the published method better. And when the paper does come out, the thing people actually need in order to use it already exists, is already tested by real users, and is already the natural home for whatever protocol or tool you build next. Every rule you settle in the main analysis gets copied across as a dated change to the public version — that's the loop that keeps the two in step.
 
 ## What this does *not* do
 
 It doesn't replace talking to your co-author. The repository and the notebook carry the record; the calls carry the judgement. And it doesn't make the AI a co-author: every decision in the notebook has a human's name on it.
+
+## Note
+
+This is a pattern, not a fixed setup. Where the shared repository lives, how formal the brief is, whether you split out a public method repository at all — all yours to shape. The durable idea is: *one home base, one written brief both assistants follow, add rather than overwrite, and nothing deleted — so two people and two AIs build one record instead of two.* Paste this to your AI and build the version that fits your collaboration.

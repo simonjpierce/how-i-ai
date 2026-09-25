@@ -10,10 +10,12 @@ A to-do list is a pile of everything, all visible at once, with no guidance on w
 
 The move here is to stop treating your day as a list to stare at and start treating it as something an AI **coaches you through, one item at a time.** Two beats:
 
-- **Plan the day.** Each morning the AI pulls together your real inputs — calendar, tasks, what's due, what you flagged last night, what's still open from yesterday — and produces a *short, ordered* list of what actually matters today. Not everything. The few things that move the needle, in the order to do them.
+- **Plan the day.** Each morning the AI pulls together your real inputs — calendar, tasks, what's due, what you flagged last night, what's still open from yesterday — and produces a *short, ordered* list of what actually matters today. Not everything. The few things that move the needle, in the order to do them. The plan can be waiting for you: the maintainer's is built by a scheduled job before he's up, and a second model checks it against the sources before it opens.
 - **Walk it, one task at a time.** Then it surfaces *one* task — just the next one — and helps you actually start it: the concrete first action, the file already open, the draft already begun. You do it (or consciously skip it), it marks it done, and *only then* does the next one appear. You're never looking at the whole pile, only at the single thing in front of you.
 
-The same pattern clears your inbox: instead of "deal with email" (vague, infinite, avoidable), the AI surfaces the messages genuinely waiting on a reply, drafts each response for you to approve or edit, and walks you down from ten to zero with a visible countdown. A finite, finishable thing with a defined finish line.
+You can run more than one coached block a day. The maintainer runs two: a morning block for the main job, and a protected afternoon block for the work the main job would otherwise crowd out — which is how that second kind of work gets done at all.
+
+The same pattern clears your inbox. Instead of "deal with email" (vague, infinite, avoidable), the AI surfaces the messages waiting on a reply and sorts them by importance: the few that matter today join the morning plan, and the rest get walked down later with a visible countdown, ten to zero. For each one it shows the message with a line of context and asks how you want to handle it; only then does it draft the reply, for you to edit and send. A finite, finishable thing with a defined finish line.
 
 ## How it runs
 
@@ -29,7 +31,7 @@ The active ingredient is the *one-at-a-time constraint.* Overwhelm is largely th
 
 ## Note
 
-This is a pattern, not a fixed implementation. What you feed the planner, whether you run a morning task-coach and an inbox-clear and an evening review or just one of them, how much "help me start" each task gets — all yours, and all optional. The durable idea is: *don't make yourself face the whole pile; have the AI plan from your real inputs and then put exactly one chosen thing in front of you at a time, with a finish line you can actually reach.* Paste this to your AI and build the version that fits how you work.
+This is a pattern, not a fixed implementation. What you feed the planner, whether you run one coached block or two, an email countdown, an evening review, or just one of them, how much "help me start" each task gets — all yours, and all optional. The durable idea is: *don't make yourself face the whole pile; have the AI plan from your real inputs and then put exactly one chosen thing in front of you at a time, with a finish line you can actually reach.* Paste this to your AI and build the version that fits how you work.
 
 ---
 

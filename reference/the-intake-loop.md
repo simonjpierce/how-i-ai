@@ -35,6 +35,10 @@ Filing without routing is just a tidier pile. The last move is to hand the docum
 
 If the next action has a real deadline, also push it onto your actual task list, not just into the note — a marker inside a file you might not reopen for weeks isn't a reminder. Title the task after the *decision or action*, not the document, and link it back to the note.
 
+## Check the note against the source
+
+After filing, a second model (read-only) reads only what was just added and asks, claim by claim, whether the source document actually says it. Anything it can't trace gets a visible "confirm or remove" marker and a task — never a silent deletion. Keep a copy of the source text alongside the note so the check, and any later reader, can go back to it. This catches the fact that crept in from memory or from a different document, which is the error an extraction note is most prone to.
+
 ## The human stays in the loop
 
 The AI does the legwork — extract, draft the note, propose the filing and the route. **A human confirms the calls that matter:** which project this really belongs to when it's ambiguous, whether a flagged conflict is resolved one way or the other, and any routing decision that needs judgement. Run it two ways depending on the moment: **interactive** (it proposes the classification and the changes, you approve before it writes) for one document you care about; **autonomous** (it files what it safely can and queues the judgement calls for later) for an overnight batch. Either way, the genuinely-judgement decisions surface to a person rather than getting silently decided.

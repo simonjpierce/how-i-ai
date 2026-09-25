@@ -37,7 +37,7 @@ git worktree remove <repo>_<task>
 - The base tree stays **parked on main**, because nightly automations commit from it. If you find it on a feature branch, return it to main once that branch's work is committed.
 - Fallback if you must share the base tree: one writer at a time; if overlapping, each on its own branch, merged serially. And if the base tree's index already holds *another session's* staged files (`git status` shows `A`/`AM` entries you didn't create), a plain `git add <file> && git commit` sweeps them into your commit — commit by pathspec.
 - **Fetch before you fast-forward a second tree** of the same repo: "Already up to date" against a stale remote-tracking ref is a lie, not a no-op.
-- Honest limit: automations still commit to main from the base tree, so contention remains at the instant an interactive branch merges — a brief serialised op, low risk.
+- Known limit: automations still commit to main from the base tree, so contention remains at the instant an interactive branch merges — a brief serialised op, low risk.
 
 What went wrong before the rule (one day, four sessions on one main): a revert war that took a live bug-fix as collateral; a review from a worktree branched off stale main flagging the sibling's commits as regressions (two wasted rounds); uncommitted edits lost to a sibling's `git clean`.
 

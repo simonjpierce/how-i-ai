@@ -40,7 +40,7 @@ Before a re-voiced draft replaces the original, prove the rewrite changed voice 
 
 If the two passes disagree, or any frozen item moved, **stop and surface it** rather than auto-resolving. Then bring the human only the genuine judgement calls — a word, an emphasis, a sentence that could go two ways — for their ear to settle.
 
-**Scale the guard to the stakes.** A low-stakes note can take a voice pass with a self-check and no second model. Reserve the full freeze for prose where a silently-drifted meaning would actually cost you — anything external-facing with commitments, facts, or a sceptical reader who'll hold it to account.
+**Scale the guard to the stakes — three levels.** *Light* (a low-stakes note): a voice pass with a self-check, no second model. *Standard* (an external email or note with dates, names, asks or commitments): the mechanical diff plus a commitments ledger — every date, name, ask and promise listed before the rewrite and checked after. *Full* (a long or structured piece — a report, a chapter, web copy with claims): the complete freeze with the independent second-model challenge. Reserve the full freeze for prose where a silently-drifted meaning would actually cost you.
 
 ## Ghostwritten vs openly-AI — get the mode right
 

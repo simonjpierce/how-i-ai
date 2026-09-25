@@ -6,7 +6,7 @@ This is an idea file. Paste it into Claude Code and it'll walk you through the s
 
 ## The core idea
 
-Two things are essential — and that's genuinely it:
+Two things are essential, and that's it:
 
 1. **Obsidian** — a free app for keeping notes on your computer. Your notes are just plain text files (markdown) in a folder; Obsidian is the friendly window onto them — it renders everything cleanly and shows the links between notes. That folder of notes is your **vault**, and it's *yours*: plain files on your own disk, nothing proprietary. → **[obsidian.md](https://obsidian.md)**
 
@@ -40,7 +40,7 @@ The order that works: install the editor → create the vault folder → connect
 You don't need the top tier of anything to begin — find your *actual* limits before paying for more.
 
 - **ChatGPT** — the standard paid plan (around US$20/month) already includes the voice and transcription and a lot of capability; start there. I run a higher tier, because I lean on voice heavily *and* use Codex (OpenAI's coding agent) a lot — worth it at that volume, but only once the cheaper plan's limits actually start to bite.
-- **Claude Code** — the entry plan (around US$20/month) is, honestly, fairly limiting for a serious volume of work. Most people doing a lot with it settle on the **mid plan (around US$100/month)**, which is the sweet spot — that's where I'd point most people first. The top plan (around US$200/month) is only worth it if you're genuinely hitting the mid plan's limits.
+- **Claude Code** — the entry plan (around US$20/month) is fairly limiting for a serious volume of work. Most people doing a lot with it settle on the **mid plan (around US$100/month)**, which is the sweet spot — that's where I'd point most people first. The top plan (around US$200/month) is only worth it if you're genuinely hitting the mid plan's limits.
 
 *(Plan names and prices change — treat these as a rough guide and check current pricing.)*
 

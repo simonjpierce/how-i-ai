@@ -6,7 +6,7 @@ This is a short read, not a setup task — but like the other workflows it's fin
 
 ## The core idea
 
-If you've used ChatGPT or Claude for any length of time, you know the pattern: every conversation starts from zero. Yesterday's three-hour session leaves nothing behind but a chat window you'll never scroll back to. You have to routinely re-brief the model on who you are and what you're working on. Personalisation hits a ceiling fast, and your conversations don't become *evergreen documents* you can build on – they steadily grow stale as they're never refreshed.
+If you've used ChatGPT or Claude for any length of time, you know the pattern: every conversation starts from zero. Yesterday's three-hour session leaves nothing behind but a chat window you'll never scroll back to. You have to routinely re-brief the model on who you are and what you're working on. Personalisation hits a ceiling fast, and your conversations don't become *evergreen documents* you can build on – they go stale, because nothing ever refreshes them.
 
 The model has limited memory. "I'll remember this for next time" is a promise no chatbot can currently keep.
 
@@ -20,7 +20,7 @@ This is the whole move: **a permanent, photographic memory that lives on your ow
 
 ## Why this changes everything
 
-Conversations come and go. The documents accumulate and get fleshed-out with new ideas, while discarding outdated information. Each session starts richer than the last, because the AI can read everything you've built up over weeks and months — not because it "remembers," but because the memory is on disk, so it can almost instantaneously catch up on where you left off – exactly.
+Conversations come and go. The documents accumulate and get fleshed-out with new ideas, while discarding outdated information. Each session starts richer than the last, because the AI can read everything you've built up over weeks and months — not because it "remembers," but because the memory is on disk, so it can catch up on exactly where you left off in seconds.
 
 Three things fall out of this once you start living in it:
 
@@ -34,7 +34,7 @@ It's not the usual "upload your documents and ask questions about them" setup (t
 
 ## Why this works
 
-The reason most personal knowledge systems die is maintenance: keeping notes current, cross-referenced, and consistent is tedious, and humans abandon it. An AI doesn't get bored doing the bookkeeping. So the durable-memory layer – that was always a good idea, but never sustainable – becomes easy. The AI does the upkeep, you do the thinking and the deciding, the AI implements. This loop continues indefinitely.
+The reason most personal knowledge systems die is maintenance: keeping notes current, cross-referenced, and consistent is tedious, and humans abandon it. An AI doesn't get bored doing the bookkeeping. So the durable-memory layer – that was always a good idea, but never sustainable – becomes easy. The AI does the upkeep and the implementing; you do the thinking and the deciding. That loop can run indefinitely.
 
 Your job is to bring the questions, the experience, the judgement, and the direction. The vault's job is to remember what you've done previously. The AI's job is to think, to keep the vault updated, and to help you meet your own goals.
 

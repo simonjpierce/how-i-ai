@@ -8,8 +8,8 @@
 
 Two distinct jobs, kept separate:
 
-- **The capture habit (continuous, automatic).** When a command fails mid-task and you find a workaround, the fix is appended to that command immediately — failure mode, the correction, what to do instead. This is debt-on-purpose: it's correct at capture time and is left exactly as written.
-- **The distillation pass (periodic, deliberate, supervised).** The repayment. Run on **one** command at a time, never in bulk, never autonomously — it rewrites something the rest of your system depends on, so a human drives it.
+- **The capture habit (continuous, automatic).** When a command fails mid-task and you find the fix, rewrite the step it belongs to so it states the best current way, and add one line to the changelog saying what changed and why. Even so, history creeps into command bodies over months — that's the debt the next pass repays.
+- **The distillation pass (periodic, scheduled).** The repayment. Run on **one** command at a time, never in bulk. The maintainer schedules it: a weekly health check ranks candidates and fixes mechanical faults, and every fortnight the top one is slimmed. The human doesn't approve each cut — the do-no-harm check below is the gate, and only a disagreement between its passes reaches them.
 
 ## The four layers (the core sort)
 
@@ -17,7 +17,7 @@ Read the bloated command and classify it at the **sentence/clause** level — a 
 
 1. **Method + branching** — the actual instructions and legitimate case-handling. *Keep; tighten only.*
 2. **A real rule wrapped in a story** — a genuine guardrail told as an anecdote ("the tool failed silently on most files that day, so always verify the output exists"). *Keep the rule as a plain imperative; drop the date/quote.*
-3. **Pure history** — a dated incident note with no live instruction of its own. *Move it to a companion changelog, leaving at most a one-line origin tag.*
+3. **Pure history** — a dated incident note with no live instruction of its own. *Delete it from the body — version control keeps the old text — and add one what-and-why line to the changelog. Never copy the old wording or the story into it.*
 4. **Hyper-niche lore** — correct but only relevant inside one rare mode. *Move it to an appendix the command points to at the moment that mode comes up* — so it's reachable when needed without taxing every run.
 
 The preservation rule that makes this safe: an operative rule must survive in the **new body** (or an appendix the body points to). A changelog is history, **not** a home for a live rule — "it exists somewhere" is not the same as "it'll be loaded when needed."
@@ -35,6 +35,8 @@ If the two passes disagree, or any rule has no live home, **stop and ask a human
 
 A light periodic scan flags candidates — detection only, it never edits. Useful signals:
 
+- **Re-read cost** — body size × how many turns it stayed loaded over the last fortnight. This ranking, not raw size, finds the real offenders.
+- **Mechanical faults** — broken pointers to appendices, missing scripts, dead flags. Fixed on the spot in the same pass rather than flagged.
 - **Size** — the command's body is approaching the length where it no longer fits in a single read. A real cost anchor, not an arbitrary cap.
 - **Growth since last cleanup** — record the commit hash at each distillation in the companion changelog; flag a command that's grown by more than ~150 net lines since then.
 - **A broken baseline** — if a recorded "last cleaned at" reference can't be found in history any more, the growth signal silently goes dark; surface *that* as its own flag rather than letting the command fall off the radar.

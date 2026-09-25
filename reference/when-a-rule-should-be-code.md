@@ -49,7 +49,7 @@ Rules the skeleton encodes:
 
 - **Block (exit 2, message on stderr)** when: the action would fail regardless (a write through a symlink, an over-cap memory write); or the harm is real and hard to undo (a recursive delete on an unenumerated folder, a commit on the wrong branch, sending an email). The message **must** contain the exact corrected call: *"retry with `limit: 500, offset: 0`"*, *"the real path is …"*. Test: an unattended run that hits this block loses one tool call and continues.
 - **Warn (exit 0 plus model-facing context)** for the legitimate-but-costly: unbounded `cat`, `git diff` without `--stat`, a path that should be quoted. A week of warnings changes the habit; a block here would strand overnight work.
-- **Re-check the block when the harness changes.** One block (a `cd` into the working folder, guarding against the shell directory leaking into later calls) became pure cost when the harness started resetting the directory after every call: 348 fires in 14 days, all false. The ledger surfaced it; it was downgraded to a warn the same day.
+- **Test the exact case before you cut.** The ledger showed one block (a `cd` into the working folder, guarding against the shell directory leaking into later calls) firing 348 times in a fortnight, and after a harness change it looked like pure cost. It was downgraded to a warn; a live test of the exact case then showed the directory still leaked, and it was a block again within the hour. The ledger tells you *where* to look; only a test of the exact case the guard covers tells you whether it's cruft.
 
 ## The model-facing channel
 
@@ -75,7 +75,7 @@ Best-effort throughout: if the ledger can't write, the hook still runs and its r
 ## Hooks the maintainer runs, by event (for shape, not to copy)
 
 - `SessionStart`: print the latest handoff entry + a fast health pre-flight; on the `compact` matcher, re-inject the handoff.
-- `UserPromptSubmit`: context-size nudge at 300k tokens; standing per-prompt reminders.
+- `UserPromptSubmit`: context-size nudge at 300k tokens. (A standing per-prompt reminder was removed: the stop-time checks already enforce it, and repeating pressure text every turn made the model over-react.)
 - `PreToolUse Bash`: secrets in a commit; stash guard; path quoting; push-suppression guard; email-send guard; recursive-delete enumeration; commit-branch check; unbounded read block; output hygiene.
 - `PreToolUse Read`: unbounded read of 500+ lines → block with two exits.
 - `PreToolUse Write|Edit`: memory-file size cap (warn 94%, deny 99%); symlink redirect; path check for files that belong in the notes vault.

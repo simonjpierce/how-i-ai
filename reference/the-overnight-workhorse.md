@@ -38,9 +38,9 @@ Two split patterns cover almost everything:
 
 Some work simply isn't a fit for an unattended worker, and queuing it anyway burns the night — it crash-loops, times out, or hands you noise. Route these to a supervised, interactive path instead:
 
-- **Anything needing a live login.** If the task has to reach a logged-in mail, drive, or browser-gated service, the headless worker doesn't have that session and can't get one at 2am.
-- **Anything that edits the AI's own configuration.** Changes to your skills directory or the assistant's own settings are gated behind interactive approval by design — a worker can't (and shouldn't) self-modify unattended.
-- **Cohesive code builds that need a real test gate.** A change that has to land green across one codebase fails the model two ways: split across parallel workers they collide on the same file; run as one big task it over-scopes — and you can't trust an unwatched worker's word that the tests actually passed. Hand coding to a supervised path where a human (or a separate review pass) holds the gate.
+- **Anything needing a live browser login, or anything that sends or shares.** Reading mail and cloud files is fine if your tools can do it from the command line; a browser-gated service is not — the headless worker doesn't have that session and can't get one at 2am.
+- **Changes to the assistant's settings, credentials or memory.** Its skills, hooks and scripts *can* be edited unattended, but only by a separate runner (the maintainer uses the Codex CLI) fenced to exactly those folders, with each change easy to roll back. Settings, credentials and memory stay interactive.
+- **Large, tightly connected code builds.** A change that has to land green across one codebase fails the model two ways: split across parallel workers they collide on the same file; run as one big task it over-scopes — and you can't trust an unwatched worker's word that the tests passed. A *small* fix can run overnight if the queue entry names its files and a test command, the tests act as the gate, and the check is "did a commit land" rather than the worker's own word. Anything bigger goes to a supervised path where a human (or a separate review pass) holds the gate.
 
 The through-line: if completing the task needs *judgement or a credential as it happens*, it belongs in your day, not the queue.
 

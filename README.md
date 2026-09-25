@@ -15,7 +15,7 @@ A working system for doing real research, writing, and operations work *with* AI
 
 ## The future is (almost) now
 
-In 1987, Apple made a concept film of a researcher talking to an AI assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on, we're still not quite there – but we're pretty close, and that's pretty much the system we're building here. 
+In 1987, Apple made a concept film of a researcher talking to an AI assistant — one that managed his calendar, pulled up the papers he needed, and even connected a video call. They called it the [Knowledge Navigator](https://www.youtube.com/watch?v=-jiBLQyUi38). Nearly forty years on we're not quite there, but we're close, and that's roughly the system this repo builds.
 
 Worth a watch!
 
@@ -32,11 +32,11 @@ Here's how I think about my AI system. My brain isn't built to *store* everythin
 
 Those files live in **Obsidian** — a free, friendly editor for plain-text notes that an AI can read and write as easily as you can. That folder of notes is, in Obsidian terminology, your **vault.** And here's what makes it powerful: over weeks, you're effectively **externalising your own knowledge into a private system on your own machine.** The AI, reading from it, gradually ends up with much the same background on a topic that you carry in your head — and that's when it's able to start working like someone who actually understands your world.
 
-Where this earns its keep, for me, is getting science *out.* A paper has a regular structure, and once you've written a few you know *your* preferred recipe: my introductions tend to run four or five paragraphs — a broad opener, then narrowing toward the question, then the previous work on it, then the aims of the study. My Discussion text also has a regular structure. Much of what we call expertise is really a stack of rules applied consistently. Write that into your vault once, and the AI can then draft using your existing mental model, instead of reinventing the wheel every time — and it keeps the production honest as it goes, checking that the numbers in the manuscript still match the analysis and that every citation points to a paper that actually exists.
+Where this earns its keep, for me, is getting science *out.* A paper has a regular structure, and once you've written a few you know *your* preferred recipe: my introductions tend to run four or five paragraphs — a broad opener, then narrowing toward the question, then the previous work on it, then the aims of the study. My Discussion text also has a regular structure. Much of what we call expertise is really a stack of rules applied consistently. Write that into your vault once, and the AI can then draft using your existing mental model, instead of reinventing the wheel every time — and it keeps the draft accurate as it goes, checking that the numbers in the manuscript still match the analysis and that every citation points to a paper that actually exists.
 
-AI isn't doing work that I *can't* do myself (though it's plainly better at coding than I am); what it's doing is **getting me to the end result faster.** The version I submit is the version I'd have written anyway — I just arrive at it by iteratively working with AI and editing the outputs, rather than starting from a blank page and a vague sense of existential dread. The point is to externalise enough of my knowledge that the AI can at least match my own standard — so my time can be spent on doing more science and conservation.
+AI isn't doing work that I *can't* do myself (though it's far better at coding than I am); what it's doing is **getting me to the end result faster.** The version I submit is the version I'd have written anyway — I just arrive at it by iteratively working with AI and editing the outputs, rather than starting from a blank page and a vague sense of existential dread. The point is to externalise enough of my knowledge that the AI can at least match my own standard — so my time can be spent on doing more science and conservation.
 
-So that's the main "trick": ensure your AI-augmented work is retained in durable files instead of a disposable chat, so you can always come back to it, improve it, and expand on it. Today's note is next week's starting point – knowledge and experience is captured and expanded upon.
+So that's the main "trick": ensure your AI-augmented work is retained in durable files instead of a disposable chat, so you can always come back to it, improve it, and expand on it. Today's note is next week's starting point – knowledge and experience are captured and built on.
 
 **Two things make it work:**
 
@@ -105,7 +105,7 @@ You don't build all of this up front. **You start by handing the AI real tasks a
 
 This repo is **descriptions, not code.** It deliberately doesn't ship a big pile of my current skills for you to copy — these get bloated and over-fitted to the person who wrote them, so dropping one into your setup will just drag in baggage that creates confusion. Instead, each **workflow** is a plain-language description of one capability: what it does, how it works, and enough detail that you can paste it into Claude Code and have it *build that capability for you*, shaped to your own setup. You get the idea; your AI works with you to build a personalised version that fits your own workflow.
 
-Most of the substantial capabilities also have a deeper **reference** companion — the actual cleaned-up *method* behind the workflow (the concrete steps, the guardrails, the failure modes I hit), with my personal specifics stripped out. It's still something to adapt, not a skill to drop in — but when you want the *how* rather than just the *what*, it's a far more concrete starting point than the description alone. The workflow orients; the reference goes deep. (That stripping-out is itself one of the workflows here — *clearing clutter from your workflows* — which is what makes sharing the method honest.)
+Most of the substantial capabilities also have a deeper **reference** companion — the actual cleaned-up *method* behind the workflow (the concrete steps, the guardrails, the failure modes I hit), with my personal specifics stripped out. It's still something to adapt, not a skill to drop in — but when you want the *how* rather than just the *what*, it's a far more concrete starting point than the description alone. The workflow orients; the reference goes deep. (That stripping-out is itself one of the workflows here — *clearing clutter from your workflows* — which is what makes the method safe to share.)
 
 ```
 how-i-ai/
@@ -137,7 +137,7 @@ This is the full map. Read the on-ramp (section 1) in order — each page points
 Set these up first — they're what turn a generic assistant into one that knows your work:
 - [Memory and context](./workflows/memory-and-context.md) — the personalisation loop: the AI learns how you work and stops repeating mistakes.
 - [The session loop](./workflows/the-session-loop.md) — orient, capture as you go, hand off cleanly; keeps the AI current on what you're doing.
-- [The daily coach](./workflows/the-daily-coach.md) — plan the day from your real inputs, then get walked through it one task at a time, and clear your inbox to zero the same way. For when the to-do pile is the thing stopping you from starting.
+- [The daily coach](./workflows/the-daily-coach.md) — plan the day from your real inputs, then get walked through it one task at a time — a morning block for the main work, an afternoon block for what it crowds out, and your email counted down to zero the same way. For when the to-do pile is the thing stopping you from starting.
 - [Surfacing conflicts](./workflows/surfacing-conflicts.md) — flag what's unresolved instead of letting the AI smooth a disagreement into false confidence.
 
 ### 3. The science & scholarship core — the spine
@@ -152,7 +152,7 @@ The centre of gravity: getting research *out*, from data to a paper you can trus
 - [Writing in your voice](./workflows/writing-in-your-voice.md) — make AI prose sound like you (from the measurable features of your own writing), and rework it without the meaning drifting. Useful for anything you write, not just papers.
 - [Reviewing your own manuscript](./workflows/reviewing-your-own-manuscript.md) — put your paper through a hostile, independent review before you submit it, and fold the fixes in.
 - [The replication audit](./workflows/the-replication-audit.md) — check that your study is genuinely set up to be re-run: every figure and number traceable to runnable code and data in the repository.
-- [Reviewing someone else's manuscript](./workflows/reviewing-others-work.md) — review a paper twice over, verify the numbers, hand the author a warm write-up.
+- [Reviewing someone else's manuscript](./workflows/reviewing-others-work.md) — review a paper twice over, verify the numbers, hand the author a clear write-up.
 - [Searching your vault](./workflows/searching-your-vault.md) — give the AI a way to find anything in your notes by meaning, not just exact words; the retrieval layer the reference library and deep research both lean on.
 - [The reference library](./workflows/the-reference-library.md) — mirror your curated literature into the vault so the AI searches it first, and keep it from going stale.
 - [Deep research](./workflows/deep-research.md) — point the AI at a question and get back a verified, cited report.
@@ -198,7 +198,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 
 ## Who this is for
 
-Anyone doing knowledge work — research, writing, operations — who wants their AI to accumulate context over time instead of starting from zero every session. It's written as *how Simon actually works*, not a one-size-fits-all product: the worked examples lean on his own science and conservation work, and you adapt the pattern to yours.
+Anyone doing knowledge work — research, writing, operations — who wants their AI to accumulate context over time instead of starting from zero every session. It's written as *how I actually work*, not a one-size-fits-all product: the worked examples lean on my own science and conservation work, and you adapt the pattern to yours.
 
 ## The quickest start
 
@@ -213,7 +213,7 @@ Reading this because someone pasted the link and asked for help getting started?
 - **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (dictate into ChatGPT's chat box with the mic icon, then paste the transcript) as a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. That upfront context is what makes everything downstream work.
 - **Build, don't ship.** There are no drop-in skills or templates to copy from this repo — that's deliberate. *Create* the starter vault, the standing-instructions file (`CLAUDE.md`), and the memory file (`MEMORY.md`) together with them, and build each capability from its workflow description — and its deeper `reference/` companion where one exists, for the concrete method — shaped to their work, not pasted in verbatim.
 - **Look before you ask.** Operating system, whether Obsidian / R / a terminal tool is already installed, what's in their home folder — check with a command rather than asking them to report it. Save their answers for the things only they know (their work, their preferences, their first task). And lay out vault folders *from* what the interview tells you, not before it.
-- **Check prerequisites first, and hand-hold the installs.** Several capabilities need external tools — a local transcription engine, PDF extractors, a second AI model on the command line. Before you build one, check what's already on their machine, install what's missing *for* them (with their OK, adapted to their OS — don't assume macOS), and name the genuinely fiddly steps up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account) so a non-technical reader knows which bits are the hard ones. When a tool isn't there, say so plainly and offer to install it — never leave them staring at a `command not found` wondering whether the whole thing is broken.
+- **Check prerequisites first, and hand-hold the installs.** Several capabilities need external tools — a local transcription engine, PDF extractors, a second AI model on the command line. Before you build one, check what's already on their machine, install what's missing *for* them (with their OK, adapted to their OS — don't assume macOS), and name the genuinely fiddly steps up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account) so a non-technical reader knows which bits are the hard ones. When a tool isn't there, say so and offer to install it — never leave them staring at a `command not found` wondering whether the whole thing is broken.
 - **One thing at a time — and in the order under "What to build first" above.** Get the foundation working and one real task done before adding capabilities; don't propose the second model, the fleet, or the overnight workhorse in the first session. Don't try to build the whole system in a single sitting — it's meant to accrete one piece at a time.
 
 ## Living repo

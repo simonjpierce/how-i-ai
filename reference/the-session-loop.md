@@ -18,6 +18,8 @@ The maintainer keeps these notes as plain markdown in an Obsidian vault, but any
 
 One running file, newest entry on top. Each session, before anything else, the AI reads the **top two or three entries** and the current state of the active project — then gives you a two-line "here's where we are." That's the whole orientation; it costs seconds and means you never re-brief from scratch.
 
+One guardrail: a handoff entry is a snapshot, and later sessions can finish what it calls "pending". So if a project keeps its own living status note, the orientation checks the two against each other, trusts the living note when they disagree, and says so.
+
 At session end, the AI **prepends** a new entry: what was done, current state (complete, or what's pending), what the next session should do or read first. Prepending is the load-bearing detail — *the next session reads the top of this file first*, so the most recent context is the first thing it sees.
 
 **Open every entry with a one-line focus pointer.** The first line names the single immediate next action — a `> read this first` banner. This is the insurance against compaction: if a long session's memory gets summarised away mid-thread, the next start lands on the right thing instead of the top of a generic log. Cheap when it's not needed, decisive when it is.
@@ -29,7 +31,11 @@ At session end, the AI **prepends** a new entry: what was done, current state (c
 - **Decision log.** What you chose *and the reasoning*, dated. This is what stops a future session silently re-opening a settled question or contradicting it. When a decision is provisional, note a revisit-by date so it gets re-examined rather than ossifying.
 - **Friction log.** Anything that broke, took a workaround, or wasted time — so the same snag doesn't bite twice. Give each entry a consistent status tag (open / stuck / resolved) on its own heading line, so a start-of-session scan can surface anything that's been sitting open too long and offer to walk it. Resolved entries move to an archive section; don't leave a stale "still open" flag eroding trust in the record.
 
-**Open questions get a marker, not a guess.** When something is unverified or two sources disagree, the AI leaves a short searchable tag in the note (something like `TODO/VERIFY:`) and writes in cautious, attributed language rather than quietly picking a version. An honest "this is still open" beats a confident sentence hiding a guess — and a resolved marker gets cleared promptly so it doesn't go stale.
+**Open questions get a marker, not a guess.** When something is unverified or two sources disagree, the AI leaves a short searchable tag in the note (something like `TODO/VERIFY:`) and writes in cautious, attributed language rather than quietly picking a version. An explicit "this is still open" beats a confident sentence hiding a guess — and a resolved marker gets cleared promptly so it doesn't go stale.
+
+## Saving mid-session
+
+Long sessions need a save that isn't a goodbye. A small hook watches the conversation's size and, past a set line (the maintainer uses 300k tokens, about 30% of the window, then every further 100k), tells the AI to *ask* at the next pause: "Save and reset now? 1. Yes 2. Not yet." On yes, the light save runs: bring the related documents current (status lines, project notes, the artifacts list), write or update the handoff entry and the two logs, commit, and hand back a ready-to-paste compress command with the focus already written. It skips only the learning passes (memory distillation, the missed-items sweep), and it ends by naming what it skipped. The full close-out stays the default for a real goodbye, and keeping its heavy steps in a separate file means the everyday save never carries them.
 
 ## Pausing a thread cleanly (resume cold)
 
@@ -45,4 +51,4 @@ The doc-sync sweep works far better if your main project note carries a small **
 
 ## What stays yours
 
-Where the logs live, how formal the closing pass is, which marker token flags an open question, whether you keep separate files or one combined notebook — all adapt to your setup. The transferable spine is just: *start from where you left off, capture honestly as you go, hand off cleanly with the next action on top — so the work is one continuous body instead of a pile of disconnected chats.* It only pays off if the capture is honest: a handoff that papers over the messy bits, or a "resolved" tag on a question that's still open, makes the next session worse, not better. Aim for a record you can trust, not a tidy-looking one.
+Where the logs live, how formal the closing pass is, which marker token flags an open question, whether you keep separate files or one combined notebook — all adapt to your setup. The transferable spine is just: *start from where you left off, capture accurately as you go, hand off cleanly with the next action on top — so the work is one continuous body instead of a pile of disconnected chats.* It only pays off if the capture is accurate: a handoff that papers over the messy bits, or a "resolved" tag on a question that's still open, makes the next session worse, not better. Aim for a record you can trust, not a tidy-looking one.

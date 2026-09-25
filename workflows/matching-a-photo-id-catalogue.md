@@ -4,7 +4,7 @@ Check a whole batch of new animal sightings against everything already catalogue
 
 This is an idea file. Paste it into your AI agent — Claude Code or Codex — to build a version for your own work; it'll fill in the specifics (folder names, exact tools) in collaboration with you. (It has to be an agent that can create files on your machine — a plain chat assistant can't set this up.)
 
-*What you'll need: an account on a photo-ID platform that lets you read its data through an API (a programming interface), the maintainer uses Sharkbook, and some Python on your machine. You also need someone who knows the animals, because every identity decision is theirs.*
+*What you'll need: an account on a photo-ID platform that lets you read its data through an API (a programming interface) — the maintainer uses Sharkbook — and some Python on your machine. You also need someone who knows the animals, because every identity decision is theirs.*
 
 ## The core idea
 
@@ -34,7 +34,7 @@ It doesn't identify animals. It shortlists candidates and records what a trained
 
 ## Why this works
 
-The fingerprints already exist; the platform computes them for every marked-up photo. What was missing was a way to compare a whole season, across the whole basin, at once, plus a rule honest about how often it's wrong. Moving the comparison off the website and onto your own computer makes a basin-wide check take minutes instead of days. And because the output is a short list of photos to look at, not a verdict, the expert's time goes where it counts.
+The fingerprints already exist; the platform computes them for every marked-up photo. What was missing was a way to compare a whole season, across the whole basin, at once, plus a rule that states how often it's wrong. Moving the comparison off the website and onto your own computer makes a basin-wide check take minutes instead of days. And because the output is a short list of photos to look at, not a verdict, the expert's time goes where it counts.
 
 ## Note
 

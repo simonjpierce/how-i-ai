@@ -15,7 +15,7 @@ Before the AI touches the open web, it searches **the sources you've already vet
 The non-obvious requirement: those sources have to be **searchable on your own machine**, not locked inside a cloud account. The pattern that works:
 
 - **A local mirror of your reference manager** — the abstract and metadata of everything you've saved, each linked to its source.
-- **A full-text sidecar for papers you've read deeply** — the extracted body text of a paper, pulled in alongside its metadata as a searchable file. This layer grows on its own, one paper at a time, as a by-product of the work; it's never a big up-front job.
+- **A full-text sidecar for every paper you can** — the extracted body text of a paper, pulled in alongside its metadata as a searchable file. With a cheap plain-text extractor the whole library can be done in one batch and topped up nightly (the maintainer's covers about 6,300 of 8,100 papers); with an expensive one, grow it paper by paper as papers are read deeply.
 - **A coverage gate.** Count the *distinct* relevant sources the library search surfaces. Above a threshold (the maintainer uses ~6), treat the topic as well-covered by your own material and run the broad web pass as an independent quality check rather than the primary source. Below it, the few hits still go in — labelled as a curated subset — and the web carries more of the load. One caution: relevance scores often saturate near the top, so judge coverage by *count of distinct sources that survive a relevance read*, not by raw score.
 
 ## Decompose so it doesn't time out
@@ -30,7 +30,7 @@ A broad topic researched as one giant prompt either times out or returns mush. S
 Run several searches in parallel, one per sub-question, **fetching and reading the promising results** rather than skimming snippets. Two habits make the gather trustworthy:
 
 - **Tie every claim to its source** as it's recorded — no free-floating assertions. A short structured "claim → source" registry per thread is the source of truth that synthesis reads from later.
-- **Let an independent model take its own pass** where you have one available on the command line, run **read-only** so it can't change anything. Two architecturally different models catch each other's blind spots; where they agree it's a useful cue (not proof). If no second model is available, the run still works — it leans harder on the citation-database checks below, and says so plainly. It never pretends a second pass happened.
+- **Let an independent model take its own pass** where you have one available on the command line, run **read-only** so it can't change anything. Two architecturally different models catch each other's blind spots; where they agree it's a useful cue (not proof). If no second model is available, the run still works — it leans harder on the citation-database checks below, and says so. It never pretends a second pass happened.
 
 A third source of breadth needs no command-line setup: the **browser-based deep-research products** (Gemini, ChatGPT, and Claude each offer one). The pattern that works: after the internal report is drafted, the run offers to build a self-contained research brief — the sub-questions plus a list of what's already well-covered, so the external product spends its effort on the gaps — for you to paste into one or more of those apps. What comes back is reconciled against the internal findings, and **every externally-sourced claim and citation goes through the same verification as everything else** (these products hallucinate references too; treat their "corrections" with the same suspicion as their claims). Two guardrails: it's an explicit yes/no offer, never automatic — nothing leaves your machine without your say-so — and the brief is scrubbed of private material before it's handed over.
 
@@ -43,7 +43,7 @@ This is the answer to "how do I know it isn't making things up," and it runs on 
 
 Build the reference check **once as its own small reusable step** the research run calls — you'll want it in other places too.
 
-## Synthesise honestly
+## Synthesise without smoothing
 
 Pull everything into one report, attributing claims at the level of the **individual finding, not the paragraph**. Where sources disagree, show *both* positions and their evidence instead of silently picking a winner. Give consequential claims a confidence note — well-corroborated, single-source, or uncertain — so a reader sees how much weight each one bears. And **write for the audience, not the audit trail**: if someone other than you reads this, strip the internal scaffolding (model attributions, "as the earlier briefing said") and make it a standalone document. Model agreement is a triangulation cue, not extra evidence — if two models assert the same thing, look at the underlying source rather than counting the agreement as confidence.
 

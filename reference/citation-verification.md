@@ -14,7 +14,7 @@ So the verification step does **no** language-model reasoning about whether a pa
 
 **Pull the references into a checkable list.** Gather every citation — in-text and in the reference list — and parse each into structured fields: authors, year, title, journal, and DOI where present. This parsing step is the one place a model helps, and even here you verify its output (a mangled parse produces false alarms downstream).
 
-**Check your own library first, if you keep one.** Anything already in a curated reference store you maintain can be matched by DOI (or title) and treated as already-vetted — *provided that store confirms metadata on import*, so a match means "checked when it entered," not merely "I chose to save it." This clears the bulk of a typical list cheaply. Honesty caveat: a hand-entered record can still carry a wrong year, so for high-stakes work either re-confirm against the databases or mark the result *found in my library, not externally re-checked*.
+**Check your own library first, if you keep one.** Anything already in a curated reference store you maintain can be matched by DOI (or title) and treated as already-vetted — *provided that store confirms metadata on import*, so a match means "checked when it entered," not merely "I chose to save it." This clears the bulk of a typical list cheaply. One caveat: a hand-entered record can still carry a wrong year, so for high-stakes work either re-confirm against the databases or mark the result *found in my library, not externally re-checked*.
 
 **Look up the rest across more than one database.** Query the open bibliographic services — **Semantic Scholar, CrossRef, and OpenAlex**. Use several, not one, because coverage genuinely differs: a paper missing from one is often present in another, so a single-source "not found" produces false alarms. Treat them as a fallback chain — try the next service when the first returns nothing — and rate-limit politely (a short pause between queries) so you don't get throttled.
 
@@ -32,7 +32,7 @@ So the verification step does **no** language-model reasoning about whether a pa
 
 **Never auto-act — flag for a human, with the evidence.** A not-found or mismatched citation is surfaced for a person to decide, showing what was searched and what came back. It is **never silently deleted** (it might be a real source the databases don't index — a book chapter, a brand-new preprint, a government report) and **never silently kept** (it might be invented). Both silent moves are failures. The check's job is to hand over a clear decision queue, not to resolve it.
 
-Two honest limits to build in from the start, so a verdict isn't over-trusted:
+Two limits to build in from the start, so a verdict isn't over-trusted:
 - **Not-found is not a guilty verdict.** Grey literature, book chapters, and very recent papers have thin database coverage. A not-found result tells you where to *look*, not what to conclude.
 - **A no-DOI match is the weak case.** When matching falls back to title-plus-author word overlap, it produces both false positives (latching onto an unrelated paper) and false negatives (a truncated title that no longer matches). Spot-check *every* no-DOI result by eye — confirm the returned record really is the cited paper — rather than trusting the status.
 

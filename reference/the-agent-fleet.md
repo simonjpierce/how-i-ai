@@ -17,7 +17,7 @@ Give each agent a small, fixed set of notes in its own folder. The maintainer's 
 - **An identity / ownership file** — read first. It states the agent's goal, which areas and files it owns, its sibling agents, and (for anything that writes external-facing prose) which voice guide to use. This is the agent's "you are this expert" brief.
 - **A current-priorities list** — its live, capped set of active items. Read in full each run.
 - **A corrections log** — the durable, learned judgement: facts you fixed, approaches you rejected, scope calls ("that's the other agent's job"). This is what makes the agent feel like it *knows* the domain.
-- **A domain-knowledge file** — accumulated context, paged rather than dumped if it grows large.
+- **A domain-knowledge file** — written as the agent's own operating principles, with an index pointing to short topic notes for the specifics. New context is appended freely; a monthly tidy-up folds it into the principles and moves the dated entries to an archive, so the file an agent reads every run stays short and current.
 - **A candidate backlog** — raw items waiting to be triaged into priorities.
 - **In-flight state** — per-item progress for work that spans sessions.
 
