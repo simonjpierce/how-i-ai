@@ -15,6 +15,8 @@ The move here is to stop treating your day as a list to stare at and start treat
 
 You can run more than one coached block a day. The maintainer runs two: a morning block for the main job, and a protected afternoon block for the work the main job would otherwise crowd out — which is how that second kind of work gets done at all.
 
+The morning plan also looks ahead at the calendar. When a real meeting is coming up today or tomorrow and there's no brief for it yet, it says so and offers to build one: who's attending, what your notes and recent email say about them, what you promised last time, and a few points to raise. The maintainer tried the other way first, with a brief built automatically before every meeting, and dropped it. Asking only when a meeting matters turned out to be the version worth keeping.
+
 The same pattern clears your inbox. Instead of "deal with email" (vague, infinite, avoidable), the AI surfaces the messages waiting on a reply and sorts them by importance: the few that matter today join the morning plan, and the rest get walked down later with a visible countdown, ten to zero. For each one it shows the message with a line of context and asks how you want to handle it; only then does it draft the reply, for you to edit and send. A finite, finishable thing with a defined finish line.
 
 ## How it runs
