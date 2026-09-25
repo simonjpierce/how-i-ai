@@ -12,7 +12,7 @@ Photo-identification recognises individual animals from their natural markings, 
 
 There's also a trap in the scores. In a catalogue of tens of thousands of photos, the best *wrong* animal already scores about as high as a typical true match, so a simple "anything above 0.5 is a match" rule flags nearly half the animals that aren't in the catalogue at all. What works is looking at the **margin**: how far the top animal is ahead of the next-best *different* animal. A clear winner is a likely match; a close race is a maybe, whatever the raw score.
 
-So the fix has two halves. The AI does the bulk comparison and the bookkeeping: it pulls the fingerprints through the platform's API, runs the comparisons on your own computer, applies a rule tested on thousands of known animals, and writes a report. The person does what only a person can: looks at the photos side by side and decides. **The machine ranks; a person decides every name.**
+So the fix has two halves. The AI does the bulk comparison and the bookkeeping: it pulls the fingerprints through the platform's API, runs the comparisons on your own computer, applies a rule tested on thousands of known animals, and writes a report. The person does what only a person can: looks at the photos side by side and decides. **The machine ranks; a person decides every name.** The method builds on Jason Holmberg's cross-site discovery work for Wild Me (the team behind Wildbook and Sharkbook); the maintainer's version adds the margin-based stopping rule and the ring-by-ring widening described below.
 
 ## How it runs
 
@@ -24,13 +24,13 @@ So the fix has two halves. The AI does the bulk comparison and the bookkeeping: 
 
 **Put the photos side by side.** For each candidate, the AI builds a simple web page. The new sighting's cropped photo sits on the left, and every photo of the candidate animal, from the same side, sits on the right, with the score and margin shown. The reviewer clicks through and gives a verdict for each: same animal, different, or can't tell.
 
-**The reviewer decides, then acts.** The reviewer makes the name assignment in the platform, not the AI. For whale sharks, a new individual gets a name only if there's a good photo of its left side. Right-side-only sightings stay unnamed until a left-side photo turns up.
+**The reviewer decides; only then does anything change.** Once the reviewer has looked and said yes to a specific pair, the assignment can be made in the platform by hand, or by the AI through the platform's programming interface — but only after that item-by-item confirmation, never on a score alone. For whale sharks, a new individual gets a name only if there's a good photo of its left side. Right-side-only sightings stay unnamed until a left-side photo turns up.
 
 **Keep the decisions as the record.** Every verdict goes into a plain decision file, and every count in a summary, email or paper is printed from those files by a small script, never typed from memory. Before anything is shared, a second AI model (the maintainer uses the Codex CLI) reads the summary against the files and flags any number that has drifted.
 
 ## What this does *not* do
 
-It doesn't identify animals. It shortlists candidates and records what a trained person decided. It won't turn a "possible" into a match because the story would be good. An 18-year return of an old shark has to pass the same side-by-side look as anything else. It won't report a movement between sites without checking the field records. A photo filed under the wrong site looks exactly like a long-distance movement, and the tell is often that the recorded sighting date equals the upload date. It changes nothing in the shared catalogue on its own: reading and scoring happen on your computer, and every change in the catalogue is a person's decision.
+It doesn't identify animals. It shortlists candidates and records what a trained person decided. It won't turn a "possible" into a match because the story would be good. An 18-year return of an old shark has to pass the same side-by-side look as anything else. It won't report a movement between sites without checking the field records. A photo filed under the wrong site looks exactly like a long-distance movement, and the tell is often that the recorded sighting date equals the upload date. It changes nothing in the shared catalogue on its own: reading and scoring happen on your computer, and every change in the catalogue follows a person's explicit decision on that item.
 
 ## Why this works
 

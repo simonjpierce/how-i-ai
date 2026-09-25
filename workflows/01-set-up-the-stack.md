@@ -40,7 +40,8 @@ The order that works: install the editor → create the vault folder → connect
 You don't need the top tier of anything to begin — find your *actual* limits before paying for more.
 
 - **ChatGPT** — the standard paid plan (around US$20/month) already includes the voice and transcription and a lot of capability; start there. I run a higher tier, because I lean on voice heavily *and* use Codex (OpenAI's coding agent) a lot — worth it at that volume, but only once the cheaper plan's limits actually start to bite.
-- **Claude Code** — the entry plan (around US$20/month) is fairly limiting for a serious volume of work. Most people doing a lot with it settle on the **mid plan (around US$100/month)**, which is the sweet spot — that's where I'd point most people first. The top plan (around US$200/month) is only worth it if you're genuinely hitting the mid plan's limits.
+- **Claude Code** — start on the entry paid plan (around US$20/month) and use it for real work. If its limits keep interrupting you, step up: the **mid plan (around US$100/month)** is where most heavy users settle, and the top plan (around US$200/month) is only worth it once you're hitting the mid plan's limits. My own workload is far heavier than a newcomer's, so don't buy for my volume on day one.
+- **If you're a researcher, check the scientists' plan first.** Anthropic's [Claude Team plan for scientists](https://claude.com/programs/team-plan-for-scientists) gives principal investigators (or equivalent) at universities and non-profit research institutes free standard seats — or premium seats with five times the usage for US$15/month — for themselves and their lab, with Claude Code included. The discounted pricing runs for 12 months from sign-up, and applications are usually reviewed within a week.
 
 *(Plan names and prices change — treat these as a rough guide and check current pricing.)*
 

@@ -2,15 +2,17 @@
 
 > **What this is.** The actual method behind [the *Matching a photo-ID catalogue* workflow](../workflows/matching-a-photo-id-catalogue.md), cleaned of the maintainer's personal specifics. It's a **starting point to adapt, not a drop-in command**: your platform, species and catalogue are shaped differently, so read it *with* your AI and build the version that fits. It was written for a team call on the Seychelles whale shark catalogue (September 2026) and is kept current as the work moves.
 >
+> **Credit.** The method builds on Jason Holmberg's cross-site discovery package for Wild Me — an all-pairs, all-sites sweep with a calibrated cutoff. The version here adds a margin-based stop rule (measured against animals removed from the gallery) and escalates a new batch site → region → ocean instead of comparing everything with everything. Wild Me's own `find-missed-matches` and `how-good-is-our-matching` agent skills describe the same read-only, human-confirms model.
+>
 > Throughout, "the platform" is the shared photo-ID catalogue (the maintainer uses **Sharkbook**, built on **Wildbook**, with the **MiewID** matcher). A "fingerprint" is the list of numbers MiewID computes from the boxed part of a photo. An "encounter" is one sighting record; an "individual" is a named animal that encounters are linked to. "The reviewer" is the person who decides identities.
 
 ## The rule that governs everything
 
-The AI reads, compares, builds review pages and keeps records. **Only the reviewer assigns identities**, one item at a time, after looking at the photos. Nothing the AI finds is a match until the reviewer says so.
+The AI reads, compares, builds review pages and keeps records. **Only the reviewer decides identities**, one item at a time, after looking at the photos. Nothing the AI finds is a match until the reviewer says so. The AI may carry out a confirmed assignment through the platform's API, but never ahead of that decision.
 
 ## 1. Get read access
 
-Sharkbook issues a personal API token (Account → API access) that expires after about eight hours. The AI keeps it in a private file outside any shared folder, never in notes or code, and checks the expiry before starting. When it runs out, the AI asks the reviewer for a fresh one; it doesn't find another way in. The token is read-only, and that's the point: the whole workflow runs without write access.
+Sharkbook issues a personal API token (Account → API access) that expires after about eight hours. The AI keeps it in a private file outside any shared folder, never in notes or code, and checks the expiry before starting. When it runs out, the AI asks the reviewer for a fresh one; it doesn't find another way in. The token is read-only, and the whole comparison runs without write access. Writing back — queuing detection, assigning a confirmed name — needs a logged-in session, and happens only after the reviewer's yes on that specific item.
 
 Two API habits that save grief: searches take full dates (`2025-01-01`, not `2025`; a bare year silently drops records), and one search returns at most 10,000 records, so big regions are pulled in date slices and the AI checks none came back truncated.
 
@@ -59,7 +61,7 @@ Naming conventions the maintainer follows for whale sharks:
 - A new individual needs a good **left**-side photo. Right-side-only sightings stay unnamed.
 - New names continue the site's series. In the Seychelles that's S-465 onwards as of September 2026.
 - An encounter is **approved** only once reviewed; "unidentifiable" is also a reviewed, final state.
-- The reviewer makes the assignment and approval in the platform after the decision, never before.
+- The assignment and approval happen only after the reviewer's decision on that item, never before — by hand in the platform, or by the AI through the logged-in API once the reviewer has confirmed.
 - **Note scars in the same pass.** While each animal is on screen, the reviewer also records its scars: *none seen*, with the body regions the photos actually show (usually one flank), or each scar in plain words. The words are kept verbatim and coded into the scar-classification categories later (cause, severity, body region), so the naming pass also feeds a scarring dataset at almost no extra cost. A "none seen" row matters as much as a scar, because it's the denominator.
 
 ## 6. Keep the books

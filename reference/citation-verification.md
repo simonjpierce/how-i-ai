@@ -26,7 +26,7 @@ So the verification step does **no** language-model reasoning about whether a pa
 - **Found, matches** — a real paper, metadata agrees. Nothing to do.
 - **Found, details off** — the paper exists but author/year/title/journal disagrees with the record. Offer the corrected metadata.
 - **Ambiguous** — a partial or low-confidence match that can't be confirmed or ruled out. Flag it.
-- **No match returned** — the checker didn't confirm the reference. Rule out a parsing problem or a failed database request (a lookup that errors out can look identical to a search that found nothing), then search by hand. Only then treat it as the one that matters most: *possibly fabricated.*
+- **No match returned** — the checker didn't confirm the reference. Rule out a parsing problem, then search by hand. A request that errored out (network, rate limit, timeout) must never collapse into this verdict: report it separately — the maintainer's checker returns *lookup failed* when every database request failed, and notes how many failed on any not-found — because otherwise an outage looks identical to a fabrication. Only then treat it as the one that matters most: *possibly fabricated.*
 
 ## The rule that makes it safe
 
