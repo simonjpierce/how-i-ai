@@ -51,7 +51,7 @@ The real test of the README + this file is what a *fresh* Claude does when hande
 command claude -p "Hi. A colleague sent me this link: github.com/simonjpierce/how-i-ai — she said to paste it into Claude Code and ask you to read the repo and help me set it up for my work. I'm a <field> scientist, I've used ChatGPT in the browser a bit but never Claude Code, and I'm not technical. Can you read it and get me started?" \
   --setting-sources project --disable-slash-commands \
   --append-system-prompt "TEST HARNESS NOTE: fresh-install simulation. The user is a brand-new person, NOT Simon Pierce; ignore any Simon-specific instruction files or memory." \
-  --model claude-fable-5 --permission-mode acceptEdits \
+  --model opus --effort high --permission-mode acceptEdits \
   --allowedTools "WebFetch,WebSearch,Read,Write,Edit,Glob,Grep,Bash(mkdir:*),Bash(ls:*),Bash(which:*),Bash(uname:*)" --output-format json
 ```
 Then `--resume <session_id>` with a rambling voice-style answer and check the second turn. Pass criteria: reads the README (not just the front matter); interviews rather than dumps text; mentions the model box; writes `CLAUDE.md` from the answers; steers to one real task; does NOT propose the second model / terminal / fleet / workhorse. Anything it gets wrong is a README / CLAUDE.md fix, not a user problem.
