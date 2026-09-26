@@ -32,7 +32,7 @@ Left to itself, a coordinator with several specialists reporting in produces a l
 - **One big thing** — a single substantial block of focused work with the AI, picked on stakes and deadline, with its first concrete step named. Exactly one: the runner-up waits for another day, and if nothing qualifies the plan says so rather than promoting something small into the slot.
 - **Everything else, below the fold** — remaining action items, replies owed, what's on the radar, specialist output. This tier is *reference*, not a queue. The coordinator doesn't walk you through it and only goes there if you ask.
 
-The coordinator then coaches in that order and stops when the top two tiers are done — any ranking or scoring it does happens *within* a tier, never across them. One escape hatch keeps the shape workable: work from a lower-priority area can claim a top-tier slot when it carries a dated deadline in the next few days. Without a deadline it waits for the session that owns it.
+The coordinator works through both top tiers before stopping, but it doesn't default to running them in the same order every day. Each morning it decides which single piece of work matters most — often the one big thing, sometimes a quick win that can't wait — names it, and leads with that; the other tier follows. Any ranking or scoring it does happens *within* a tier, never across them. One escape hatch keeps the shape workable: work from a lower-priority area can claim a top-tier slot when it carries a dated deadline in the next few days. Without a deadline it waits for the session that owns it.
 
 ## When the ranking starves a domain
 
