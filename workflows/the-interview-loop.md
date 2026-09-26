@@ -20,6 +20,8 @@ Then they get asked at the one moment you can answer them richly without eating 
 
 **The answers file themselves.** Each answer gets transcribed and routed: the substance lands in the asking agent's notes, and the question is marked answered. If an answer opens up an obvious next question, the agent is allowed to chain a follow-up for a later walk. A question that got read out but didn't get answered simply resurfaces next time rather than being lost.
 
+**The walk takes drop-ins, too.** Anything that occurs to you on the way can go in — "draft a reply to that email", "find out whether the permit came through", "move Thursday's call". Each drop-in is transcribed, routed to the right place and *started*, not just written down, so the result is waiting at the desk. That's the difference from a capture-only inbox, where a thought is kept safe but nothing happens to it until you come back to it.
+
 ## What this does *not* do
 
 It doesn't let the agents interrupt you. The whole point is that questions *wait* for a good moment — they never nag mid-task. It doesn't answer anything *for* you or invent your preferences; a gap it can't fill just stays a gap until you fill it. And "answered" doesn't mean "finished" — early on, your answers are first-pass and an agent is expected to come back and drill deeper into the same topic later, layer by layer. That's the system catching up on who you are, which is exactly what you want it doing.
