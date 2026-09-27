@@ -10,6 +10,8 @@ A working system for doing real research, writing, and operations work *with* AI
 > 4. One setting worth changing straight away: the model. The default isn't the best communicator — see [which model I use and how to switch](./workflows/01-set-up-the-stack.md#which-model--and-how-to-change-it).
 >
 > That's it. You don't need to read the rest of this page first; the AI will. Everything below is here for when you want to understand *why* it works, or want to see what becomes possible once the foundation is in place.
+>
+> **Researcher at a university or non-profit research institute?** Before you pay for a plan, look at Anthropic's [Claude Team plan for scientists](https://claude.com/programs/team-plan-for-scientists): free or heavily discounted seats for a lab head and their group, with Claude Code included. The [help article](https://support.claude.com/en/articles/16634237-claude-team-plan-for-scientists) covers who's eligible, pricing and the common questions.
 
 ---
 
