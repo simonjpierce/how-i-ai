@@ -14,7 +14,7 @@ The important discipline: the workhorse runs **what's in the queue, and only tha
 
 ## The pieces
 
-- **The evening review** — a short end-of-day pass where you look at what got done, what's coming, and what's worth the overnight compute. In the maintainer's setup this is a command (`/tonight`) that walks through it and writes the night's priorities down.
+- **The evening review** — a short end-of-day pass where you look at the ranked requests for overnight compute and say yes or no to each. In the maintainer's setup this is a command (`/tonight`) that walks through them one at a time and records each answer with your reason. That record is a log of compute decisions, not tomorrow's plan; the queue entries carry the actual instructions.
 - **The queue** — a simple list of tasks for the workhorse, each with enough instruction to be done without you there to answer questions. Some entries are parked on purpose — shaped for a moment you can't hand off yet — so mark those as parked with a reason, or they read as work the runner kept failing to reach and you end up promoting them on a false premise.
 - **The workhorse** — the unattended runner. It picks up the queue and works through it; when the queue is empty it stops (or waits for more), rather than freelancing.
 - **The morning review** — you read the drafts and results, keep what's good, redirect what isn't.
@@ -22,6 +22,10 @@ The important discipline: the workhorse runs **what's in the queue, and only tha
 ## How it runs
 
 In the evening you review the day and queue what's worth doing overnight — clearly enough that the task can run without you. The workhorse runs through the night, task by task, and leaves its output in your vault. In the morning you review: the drafts are starting points, not finished work, so you read them with an editor's eye.
+
+Keep two things apart in the evening review. 'Not worth overnight compute tonight' is a different statement from 'leave this alone': a decline just means the runner skips it for now, and only an explicit instruction to keep hands off the work should stop it being touched at all. Likewise, work you've already approved keeps its approval when it carries over unfinished — ask again only when its scope genuinely changes, not because it's a day older.
+
+Don't make the night depend on the evening review having happened, either. If you skip it, a timer should still start the runner late in the evening — unless a supervised session is already running — and let it work through whatever is already queued, then wait for new entries until the morning cutoff. The review decides what *new* work earns compute; it isn't what switches the night on.
 
 Because the tasks have to be self-contained (no one's there to clarify at 2am), writing a good queue entry is a skill in itself — say exactly what you want, where the inputs are, and what "done" looks like. Your AI can help you write them.
 
