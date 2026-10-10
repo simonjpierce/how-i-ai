@@ -24,6 +24,8 @@ The day starts with a plan already waiting: the specialists proposed their work 
 
 Underneath, each agent reads and writes the same vault (see [the philosophy](./00-the-philosophy.md)) — so a specialist's "knowledge of its domain" is just notes in your files, getting richer over time, not a black box. And when a session does substantial work in one agent's area without updating that agent's notes, the closing routine notices and asks once whether to bring them up to date.
 
+Writing to those notes goes through a single route. The early-morning planning run only reads them: it reports which transcripts and quick-capture notes are still waiting to be filed, but leaves the filing to the intake routine (or the attended transcription session), which also owns the shared "already processed" marker. That way an unattended planner can't change an agent's knowledge outside the one writer responsible for it, and anything not yet filed simply stays eligible until that writer picks it up.
+
 ## Give the day a fixed shape
 
 Left to itself, a coordinator with several specialists reporting in produces a long flat ranking — everything sorted, nothing distinguished. It works much better if the day has a shape the coordinator must fill:
