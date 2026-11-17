@@ -22,6 +22,35 @@ So the lever is not "do less". It is **keep the working memory small, and keep i
 - **Stop files growing without bound.** The logs the system writes and reads most — decision log, daily log, handoff log — are rotated nightly: old entries move verbatim to archive files, an index line stays behind, and a byte-count check proves nothing was lost. Files that get *dense* (a project register with 600-character lines) trip the read guard too, because tokens follow characters, not line count.
 - **Measure weekly, review monthly.** A weekly script (Saturday, just before the weekly system review) reads the AI's own session logs and reports the week's totals, the costliest sessions with their opening prompt, subagent overhead and cache ratios — plus which skills actually cost the most (body size × turns loaded, not just size) and whether the read guard is paying for itself. Once a month, a review session picks one layer of the system and asks what it produced against what it cost. That's where most of the above came from.
 
+## How to build the display, the nudge and the save
+
+The first three pieces work as one unit, and they are the ones to build first. Ask your AI to build each from the description below; all three are small. In Claude Code the display and the nudge are registered in the settings file (`~/.claude/settings.json`); the save is a custom command.
+
+**1. The display (a status line).** Claude Code's `statusLine` setting runs a script every time the screen refreshes and shows the one line it prints under the prompt.
+
+- The script receives a block of JSON. It needs three fields: `model.display_name`, `context_window.context_window_size`, and `context_window.current_usage` (add up its four token counts: input, cache creation, cache read and output).
+- Print one line: `[Model] Context: 42% used | 58% remaining`.
+- Change the wording as the room runs out. The maintainer's says `COMPACT SOON` under 30% remaining and `COMPACTING IMMINENTLY` under 15%.
+- Before the first reply there is no usage yet, so print `Context: 0%`.
+- In the desktop app, skip this: the usage ring beside the model picker shows the same number.
+
+**2. The nudge (a hook on each message you send).** Register a script on the `UserPromptSubmit` event. It runs each time you send a message, and whatever it returns as `hookSpecificOutput.additionalContext` is read by the AI, not shown to you.
+
+- The script is handed the path of the session's transcript file (`transcript_path`). Read only the end of that file (the last 400 KB is plenty), find the most recent reply's `usage` block, and add input, cache creation and cache read tokens. That sum is the current context size.
+- Stop scanning if you reach a compaction marker (`isCompactSummary` or `compact_boundary`). Without that, the first message after a reset reports the old size.
+- Keep a small state file per session holding the size at the last nudge. Fire once at the threshold, then only after each further step of growth. The maintainer uses 400,000 tokens (40% of a 1M window) and a 100,000 step.
+- Word the message as an instruction to ask, not a fact to pass on: *"Context is about 440k tokens and every turn re-reads all of it. At the next pause, ask: 'Context is over 40%. Save and reset now? 1. Yes 2. Not yet'. Never run it unasked, and don't interrupt a task mid-step."*
+- Make it fail quietly: on any error the script exits without output, so a broken nudge never blocks a message.
+
+Two versions did not work. A nudge that only told the AI to *mention* the size was ignored for a week. One that ran the save automatically fired at the wrong moments. A question the AI must ask, answered with one keystroke, is the shape that held.
+
+**3. The save (one command, then one paste).** Write a command for the mid-session save (the maintainer's is `/update`). It brings the notes for the current work up to date, writes the handoff entry described in [the session loop](./the-session-loop.md), and ends by printing a ready-made compaction line: `/compact Focus on <the current thread; re-read the handoff entry after compacting>`. You paste that line and the conversation shrinks, with the work already in files.
+
+- Keep it lighter than your end-of-day close-out. The learning steps (reviewing what went wrong, tidying memory) belong to the goodbye, not to every save.
+- Add a `SessionStart` hook with the matcher `compact` that prints the latest handoff entry back into the fresh conversation, so the AI picks up where it left off.
+
+**Check it works.** Lower the threshold to something small, send a few messages, and confirm the AI asks the question once, then stays quiet until the context has grown by a full step. Say yes, run the save, paste the compaction line, and check that the display drops and the AI can tell you what it was doing.
+
 ## What this does *not* do
 
 It doesn't make the AI do less work, and it isn't a length limit on anything. A skill that's long because its method is long stays long; a session that needs 400k of context for one hard problem gets it. The target is *waste*: bulk that entered the context and was never needed, history re-read a thousand times, a mechanical job carrying a scholar's briefing. Nor is it worth doing before you feel the ceiling — a person on an entry plan doing one task at a time needs none of it. And it isn't a substitute for the notes: the reason a reset is safe at all is that the work already lives in files, not in the conversation.
