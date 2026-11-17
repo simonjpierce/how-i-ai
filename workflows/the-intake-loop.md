@@ -24,7 +24,7 @@ The loop has a few intake channels, all ending the same way — material, in the
 
 **Documents — for the PDFs and the rest.** A paper, a report, a scanned letter becomes [clean markdown in the vault](./pdf-to-markdown.md), so its content is searchable and quotable rather than locked in a file you have to open to read.
 
-**Let it run while you sleep.** Once the channels exist, most of the filing wants no supervision — it's the kind of low-judgement bookkeeping that's perfect for [overnight automation](./the-overnight-workhorse.md). New material that came in during the day gets pulled in and filed overnight, so by morning the vault is current and what's left for you is the deciding, not the sorting. (Routing that needs a judgement call still waits for you; the loop files what it safely can and surfaces the rest.)
+**Let it run while you sleep.** Once the channels exist, most of the filing wants no supervision — it's the kind of low-judgement bookkeeping that's perfect for a scheduled overnight job. New material that came in during the day gets pulled in and filed overnight, so by morning the vault is current and what's left for you is the deciding, not the sorting. (Routing that needs a judgement call still waits for you; the loop files what it safely can and surfaces the rest.)
 
 ## What this does *not* do
 

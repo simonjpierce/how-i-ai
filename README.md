@@ -121,7 +121,7 @@ The map below is the whole system, and it looks like a lot. You don't build it i
 
 - **Day 1 — the foundation, on real work.** Install the stack, let the AI interview you and write your standing-instructions file (first rule: write it down as you go), back the vault up to GitHub, and install the [session loop](./workflows/the-session-loop.md)'s one-command quick save as your first command, because it's what makes "write it down as you go" actually happen. Start [the agent fleet](./workflows/the-agent-fleet.md) straight away: a chief of staff session that runs your projects, plus a brief for each specialist your work needs (for a researcher, [a science agent](./workflows/a-science-agent.md)). Then do *one real task* end to end in a project session. Desktop app, entry-level plan, no second model needed.
 - **Month 1 — make it know you.** Bring in the papers that matter now, one lab notebook per analysis, and a weekly check by the chief of staff. [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
-- **Later, when the need shows up.** A second AI model for independent cross-checks, the overnight workhorse, the terminal. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
+- **Later, when the need shows up.** A second AI model for independent cross-checks, handing bigger jobs off to run without you (in [sessions beside you](./workflows/running-many-sessions-at-once.md), or [overnight](./workflows/the-overnight-workhorse.md)), the terminal. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
 
 ## The workflows, in order
 
@@ -179,7 +179,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - [The terminal (optional)](./workflows/move-to-the-terminal.md) — you probably don't need it: the desktop app now runs hooks, skills, and scheduled tasks. What the terminal is still for, plus how to think about your context window.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
 - [The interview loop](./workflows/the-interview-loop.md) — let those specialists ask *you* what they can't work out, and answer by talking on a walk.
-- [The overnight workhorse](./workflows/the-overnight-workhorse.md) — queue work, review it in the morning.
+- [The overnight workhorse](./workflows/the-overnight-workhorse.md) — hand off work that doesn't need you watching: the full overnight queue, and why I now keep the night for routine drafting and start bigger jobs in the daytime.
 - [The self-improvement loop](./workflows/the-self-improvement-loop.md) — the system sands its own rough edges.
 - [Growing your own capabilities](./workflows/growing-your-own-capabilities.md) — how the system mints new workflows of its own, and changes itself safely.
 - [Clearing clutter from your workflows](./workflows/clearing-clutter-from-your-workflows.md) — the counterpart to growing: prune the cruft your commands accrete over time, with a check that proves nothing load-bearing was lost.

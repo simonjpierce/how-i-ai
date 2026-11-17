@@ -14,7 +14,7 @@ The move here is to make the system watch itself and improve. It rests on a few 
 - When you make a non-obvious choice, the reasoning gets written down — in a **decision log** — so you (and the AI) don't re-litigate it later.
 - Periodically, something reviews those logs, spots the patterns ("this has come up three times"), and **proposes a fix**.
 - Before a meaningful fix lands, a **second model checks it** — an independent review that catches the holes in the first model's plan.
-- Fixes that pass get **implemented** — often overnight by [the workhorse](./the-overnight-workhorse.md) — and the lesson is folded into the AI's standing instructions or memory so it actually sticks.
+- Fixes that pass get **implemented** — often overnight, by a scheduled improvement pass — and the lesson is folded into the AI's standing instructions or memory so it actually sticks.
 
 The result: the system you use in three months is noticeably smoother than the one today, without you running an improvement project. The improvements ride along on work you were doing anyway.
 
@@ -23,8 +23,8 @@ The result: the system you use in three months is noticeably smoother than the o
 - **A friction log** — what hurt, what you worked around, what needs a real fix. Append-only; cheap to add to.
 - **A decision log** — non-obvious choices and *why*, so they're not second-guessed later.
 - **A review step** — a second, independent AI model that pressure-tests a proposed fix before it's built. Two models disagreeing productively beats one model confidently wrong.
-- **An implementer** — the thing that actually makes the approved change (in the maintainer's system, the overnight workhorse plus a nightly "improve the system" pass).
-- **A budget** — a limit on how many self-maintenance jobs can wait in the overnight queue at once, most useful first, so the system's work on itself never crowds out your real work.
+- **An implementer** — the thing that actually makes the approved change (in the maintainer's system, a nightly "improve the system" pass for the small fixes, and a supervised session for anything larger).
+- **A budget** — a limit on how many self-maintenance jobs can wait at once, most useful first, so the system's work on itself never crowds out your real work.
 - **A home for the lesson** — the standing-instructions and memory files, so the fix changes future behaviour, not just one session.
 
 ## How it runs

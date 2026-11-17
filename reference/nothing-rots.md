@@ -22,11 +22,11 @@
 
 Every loop names three elements, inline, in the same turn:
 
-1. **Owner** — you, a named agent, the overnight worker, or an external party *with a named chaser*.
+1. **Owner** — you, a named agent, a scheduled job, or an external party *with a named chaser*.
 2. **Surface** — a specific *existing* place (routing table below). Never a new one.
-3. **Trigger / cadence** — next evening review; Saturday system walk; a dated to-do; the nightly queue; "when X replies + 7-day chase check".
+3. **Trigger / cadence** — tomorrow's plan or the next morning walk; the weekly system review; a dated to-do; a nightly scheduled job; "when X replies + 7-day chase check".
 
-Form: *"parked the migration → resurfaces at the next evening review (owner: you)."* Not a loop: *"no open loop — [reason]"* or *"standing flag — [reason]."*
+Form: *"parked the migration → resurfaces in tomorrow's plan (owner: you)."* Not a loop: *"no open loop — [reason]"* or *"standing flag — [reason]."*
 
 One carve-out worth copying: **a gap in an observer is not a deferrable loop.** If you build a tracker, ledger or detector that doesn't yet capture the real events, or captures them but reaches no action, that gap may not be parked under this rule — it's an incomplete build and gets finished or explicitly scoped out in the same run. Otherwise "the observer half is done" becomes a permanent state.
 
@@ -34,11 +34,11 @@ One carve-out worth copying: **a gap in an observer is not a deferrable loop.** 
 
 | Loop type | Owner | Surface | Trigger |
 |---|---|---|---|
-| Human action, undated | you | the owning agent's backlog / top-10 | daily or evening review walk |
+| Human action, undated | you | the owning agent's backlog / top-10 | the daily plan or the morning walk |
 | Human action, dated | you | to-do app, via the to-do command | due date |
-| Build changing the AI's skills, hooks or scripts | unattended second-model worker where its permissions allow; otherwise you + AI | queue entry with declared targets, or an INTERACTIVE item for restricted files (settings, credentials, memory) | nightly run; evening or weekly review for restricted work |
-| Other deferred build | overnight worker | queue entry / spec status | nightly run; weekly backstop |
-| Pending decision | you | ask *now*; else a pending-decisions note | this turn, else the evening review |
+| Build changing the AI's skills, hooks or scripts | the nightly improvement pass for small mechanical fixes; otherwise you + AI in a supervised session | a spec, or an INTERACTIVE item for restricted files (settings, credentials, memory) | nightly run for the small fixes; the weekly system review for the rest |
+| Other deferred build | a session you approve (or the overnight worker, if you run the full pattern) | spec status / the owning agent's list | the next morning walk; weekly backstop |
+| Pending decision | you | ask *now*; else a pending-decisions note | this turn, else tomorrow's plan or walk |
 | Waiting on external | external + chaser | a "waiting" line in the agent backlog or a dated to-do | chase date — only with evidence they're stuck |
 | Parked thread | you + AI | State of Play doc | evening review if parked for it; otherwise the weekly walk |
 | Verify-later flag created this session | per content | the note itself + a line in the close-out | next session on that topic, or "standing flag" |

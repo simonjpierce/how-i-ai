@@ -1,6 +1,6 @@
 # Running many sessions at once
 
-Once the AI is useful you stop running one conversation and start running five — a research thread here, a build there, an overnight job, a scheduled review — all reading and writing the same notes and the same config. This is how to keep them from trampling each other.
+Once the AI is useful you stop running one conversation and start running five — a research thread here, a build there, a job running unattended, a scheduled review — all reading and writing the same notes and the same config. This is how to keep them from trampling each other.
 
 This is an idea file. Paste it into your AI agent — Claude Code or Codex — to build a version for your own work; it'll fill in the specifics in collaboration with you. (It has to be an agent that can create files on your machine — a plain chat assistant can't set this up.)
 

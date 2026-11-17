@@ -43,7 +43,7 @@ There's also a third source of breadth that needs no command-line setup at all: 
 
 **Deliver.** The finished report — with its citations, its flagged uncertainties, and its verification notes — is saved into your notes so it compounds with everything else you know, rather than scrolling out of a chat. When the question drew on published literature, it also hands you a short, deduplicated list of the papers it cited that *aren't yet in your own library* — ranked by how much they matter to the question — so each run grows your trusted sources by relevance instead of leaving you to diff a bibliography by hand.
 
-Because it can run unattended for a stretch, this pairs naturally with [the overnight workhorse](./the-overnight-workhorse.md): queue a research question at night, read the report in the morning.
+Because it can run unattended for a stretch, it's a natural job to hand off: start it as [a session of its own](./running-many-sessions-at-once.md) and read the report when it's done. (In the full [overnight pattern](./the-overnight-workhorse.md), you queue the question at night and read the report in the morning.)
 
 ## What this does *not* do
 
