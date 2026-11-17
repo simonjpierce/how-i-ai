@@ -14,6 +14,8 @@ Ordering between parallel session-start hooks isn't guaranteed; don't depend on 
 
 ## Tab titles
 
+*Terminal only. In the desktop app, each session's title in the sidebar does this job, and a parent session that starts the others (see [the workflow](../workflows/running-many-sessions-at-once.md)) shows which session is doing what.*
+
 A per-terminal file (`/tmp/claude-title-<tty>`) holds a 3–6 word label. The session writes it at start and whenever the task changes:
 
 ```bash

@@ -16,7 +16,7 @@ As of mid-2026 the Claude desktop app covers all of that:
 - it shows your context usage in a ring next to the model picker — so the custom context meter that used to be the best reason to move is no longer needed;
 - and it has a terminal pane built in for the odd command.
 
-The maintainer still lives in a terminal (a terminal app called [Ghostty](https://ghostty.org)) — partly habit, partly because his overnight jobs are *scripts* that drive Claude in "headless" mode (`claude -p`, no interactive session at all) from the operating system's own scheduler, which is a step beyond a scheduled prompt. If you reach the point where you want code to orchestrate the AI rather than a prompt on a timer, that's the terminal's remaining real job. Otherwise: stay in the app.
+The maintainer lived in a terminal (a terminal app called [Ghostty](https://ghostty.org)) for most of 2026, but since late October he has worked in the desktop app, because there one session can start his other sessions and hear back from them ([running many sessions at once](./running-many-sessions-at-once.md)). What still needs the command-line side of things in his setup is the scheduled jobs: they are *scripts* that drive Claude in "headless" mode (`claude -p`, no interactive session at all) from the operating system's own scheduler, which is a step beyond a scheduled prompt. If you reach the point where you want code to orchestrate the AI rather than a prompt on a timer, that's the terminal's remaining real job. Otherwise: stay in the app.
 
 ## If you do use the terminal
 
