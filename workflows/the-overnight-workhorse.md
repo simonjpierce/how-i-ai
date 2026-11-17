@@ -2,7 +2,7 @@
 
 A way to hand off the work that doesn't need you watching — research, first drafts, analysis — so it runs while you sleep and you wake up to results to review, instead of spending your day waiting on the AI.
 
-*This is an advanced pattern — worth reaching for once your core setup is humming and real work is piling up, not something to build on day one. It shows the shape; when you're ready, paste it into Claude Code to wire up the queue and the overnight run.*
+*Where the maintainer is now (November 2026): his overnight worker runs routine drafting only, and has since 5 November. Bigger work starts in the daytime instead, as its own session that he approves on his morning walk; see [what the maintainer does now](#what-the-maintainer-does-now). The full overnight pattern below ran in his system for months and is kept as an option. It is an advanced pattern, worth reaching for once your core setup is humming and real work is piling up, not something to build on day one.*
 
 ## The core idea
 
@@ -11,6 +11,16 @@ A lot of useful work doesn't actually need you in the loop while it happens. Pul
 So you separate two moments. At the **end of the day**, you decide what's worth running unattended and add it to a queue. Overnight, an autonomous process — the **workhorse** — works through that queue. In the **morning**, you review what it produced. Your day stays for thinking and deciding; the slow, unattended work happens while you're asleep.
 
 The important discipline: the workhorse runs **what's in the queue, and only that.** It never invents its own projects in the night. You fill the queue each evening, and a few trusted automations add to it too — each one a kind of job you've already agreed it may do, such as the small next steps on your projects that need no decision from you.
+
+## What the maintainer does now
+
+In late October 2026 the maintainer ran a one-week comparison. Heavy work went to daytime sessions he had approved, and the overnight worker kept only its routine drafting. The daytime sessions delivered the real work (report drafts, a new automated check, website changes), while the worker's overnight building produced nothing he kept. On 5 November he made it permanent: the overnight worker runs routine drafting only, and the evening review that used to approve overnight jobs no longer asks him anything.
+
+The bigger work now starts on the morning walk. When an item would benefit from a substantial piece of preparation (research plus a full draft, a kick-off pack, a build), the walk offers to start it. On his yes, the [chief of staff](./the-agent-fleet.md) session that runs his day starts it as its own linked session, usually the session of the agent that owns that area (see [running many sessions at once](./running-many-sessions-at-once.md)), and the result is linked from the item in the day's plan that it serves. By the time he reaches that item at his desk, the hard part is done.
+
+This suits him better than the night for two reasons. He can see the work while it happens and steer it with a sentence, instead of finding out in the morning that a task drifted at 2am. And a failure shows up the same day, while the context is still fresh. The night keeps what it is best at: routine, pre-agreed jobs that need no one watching.
+
+The rest of this page is the full overnight pattern. The routine drafting, the guardrails and the supervision all still apply to the night he runs now; the evening review and the queue of larger jobs are the parts he retired.
 
 ## The pieces
 
@@ -29,7 +39,7 @@ Don't make the night depend on the evening review having happened, either. If yo
 
 One kind of job can be pre-agreed as a standing order instead of being approved night by night: routine drafting, such as thank-yous to donors or replies to messages where your records already support the answer. Each night's run adds these to the queue itself — after any preparation that feeds your morning review, and before larger approved work — and the time budget decides how many get reached; the rest wait for the next night. Each item goes through three steps. A preparation check says whether it is ready to draft at all (held, already answered and out of time are all valid outcomes, not failures). A writer then drafts it after reading your voice guide and your accumulated corrections, and is told never to invent costs, personal connections, commitments or decisions. Finally, a separate finishing step validates the draft and only then moves it from 'pending validation' to 'ready' and places it in your drafts folder, so a draft that hasn't passed that step never reads as finished. You alone press send.
 
-You can also dial the whole night down to routine-only. One standing switch tells the runner to do just the pre-agreed routine drafting and to hold every other queued entry. While it is on, the evening review has nothing to ask you: it doesn't offer, rank or approve overnight work, and nothing needs launching because the late-evening timer starts the routine night by itself. Anything heavy is started as a daytime session instead, when you can see it, and a useful request is offered to you that way rather than queued. Remove the switch and the fuller pattern above resumes. It is a sensible setting when you want the safest, most repeatable part of the night to keep running and the larger unattended jobs to wait until you trust them again.
+You can also dial the whole night down to routine-only, which is the setting the maintainer now runs permanently. One standing switch tells the runner to do just the pre-agreed routine drafting and to hold every other queued entry. While it is on, the evening review has nothing to ask you: it doesn't offer, rank or approve overnight work, and nothing needs launching because the late-evening timer starts the routine night by itself. Anything heavy is started as a daytime session instead, when you can see it, and a useful request is offered to you that way rather than queued. Remove the switch and the fuller pattern above resumes. It suits anyone who wants the safest, most repeatable part of the night to keep running while the larger jobs happen where they can be watched.
 
 Because the tasks have to be self-contained (no one's there to clarify at 2am), writing a good queue entry is a skill in itself — say exactly what you want, where the inputs are, and what "done" looks like. Your AI can help you write them.
 
@@ -43,7 +53,7 @@ Research or audits that might lead to changes in your own setup deserve a strict
 
 Unattended research also needs a convention for claims that something doesn't exist. Any claim that something wasn't found, or that nothing covers a topic, has to name the specific list, atlas or index the worker fetched and read in full — a keyword search that came back empty doesn't count — or carry an explicit 'absence unverified' flag, so you know to check it in the morning rather than trust it.
 
-In the maintainer's setup, code builds handed to the dedicated implementation lane (the one that runs on Codex) get a similar caution about landing. A build on that lane that passes its declared tests and the diff review isn't merged by the night itself: it's kept as a held candidate with a pointer in the queue, and a supervised session checks it against the whole test suite in an isolated copy before it goes through your ordinary reviewed commit. A held candidate isn't rebuilt the next night. Work that fails review on that lane isn't thrown away either — it's preserved as unreviewed evidence and handed to the task's fallback along with the diagnostics, so the next attempt starts from what went wrong.
+When the maintainer still ran code builds overnight (a lane he has since retired), builds handed to the dedicated implementation lane on Codex got a similar caution about landing. A build on that lane that passes its declared tests and the diff review isn't merged by the night itself: it's kept as a held candidate with a pointer in the queue, and a supervised session checks it against the whole test suite in an isolated copy before it goes through your ordinary reviewed commit. A held candidate isn't rebuilt the next night. Work that fails review on that lane isn't thrown away either — it's preserved as unreviewed evidence and handed to the task's fallback along with the diagnostics, so the next attempt starts from what went wrong.
 
 The same logic applies to the rails themselves. An unattended job should never be able to loosen the checks that govern it, so treat the guardrail files that gate what your automation may do as off-limits to every overnight worker. Snapshot them before a run and compare afterwards; if anything changed, save a copy of the change with a diff, put the original back, and hold that run with a single alert for your next session. If the snapshot can't be read, or the restore can't be verified, hold rather than guess — and a change you made by hand during the run is saved and restored too, so it surfaces rather than vanishes. A hold stops only the run that caused it; later runs carry on once the files are back as they should be.
 
@@ -61,7 +71,7 @@ It's not hands-off autonomy you can't see. Everything in the queue has a named s
 
 ## Note
 
-This is a pattern, not a fixed tool. How you trigger the run, where the queue lives, how much you queue, how unattended you let it be — all yours. The durable idea is: *the work that doesn't need you watching shouldn't cost you daytime; queue it, sleep, review.* Paste this to your AI and build the version you'll actually trust.
+This is a pattern, not a fixed tool. How you trigger the run, where the queue lives, how much you queue, how unattended you let it be — all yours. The maintainer has settled on routine drafting at night and bigger jobs in daytime sessions he can see. The durable idea is: *the work that doesn't need you watching shouldn't cost you your attention; hand it off, overnight or in a session beside you, then review.* Paste this to your AI and build the version you'll actually trust.
 
 ---
 

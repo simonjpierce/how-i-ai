@@ -2,6 +2,8 @@
 
 > **What this is.** The actual method behind [the *Overnight workhorse* workflow](../workflows/the-overnight-workhorse.md), cleaned of the maintainer's personal specifics (real paths, names, machine state). It's a **starting point to adapt, not a drop-in command** — your queue, your runner, and your evening habit are shaped differently, so read it *with* your AI and build the version that fits. The narrative workflow says *why* and *when*; this says *how*, concretely enough that your agent doesn't have to reinvent the hard parts.
 >
+> **Status.** The maintainer now runs the night routine-only: it does pre-agreed drafting, and bigger work runs as daytime sessions he approves on his morning walk (see [the workflow](../workflows/the-overnight-workhorse.md#what-the-maintainer-does-now)). The scoping rules below still hold for anything you hand off to run without you watching, overnight or in the daytime.
+>
 > Throughout, the **worker** is one autonomous AI session that picks up a single task and runs it with no human watching; the **queue** is a plain text file of tasks waiting for tonight; "your skills directory" means wherever your AI keeps its reusable commands.
 
 ## The shape of it
