@@ -117,11 +117,11 @@ how-i-ai/
 
 ## What to build first
 
-The map below is the whole system, and it looks like a lot. You don't build it in that order or all at once — here's a sequence that should work:
+The map below is the whole system, and it looks like a lot. You don't build it in that order or all at once — [your first month](./workflows/your-first-month.md) walks through a sequence that should work. In short:
 
-- **Week 1 — the foundation.** Install the stack, let the AI interview you and write your standing-instructions file, set up a couple of vault folders, and do *one real task* end to end (a document you need to write, a transcript to tidy). Then the [session loop](./workflows/the-session-loop.md), so the next session starts where this one ended — and make its one-command quick save the first command you install, because it's what makes "write it down as you go" actually happen. Desktop app, entry-level plan, no second model needed.
-- **Month 1 — make it know you.** [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
-- **Later, when the need shows up.** A second AI model for independent cross-checks, the agent fleet, the overnight workhorse. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
+- **Day 1 — the foundation, on real work.** Install the stack, let the AI interview you and write your standing-instructions file (first rule: write it down as you go), back the vault up to GitHub, and install the [session loop](./workflows/the-session-loop.md)'s one-command quick save as your first command, because it's what makes "write it down as you go" actually happen. Start [the agent fleet](./workflows/the-agent-fleet.md) straight away: a chief of staff session that runs your projects, plus a brief for each specialist your work needs (for a researcher, [a science agent](./workflows/a-science-agent.md)). Then do *one real task* end to end in a project session. Desktop app, entry-level plan, no second model needed.
+- **Month 1 — make it know you.** Bring in the papers that matter now, one lab notebook per analysis, and a weekly check by the chief of staff. [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
+- **Later, when the need shows up.** A second AI model for independent cross-checks, the overnight workhorse, the terminal. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
 
 ## The workflows, in order
 
@@ -133,6 +133,7 @@ This is the full map. Read the on-ramp (section 1) in order — each page points
 - [How it all fits together](./workflows/how-it-all-fits-together.md) — a day in the life: how the maintainer actually uses this across a working day. (Orientation, not something you build.)
 - [Set up the stack](./workflows/01-set-up-the-stack.md) — Obsidian + a file-capable AI; the foundation everything else builds on.
 - [Teach it who you are](./workflows/02-teach-it-who-you-are.md) — the onboarding interview that fills in your standing-instructions file and sets up your vault folders.
+- [Your first month](./workflows/your-first-month.md) — what to switch on, in what order: real projects on day one, a chief of staff and specialist agents from the start, the rest only when the work asks for it.
 
 ### 2. The foundation — make the AI know you *(desktop app, no terminal needed)*
 

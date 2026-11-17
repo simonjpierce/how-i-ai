@@ -60,4 +60,4 @@ A few minutes teaching the AI who you are is the difference between an assistant
 
 ## Next step
 
-**→ [Memory and context](./memory-and-context.md)** — the personalisation loop: how the AI keeps learning how you work, so you never have to correct the same thing twice.
+**→ [Your first month](./your-first-month.md)** — what to switch on, in what order: real projects on day one, a chief of staff and specialist agents from the start, and everything else only when the work asks for it.
