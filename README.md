@@ -119,7 +119,7 @@ how-i-ai/
 
 The map below is the whole system, and it looks like a lot. You don't build it in that order or all at once — here's a sequence that should work:
 
-- **Week 1 — the foundation.** Install the stack, let the AI interview you and write your standing-instructions file, set up a couple of vault folders, and do *one real task* end to end (a document you need to write, a transcript to tidy). Then the [session loop](./workflows/the-session-loop.md), so the next session starts where this one ended. Desktop app, entry-level plan, no second model needed.
+- **Week 1 — the foundation.** Install the stack, let the AI interview you and write your standing-instructions file, set up a couple of vault folders, and do *one real task* end to end (a document you need to write, a transcript to tidy). Then the [session loop](./workflows/the-session-loop.md), so the next session starts where this one ended — and make its one-command quick save the first command you install, because it's what makes "write it down as you go" actually happen. Desktop app, entry-level plan, no second model needed.
 - **Month 1 — make it know you.** [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
 - **Later, when the need shows up.** A second AI model for independent cross-checks, the agent fleet, the overnight workhorse. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
 
