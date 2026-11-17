@@ -8,7 +8,7 @@ A way to start each day with a team of specialist assistants — each one watchi
 
 A single general-purpose AI assistant is a generalist — it knows a bit about everything you're doing but isn't deeply on top of any one area. The move here is to run several **agents** instead: each one is the *same* AI, but pointed at a single domain and given its own accumulated knowledge of it. ("Agent" just means the AI working in a defined role with its own notes — not a separate piece of software.)
 
-So you might have a fundraising agent, a science agent, a communications agent, an admin agent — whatever your real domains are. Each keeps its own running picture of that domain: the active projects, what's stalled, what's coming up. Each afternoon, they look across your projects and propose what's worth doing *in their area* — including work they could do overnight.
+So you might have a fundraising agent, a science agent ([what one looks like](./a-science-agent.md)), a communications agent, an admin agent — whatever your real domains are. Each keeps its own running picture of that domain: the active projects, what's stalled, what's coming up. Each afternoon, they look across your projects and propose what's worth doing *in their area* — including work they could do overnight.
 
 The problem with a team of keen assistants is that they'd bury you. So one more agent sits on top: a **chief of staff**. It collects what every specialist is proposing, weighs it against each other, and hands you work **one task at a time** — not a wall of twenty suggestions. You do a thing, you come back, it gives you the next thing.
 
