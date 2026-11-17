@@ -75,7 +75,7 @@ Best-effort throughout: if the ledger can't write, the hook still runs and its r
 ## Hooks the maintainer runs, by event (for shape, not to copy)
 
 - `SessionStart`: print the latest handoff entry + a fast health pre-flight; on the `compact` matcher, re-inject the handoff.
-- `UserPromptSubmit`: context-size nudge at 300k tokens. (A standing per-prompt reminder was removed: the stop-time checks already enforce it, and repeating pressure text every turn made the model over-react.)
+- `UserPromptSubmit`: context-size nudge at 400k tokens. (A standing per-prompt reminder was removed: the stop-time checks already enforce it, and repeating pressure text every turn made the model over-react.)
 - `PreToolUse Bash`: secrets in a commit; stash guard; path quoting; push-suppression guard; email-send guard; recursive-delete enumeration; commit-branch check; unbounded read block; output hygiene.
 - `PreToolUse Read`: unbounded read of 500+ lines → block with two exits.
 - `PreToolUse Write|Edit`: memory-file size cap (warn 94%, deny 99%); symlink redirect; path check for files that belong in the notes vault.
