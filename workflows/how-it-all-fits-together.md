@@ -31,7 +31,7 @@ I finish a task, come back, and the chief of staff hands me the next one. The fl
 
 **The record keeps itself.** This is the part that makes the next day cheap. As I work, the system writes down the decisions and the reasoning and keeps my project notes current — and at the end of a session a handoff step distils what happened: what was done, what's still open, what the next session should read first. The hard-won corrections ("don't do it that way", "always check this first") get distilled into the AI's long-term memory so I'm not re-litigating them next week. Tomorrow starts from where today actually ended, not from a cold start.
 
-**Afternoon.** After lunch a second coach takes over, for the work the main job would otherwise crowd out — photography, my websites, life admin — drawing on the specialists for those areas. It finishes by counting down the remaining email replies: the important ones were already sorted into the morning, and the rest get cleared here, one at a time.
+**Afternoon.** The same plan carries on into the work the main job would otherwise crowd out — photography, my websites, life admin — drawing on the specialists for those areas, followed by the remaining email replies, cleared one at a time. I used to run a separate afternoon coach for this, and barely ever opened it, so now it all sits in the one plan, ranked below the non-profit's work.
 
 **Evening.** Nothing to decide. I used to end the day choosing jobs for [the overnight workhorse](./the-overnight-workhorse.md) to run while I slept. Now the bigger jobs start on the morning walk instead, as sessions I can watch and steer, and the night keeps only the routine work that needs no one watching.
 

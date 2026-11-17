@@ -37,7 +37,7 @@ Optional sections below those.
 | `status:` | Meaning | Surfaced by |
 |---|---|---|
 | `active — in progress` | being worked in the live stream; the initial state | nothing (you're on it); the currency script may write to it |
-| `paused — awaiting <condition>` | parked | weekly system walk; the evening review only when the condition *is* that review |
+| `paused — awaiting <condition>` | parked | its resume question in the next day's plan or walk (a dated reminder if it waits for a set date); the weekly system review as a backstop |
 | `active reference — <what>` | a living collation doc, not a task tracker | nothing; outside this lifecycle |
 | `resolved` | done; terminal | archived at close-out |
 | `promoted — <doc>` | content moved to a process doc; original kept as a pointer; terminal | — |
