@@ -189,6 +189,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 - [Knowing when your automations broke](./workflows/knowing-when-your-automations-broke.md) — one intake page every job reports to, a session-start pre-flight that keeps new failures apart from known ones, and health checks that test the outcome rather than the run.
 - [Nothing rots](./workflows/nothing-rots.md) — every deferral names an owner, a surface and a trigger, or it's a loss dressed as a plan; dated decisions get walked.
 - [Parking a thread](./workflows/parking-a-thread.md) — stop working on something for weeks and let a cold session resume it in one move: one living doc with a pickup prompt, plus a reminder that fires.
+- [One session that runs the others](./workflows/one-session-that-runs-the-others.md) — a long-running chief-of-staff session in the desktop app starts each piece of work in its own session, checks every report against the files, and brings you one decision at a time.
 - [Running many sessions at once](./workflows/running-many-sessions-at-once.md) — five conversations on the same files: make the others visible, build in worktrees, lock what's shared, re-verify parked steps.
 - [The model panel](./workflows/the-model-panel.md) — put several independent AI models on one problem and reconcile them; cross-checked results when being right matters more than being fast.
 
