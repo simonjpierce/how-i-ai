@@ -12,17 +12,9 @@ State: a folder of marker files, one per live session, named by session id, cont
 
 Ordering between parallel session-start hooks isn't guaranteed; don't depend on the warning appearing before or after the handoff text.
 
-## Tab titles
+## Session titles
 
-*Terminal only. In the desktop app, each session's title in the sidebar does this job, and a parent session that starts the others (see [the workflow](../workflows/running-many-sessions-at-once.md)) shows which session is doing what.*
-
-A per-terminal file (`/tmp/claude-title-<tty>`) holds a 3–6 word label. The session writes it at start and whenever the task changes:
-
-```bash
-MY_TTY=$(ps -o tty= -p $PPID | tr -d ' ') && echo "short task summary" > "/tmp/claude-title-${MY_TTY}"
-```
-
-A tiny background daemon (started by the session-start hook if not running) reads the file every two seconds and sets the terminal title with an OSC escape. It's a daemon rather than a hook because the harness's own redraws overwrite a title set from inside a hook. The status line also reads the same file, so the label appears beside the context meter. Some harness versions offer a native session-title setting; the daemon is kept because it supports mid-session changes and a "✅ done" flip.
+In the desktop app, each session's title in the sidebar carries a 3–6 word label for what it is doing. The session sets it at start and renames itself whenever the task changes, so the label never describes a job it finished an hour ago. A parent session that starts the others (see [the workflow](../workflows/running-many-sessions-at-once.md)) shows which session is doing what.
 
 ## The worktree convention
 
@@ -80,4 +72,4 @@ A background job sweeps your uncommitted edits into its commit; the harness show
 
 ## What stays yours
 
-Marker window, tab-label mechanism, how strict the worktree rule is for one-line edits, which files get the lock helper. The transferable spine: *make other sessions visible; give each writer its own tree; check the branch before every commit and never hide a push's errors; verify live state before acting on a parked step; lock the few files everyone shares.*
+Marker window, how sessions are labelled, how strict the worktree rule is for one-line edits, which files get the lock helper. The transferable spine: *make other sessions visible; give each writer its own tree; check the branch before every commit and never hide a push's errors; verify live state before acting on a parked step; lock the few files everyone shares.*

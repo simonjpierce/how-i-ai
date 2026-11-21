@@ -12,7 +12,7 @@ So the lever is not "do less". It is **keep the working memory small, and keep i
 
 ## The pieces
 
-- **See it.** A one-line status bar under the terminal shows the model and how full the context is (`Context: 42% used`). Nothing changes behaviour like a number you can see. The desktop app has the same thing as a ring next to the model picker.
+- **See it.** The desktop app shows how full the context is as a ring next to the model picker. Nothing changes behaviour like a number you can see.
 - **Get nudged at the line.** A small hook watches the context size on each message. When it crosses a threshold (the maintainer uses 400k tokens, then again every 100k), it tells the AI — not you — to raise it at the next pause: one line, "Context is over 40%. Save and reset now? 1. Yes 2. Not yet". You answer with a keystroke. The AI carries the reminder so it fires in the moment, every time; you keep the decision, because sometimes you are three replies from closing the session and a save-and-reset in the middle is exactly wrong.
 - **Save, then reset — one command.** The reset is compaction: the conversation is summarised to free room. Compaction alone loses detail, so pair it with the save step from [the session loop](./the-session-loop.md): a mid-session checkpoint command writes the handoff note and the logs, then hands back the compaction command ready to run. One keystroke, nothing lost, and every turn after it costs roughly a third of what it did. The maintainer measured a reset from ~430k tokens of context to ~110k. A separate hook re-injects the latest handoff after compaction so the AI picks up exactly where it was.
 - **Keep bulk out: don't read long files whole.** Reading a 2,000-line transcript into the conversation is not thinking, it's plumbing — and it then gets re-read on every later turn. A hook blocks any unbounded read of a long file (500+ lines, whether via the file tool or `cat` in the shell) and offers two exits: a cheap, fast model (Sonnet) reads the file and returns a dense answer to the question, or the main model reads a bounded slice for edits and quotes. The same idea covers command output: a warning fires on a bare `git diff`, a full test run without `-q`, a recursive directory listing — anything whose output would land whole in the context and stay there.
@@ -24,15 +24,9 @@ So the lever is not "do less". It is **keep the working memory small, and keep i
 
 ## How to build the display, the nudge and the save
 
-The first three pieces work as one unit, and they are the ones to build first. Ask your AI to build each from the description below; all three are small. In Claude Code the display and the nudge are registered in the settings file (`~/.claude/settings.json`); the save is a custom command.
+The first three pieces work as one unit, and they are the ones to set up first. The display is already there; ask your AI to build the other two from the descriptions below, both small. In Claude Code the nudge is registered in the settings file (`~/.claude/settings.json`); the save is a custom command.
 
-**1. The display (a status line).** Claude Code's `statusLine` setting runs a script every time the screen refreshes and shows the one line it prints under the prompt.
-
-- The script receives a block of JSON. It needs three fields: `model.display_name`, `context_window.context_window_size`, and `context_window.current_usage` (add up its four token counts: input, cache creation, cache read and output).
-- Print one line: `[Model] Context: 42% used | 58% remaining`.
-- Change the wording as the room runs out. The maintainer's says `COMPACT SOON` under 30% remaining and `COMPACTING IMMINENTLY` under 15%.
-- Before the first reply there is no usage yet, so print `Context: 0%`.
-- In the desktop app, skip this: the usage ring beside the model picker shows the same number.
+**1. The display.** In the desktop app there is nothing to build: the usage ring beside the model picker shows how full the context is. Glance at it the way you would a fuel gauge.
 
 **2. The nudge (a hook on each message you send).** Register a script on the `UserPromptSubmit` event. It runs each time you send a message, and whatever it returns as `hookSpecificOutput.additionalContext` is read by the AI, not shown to you.
 

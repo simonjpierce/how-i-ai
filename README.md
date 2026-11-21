@@ -121,7 +121,7 @@ The map below is the whole system, and it looks like a lot. You don't build it i
 
 - **Day 1 — the foundation, on real work.** Install the stack, let the AI interview you and write your standing-instructions file (first rule: write it down as you go), back the vault up to GitHub, and install the [session loop](./workflows/the-session-loop.md)'s one-command quick save as your first command, because it's what makes "write it down as you go" actually happen. Start [the agent fleet](./workflows/the-agent-fleet.md) straight away: a chief of staff session that runs your projects, plus a brief for each specialist your work needs (for a researcher, [a science agent](./workflows/a-science-agent.md)). Then do *one real task* end to end in a project session. Desktop app, entry-level plan, no second model needed.
 - **Month 1 — make it know you.** Bring in the papers that matter now, one lab notebook per analysis, and a weekly check by the chief of staff. [Memory and context](./workflows/memory-and-context.md), so corrections stick. [The daily coach](./workflows/the-daily-coach.md) if the to-do pile is the problem. One science workflow — [citation verification](./workflows/citation-verification.md) is the easiest first win, [lab-notebook analysis](./workflows/lab-notebook-analysis.md) the most valuable.
-- **Later, when the need shows up.** A second AI model for independent cross-checks, handing bigger jobs off to run without you (in [sessions beside you](./workflows/running-many-sessions-at-once.md), or [overnight](./workflows/the-overnight-workhorse.md)), the terminal. Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
+- **Later, when the need shows up.** A second AI model for independent cross-checks, handing bigger jobs off to run without you (in [sessions beside you](./workflows/running-many-sessions-at-once.md), or [overnight](./workflows/the-overnight-workhorse.md)). Each is worth it only once you have enough going on that planning the work and waiting on it are themselves a cost.
 
 ## The workflows, in order
 
@@ -135,7 +135,7 @@ This is the full map. Read the on-ramp (section 1) in order — each page points
 - [Teach it who you are](./workflows/02-teach-it-who-you-are.md) — the onboarding interview that fills in your standing-instructions file and sets up your vault folders.
 - [Your first month](./workflows/your-first-month.md) — what to switch on, in what order: real projects on day one, a chief of staff and specialist agents from the start, the rest only when the work asks for it.
 
-### 2. The foundation — make the AI know you *(desktop app, no terminal needed)*
+### 2. The foundation — make the AI know you *(desktop app)*
 
 Set these up first — they're what turn a generic assistant into one that knows your work:
 - [Memory and context](./workflows/memory-and-context.md) — the personalisation loop: the AI learns how you work and stops repeating mistakes.
@@ -173,10 +173,10 @@ The breadth that keeps a working life running, framed as support for the output 
 - [Automated photo-ID image upload](./workflows/automated-photo-id-image-upload.md) — turn a folder of tagged field photos into properly-formatted records in a shared research database, uploaded in the background; the human supplies the judgement, the AI builds the plumbing.
 - [Matching a photo-ID catalogue](./workflows/matching-a-photo-id-catalogue.md) — check a season of sightings against the site, the region and the ocean basin at once, with a tested rule for how far to trust a match; the AI shortlists and keeps the books, a person confirms every identity by eye.
 
-### 5. How the system runs itself — *(these need scheduling — the desktop app's Routines page does it; the terminal is optional)*
+### 5. How the system runs itself — *(these need scheduling — the desktop app's Routines page does it)*
 
 The autonomy layer — worth it once you have enough going on that planning the work and waiting on it are themselves a cost:
-- [The terminal (optional)](./workflows/move-to-the-terminal.md) — you probably don't need it: the desktop app now runs hooks, skills, and scheduled tasks. What the terminal is still for, plus how to think about your context window.
+- [The desktop app and your phone](./workflows/the-desktop-app-and-your-phone.md) — the desktop app as the one home for everything, and the Claude mobile app connected to it through Remote Control, so you can work from your phone while the files stay on your computer.
 - [The agent fleet](./workflows/the-agent-fleet.md) — specialists that surface work one task at a time.
 - [The interview loop](./workflows/the-interview-loop.md) — let those specialists ask *you* what they can't work out, and answer by talking on a walk.
 - [The overnight workhorse](./workflows/the-overnight-workhorse.md) — hand off work that doesn't need you watching: the full overnight queue, and why I now keep the night for routine drafting and start bigger jobs in the daytime.
@@ -197,7 +197,7 @@ The autonomy layer — worth it once you have enough going on that planning the 
 
 ## The stack
 
-- **[Claude Code](https://docs.claude.com/claude-code)** — desktop app (start here) or the terminal, if you prefer it — both run hooks and scheduled tasks. This is what the guide is written for. (Prefer a different file-capable agent, like OpenAI's [Codex](https://github.com/openai/codex)? The workflows are plain descriptions, so your agent can adapt them.)
+- **[Claude Code](https://docs.claude.com/claude-code)**, in the [Claude desktop app](https://claude.ai/download) — it runs hooks, skills, and scheduled tasks, and the Claude mobile app connects to it from your phone through [Remote Control](./workflows/the-desktop-app-and-your-phone.md). This is what the guide is written for. (Prefer a different file-capable agent, like OpenAI's [Codex](https://github.com/openai/codex)? The workflows are plain descriptions, so your agent can adapt them.)
 - **[Obsidian](https://obsidian.md)** — where the notes live.
 
 *Optional, when a workflow asks for it:* the [Codex CLI](https://github.com/openai/codex) — used as an independent *second* model for the cross-checks in the research and writing workflows (a different model checking the first one's work).
@@ -216,9 +216,9 @@ It'll read the workflows, set up your vault and a starter config, and get you to
 
 Reading this because someone pasted the link and asked for help getting started? This part is for you. Build them *their own* version, adapted to their operating system, the tools they already have, and the work they actually do — don't hand them text to copy out:
 
-- **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (dictate into ChatGPT's chat box with the mic icon, then paste the transcript) as a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. That upfront context is what makes everything downstream work.
+- **Interview them — don't make them write.** Most newcomers fear they have to author all of this themselves; they don't. Ask questions and build the files *for* them from their answers. Invite voice answers (Claude's own microphone button in the prompt box, in the desktop or mobile app) as a loose stream-of-consciousness — reassure them they needn't be organised or careful about it — and ask follow-ups until you have enough context. That upfront context is what makes everything downstream work.
 - **Build, don't ship.** There are no drop-in skills or templates to copy from this repo — that's deliberate. *Create* the starter vault, the standing-instructions file (`CLAUDE.md`), and the memory file (`MEMORY.md`) together with them, and build each capability from its workflow description — and its deeper `reference/` companion where one exists, for the concrete method — shaped to their work, not pasted in verbatim.
-- **Look before you ask.** Operating system, whether Obsidian / R / a terminal tool is already installed, what's in their home folder — check with a command rather than asking them to report it. Save their answers for the things only they know (their work, their preferences, their first task). And lay out vault folders *from* what the interview tells you, not before it.
+- **Look before you ask.** Operating system, whether Obsidian / R / a command-line tool is already installed, what's in their home folder — check with a command rather than asking them to report it. Save their answers for the things only they know (their work, their preferences, their first task). And lay out vault folders *from* what the interview tells you, not before it.
 - **Check prerequisites first, and hand-hold the installs.** Several capabilities need external tools — a local transcription engine, PDF extractors, a second AI model on the command line. Before you build one, check what's already on their machine, install what's missing *for* them (with their OK, adapted to their OS — don't assume macOS), and name the genuinely fiddly steps up front (compiling a transcription engine, an ML-based PDF extractor, a second model's separate account) so a non-technical reader knows which bits are the hard ones. When a tool isn't there, say so and offer to install it — never leave them staring at a `command not found` wondering whether the whole thing is broken.
 - **One thing at a time — and in the order under "What to build first" above.** Get the foundation working and one real task done before adding capabilities; don't propose the second model, the fleet, or the overnight workhorse in the first session. Don't try to build the whole system in a single sitting — it's meant to accrete one piece at a time.
 

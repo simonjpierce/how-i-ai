@@ -29,7 +29,7 @@ Two things go in from the very first session, because everything else rests on t
 - Add a specialist agent for another area only when there's a steady stream of work in it.
 - Automate a task only after you've done it by hand three times and the steps have stopped changing ([growing your own capabilities](./growing-your-own-capabilities.md)).
 
-**Not yet.** Overnight workers ([the overnight workhorse](./the-overnight-workhorse.md)), the multi-model review panel ([the model panel](./the-model-panel.md)), and [the terminal](./move-to-the-terminal.md). Each earns its place once you have enough going on that planning and waiting on the work are themselves a cost.
+**Not yet.** Overnight workers ([the overnight workhorse](./the-overnight-workhorse.md)), and the multi-model review panel ([the model panel](./the-model-panel.md)). Each earns its place once you have enough going on that planning and waiting on the work are themselves a cost.
 
 **On a smaller plan.** The structure is what makes a smaller plan workable. Run the chief of staff at low effort, since its job is reading and routing rather than heavy thinking, and project sessions at medium. Split heavy jobs (reading thousands of images, reviewing a whole manuscript) across several days, and keep an eye on the week's usage in the app's settings ([managing your token budget](./managing-your-token-budget.md)).
 

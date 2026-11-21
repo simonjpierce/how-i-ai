@@ -23,7 +23,7 @@ Build a **weekly report** from those transcripts and schedule it (the maintainer
 
 ## Layer 1 — see it
 
-**Status line.** Claude Code's `statusLine` setting runs a script on every refresh and shows its one line of output under the prompt. The input JSON includes `model.display_name`, `context_window.context_window_size` and `context_window.current_usage` (sum its four token fields). Print `[Model] Task | Context: 42% used | 58% remaining`, switching the wording to `COMPACT SOON` under 30% remaining and `COMPACTING IMMINENTLY` under 15%. Optional: read a short task label from a per-terminal file so the line also says what the session is doing. In the desktop app the usage ring does the same job; skip this layer there.
+**The usage ring.** The desktop app shows how full the context is as a ring beside the model picker, so this layer needs nothing built. What it doesn't do is speak up, which is the nudge's job.
 
 **The nudge hook** (`UserPromptSubmit` event). Each time you send a message the hook receives `transcript_path`. Read the *tail* of that file (the last ~400KB is plenty), find the most recent assistant `usage` block, sum input + cache creation + cache read — that's the current context size. Two guards: stop scanning at a compaction-boundary record (`isCompactSummary` / `compact_boundary`), or the first message after a compaction reports the *old* size; and keep a per-session state file so the nudge fires once at the threshold and then only every step of further growth, not every message. Output `hookSpecificOutput.additionalContext` — text the *model* reads, not you.
 

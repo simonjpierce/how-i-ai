@@ -22,7 +22,7 @@ No history to draw on? Skip this — the interview below covers it.
 
 ## The interview
 
-Now the AI fills the gaps by asking you. The easiest way to answer is by voice — talk, stream-of-consciousness, as much detail as comes to mind (the mic-and-paste method from [set up the stack](./01-set-up-the-stack.md)). You don't need to be organised about it; a rambling answer is exactly right, and the AI pulls out what it needs and asks follow-ups.
+Now the AI fills the gaps by asking you. The easiest way to answer is by voice — talk, stream-of-consciousness, as much detail as comes to mind (the microphone button described in [set up the stack](./01-set-up-the-stack.md)). You don't need to be organised about it; a rambling answer is exactly right, and the AI pulls out what it needs and asks follow-ups.
 
 It's trying to learn the things it would otherwise get wrong every session:
 
