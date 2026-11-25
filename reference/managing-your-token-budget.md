@@ -66,8 +66,12 @@ Everything here is paid on every turn, so small cuts compound.
 
 ## Layer 5 — right model, right entry cost
 
-- **Routing.** The top model orchestrates: judgement, voice, final calls. A fast cheap model takes bulk reads and extraction (the bulk-reader). A second provider's CLI model — the maintainer uses OpenAI's Codex — takes review passes, code builds and autonomous overnight work on its *own* weekly quota (its effort paced automatically — high by default, stepped down only while the week's usage runs ahead of pace — because that quota runs out too). Mid-tier models review and run background subagents. The trap: a `general-purpose` subagent inherits the session's model. If you want cheap, say `model: sonnet` in the agent definition.
+- **Routing.** The top model orchestrates: judgement, voice, final calls. A fast cheap model takes bulk reads and extraction (the bulk-reader). A second provider's CLI model — the maintainer uses OpenAI's Codex — takes review passes, code builds and daytime legwork on its *own* weekly quota (its effort paced automatically — high by default, stepped down only while the week's usage runs ahead of pace — because that quota runs out too). Mid-tier models review and run background subagents. The trap: a `general-purpose` subagent inherits the session's model. If you want cheap, say `model: sonnet` in the agent definition.
 - **A lighter start for mechanical jobs.** Every `claude -p` run pays the working folder's instruction cascade, the skill catalogue and all hook output before its first turn. Measured on a single-turn Sonnet probe: 62k tokens from the main vault root; 45k from a minimal folder (a 15-line instruction file: where the vault is, path hygiene, spelling) with the vault attached by `--add-dir`; 34k adding `--disable-slash-commands`. Note `--add-dir` does *not* load the attached folder's instruction files — so this is only for jobs that need none of them, and any job whose prompt relies on vault-relative paths or edits prose a human reads stays on the full cascade. At ~440 unattended runs in 36 hours, median 55k context and 20 turns each, this was the largest single saving in the review that found it.
+
+## Pace the weekly allowance
+
+Watch the provider's weekly usage meter alongside the transcript report. At about 75% of the weekly allowance, wind down background work. Close sessions that have finished, keep one list session per agent, and hand legwork to the second provider on its separate quota.
 
 ## Layer 6 — stop files growing without bound
 

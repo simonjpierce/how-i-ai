@@ -12,11 +12,11 @@ Going forward, we'll often discuss each workflow as a single capability — writ
 
 Here's my actual rhythm when I'm at home.
 
-**Early, before I'm even at the desk.** Overnight, the system has already done a full shift. A handful of scheduled jobs run while I sleep: new material that came in during the day (saved articles, papers, voice notes) gets pulled into the vault and filed; a self-improvement pass reviews yesterday's system errors and folds in small fixes; replies and thank-yous are drafted into my email for me to check; backups and health checks run. By the time I'm awake, the overnight housekeeping is done — and the day's plan has already been drafted from my calendar, tasks, email and each specialist's notes, and checked by a second model.
+**Early, before I'm even at the desk.** Overnight, the system has already done a full shift. A handful of scheduled jobs run while I sleep: new material that came in during the day (saved articles, papers, voice notes) gets pulled into the vault and filed; replies and thank-yous are drafted into my email for me to check; backups and health checks run. By the time I'm awake, the overnight housekeeping is done — and the day's plan has already been drafted from my calendar, tasks, email and each specialist's notes, and checked by a second model.
 
 **My morning walk.** I talk to the system from my phone, through the Claude app connected to a session on my Mac ([the desktop app and your phone](./the-desktop-app-and-your-phone.md)). It reads me the day's priorities, the emails that need my call, and the questions the specialist agents couldn't answer from their notes. I answer out loud — stream of consciousness, no structure; it's basically verbal journalling to help cage my monkey brain — and each answer sets work going in the background while I keep walking: a draft started, a question researched, a decision recorded ([the interview loop](./the-interview-loop.md)). When something bigger needs doing, such as research plus a full draft, it offers to start it as its own session; I say yes, and it's under way before I'm home. Anything else I say gets [transcribed](./transcription.md) and filed: tasks to my to-do list, thought bubbles to my idea file for the AI to think about and make a plan for. I didn't have to organise any of this; I just thought out loud like a crazy person. A lot like a crazy person, in fact.
 
-**The AI coaches my day.** When I'm at my desk, I open the Claude desktop app, where one chief-of-staff session runs my day, and it coaches me through the plan (/today). The plan it coaches me through comes from the **agent fleet** — a set of domain specialists, one each for my science, fundraising, external communications, executive oversight of our non-profit, photography plans and admin. Each agent reviews its own folder of notes in the vault and surfaces what it thinks needs my attention; the chief of staff agent collates all those jobs, weighs them against one another, folds in what I said on the walk, and hands me the **single most important first task** — not a wall of twenty bullet points, one thing, typically with the recommended action already worked out or a draft already created for me. The morning belongs to the non-profit's work, so it draws on those specialists.
+**The AI coaches my day.** When I'm at my desk, I open the Claude desktop app, where one chief-of-staff session runs my day, and it coaches me through the plan (/today). The plan it coaches me through comes from the **agent fleet** — one agent per area of my life (work programmes, admin, health, photography and so on). Each agent reviews its own folder of notes in the vault and surfaces what it thinks needs my attention; the chief of staff agent collates all those jobs, weighs them against one another, folds in what I said on the walk, and hands me the **single most important first task** — not a wall of twenty bullet points, one thing, typically with the recommended action already worked out or a draft already created for me. The morning belongs to the non-profit's work, so it draws on those specialists.
 
 **I work, one thing at a time.** Each task gets done with whichever capability fits it, and the variety across a day is wide:
 
@@ -37,7 +37,7 @@ I finish a task, come back, and the chief of staff hands me the next one. The fl
 
 **Overnight, again.** The scheduled jobs run and the cycle closes: the next morning, the vault is richer than it was, the specialists review *that* richer state, and the day starts from a better place than the one before.
 
-**And quietly, underneath all of it:** the [self-improvement loop](./the-self-improvement-loop.md) is watching for friction — anything that was harder than it should have been — and turning the recurring annoyances into fixes. The system that runs my day is also, slowly, improving the system that runs my day.
+**And quietly, underneath all of it:** the [self-improvement loop](./the-self-improvement-loop.md) is watching for friction — anything that was harder than it should have been — and turning the recurring annoyances into fixes in a daytime system-upkeep session. The overnight worker keeps to routine jobs. The system that runs my day is also, slowly, improving the system that runs my day.
 
 ## The range of what it handles
 
@@ -68,8 +68,8 @@ You don't have to know all of them to use the system. (The maintainer's own note
 Not here. You build *up* to this picture; you don't assemble it in a weekend. The path that works:
 
 1. The foundation — [set up the stack](./01-set-up-the-stack.md) (the vault, the editor, the AI).
-2. **One** capability you'll use this week — pick the workflow that matches your most common task.
-3. Add the next piece only when you feel the need for it. The agent fleet, and handing bigger jobs off to run on their own (overnight, or as [sessions beside you](./running-many-sessions-at-once.md)), are worth it once you have enough going on that *planning what to do* and *waiting for things to finish* are themselves a cost worth automating away.
+2. A small [agent structure](./the-agent-fleet.md) from day one — a coordinator and briefs for the specialists your work needs — plus **one** capability you'll use this week.
+3. Add the next piece only when you feel the need for it. Daily agent runs and handing bigger jobs off to run on their own (overnight, or as [sessions beside you](./running-many-sessions-at-once.md)) are worth it once you have enough going on that *planning what to do* and *waiting for things to finish* are themselves a cost worth automating away.
 
 The system earns its keep gradually. Each piece is useful alone; the compounding is the reward for sticking with it.
 

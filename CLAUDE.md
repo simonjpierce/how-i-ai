@@ -56,7 +56,7 @@ command claude -p "Hi. A colleague sent me this link: github.com/simonjpierce/ho
   --model opus --effort high --permission-mode acceptEdits \
   --allowedTools "WebFetch,WebSearch,Read,Write,Edit,Glob,Grep,Bash(mkdir:*),Bash(ls:*),Bash(which:*),Bash(uname:*)" --output-format json
 ```
-Then `--resume <session_id>` with a rambling voice-style answer and check the second turn. Pass criteria: reads the README (not just the front matter); interviews rather than dumps text; mentions the model box; writes `CLAUDE.md` from the answers; steers to one real task; does NOT propose the second model / fleet / workhorse. Anything it gets wrong is a README / CLAUDE.md fix, not a user problem.
+Then `--resume <session_id>` with a rambling voice-style answer and check the second turn. Pass criteria: reads the README (not just the front matter); interviews rather than dumps text; mentions the model box; writes `CLAUDE.md` from the answers; starts a small agent structure (a chief of staff and briefs for the specialists their work needs); steers to one real task; does NOT propose the second model or workhorse. Anything it gets wrong is a README / CLAUDE.md fix, not a user problem.
 
 **Public repo.** This repo is **public** under CC-BY-4.0 — treat everything in it as shareable. The git history was squashed to a single initial-release commit at launch (2026-06-13), so the changelog starts clean from public release; ordinary commits to `origin/main` from here are the public-facing change record. Don't commit anything you wouldn't want public — keys, unpublished data, anyone's private information (see `CONTRIBUTING.md`).
 

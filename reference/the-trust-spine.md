@@ -13,21 +13,21 @@ When the system changes itself, the same principle as the rest of the spine appl
 
 Neither gate trusts the agent that wrote the plan or the code. That's the whole point: the author's blind spot is the same one that hides the mistake on a re-read.
 
-## Gate A — pressure-test the plan (a converging review loop)
+## Gate A — pressure-test the plan (panel once, fold once)
 
-This is not a single "review this" pass. It's a loop that runs until it stops finding things:
+Run one independent panel on the frozen plan, then fold the verified findings once:
 
-- **Round 1 — pre-flight.** Confirm the input is actually a plan/spec, not hand-written prose you'd be destroying by editing in place. Snapshot the original before touching it — the loop edits the plan as it goes, so keep a recovery copy.
-- **Round 2 — a panel reviews.** Hand the plan, read-only, to a small panel of independent models (the maintainer uses three: Codex plus two Claude models), each blind to the others, and ask the sharp question — not "is this good?" but **"for every file and line this plan cites, read the actual file and tell me where the plan's claims don't match reality."** Plans drift from the code they describe; this catches a design built on a stale mental model.
-- **Round 3 — arbitrate, don't rubber-stamp.** This is the discipline that makes the loop trustworthy. Each finding gets sorted into one of three buckets:
+- **Prepare.** Confirm the input is actually a plan/spec, not hand-written prose you'd be destroying by editing in place. Snapshot the original before touching it — the fold edits the plan, so keep a recovery copy.
+- **Review once.** Hand the plan, read-only, to a small panel of independent models (the maintainer uses Codex and a fresh Claude reviewer), each blind to the others, and ask the sharp question — not "is this good?" but **"for every file and line this plan cites, read the actual file and tell me where the plan's claims don't match reality."** Plans drift from the code they describe; this catches a design built on a stale mental model.
+- **Fold once — arbitrate, don't rubber-stamp.** This is the discipline that makes the review trustworthy. Each finding gets sorted into one of three buckets:
   - **Fold** — the reviewer is right and the evidence holds (a cited file doesn't exist, an edge is miswired). Fix the plan in place.
   - **Reject** — the reviewer is wrong or unevidenced (a style preference, a naming opinion, a pattern borrowed from elsewhere that doesn't fit here). Log *why* you rejected it, with evidence, and move on.
   - **Judgement call** — a real decision the reviewer can't settle (a scope expansion, two valid architectures, anything that removes content). Park it for a human.
   - The non-negotiable: **re-verify each finding yourself by reading the cited file** before folding it. Don't fold on the reviewer's say-so any more than you'd ship on the author's.
-- **Round 4 — re-review the revised plan.** Send the *revised* plan back for another check, told what was already folded and rejected so it hunts new ground: did the folds introduce fresh contradictions? Are the new safeguards well-formed?
-- **Round 5 — final fold + converge.** Apply the same arbitration to the second pass. There's no fixed round count. Stop when the serious findings are resolved and what's left is small enough to fix without another review — don't run another pass just to get a zero-findings report — and pause if successive passes keep reopening the same problems. For a change that other parts of the system rest on, add one last step after convergence: a single hostile read by a strong model that had no hand in writing the plan, hunting for a wrong frame the loop may have locked in. If more than a handful of genuine judgement calls pile up, that's a signal the plan *wasn't ready for review* — stop and reframe it rather than shipping with a stack of open decisions.
+- **A closing audit only for keystone changes.** When a plan changes shared machinery that other parts of the system depend on, give the revised plan one final audit by the heaviest model, independent of its author. Ordinary plans proceed after the fold without re-review.
+- **Then proceed.** Do not loop until it settles. Unresolved scope or design choices go to the human; they are not a reason to keep asking models for another opinion.
 
-Everything parked as a judgement call lands in an **Open decisions** list for the human. The loop folds the mechanical findings autonomously; it never folds a scope or design choice.
+Everything parked as a judgement call lands in an **Open decisions** list for the human. The fold handles mechanical findings autonomously; it never folds a scope or design choice.
 
 ## Gate B — re-derive the result from the shipped files
 
@@ -44,4 +44,4 @@ Self-review is structurally weak, not just lazy: a system that just produced an 
 
 ## What stays yours
 
-Which second model you reach for, how many rounds you allow before calling a plan "not ready," where the unverified/needs-revision states live, how loud the remediation flag is — all adapt to your setup. The human stays in the loop at both gates by design: the loop parks judgement calls instead of deciding them, and the post-build gate hands over a checklist unless real runtime evidence already exists. The transferable spine is just this: *put one independent check before a self-change and one after; let the machine fold the mechanical findings but never the judgement calls; re-verify every finding against the actual files; and never let the system bless its own work — "verified" needs evidence from a real run, never just a clean read.*
+Which second model you reach for, where the unverified/needs-revision states live, how loud the remediation flag is — all adapt to your setup. The human stays in the loop at both gates by design: the fold parks judgement calls instead of deciding them, and the post-build gate hands over a checklist unless real runtime evidence already exists. The transferable spine is just this: *put one independent check before a self-change and one after; let the machine fold the mechanical findings but never the judgement calls; re-verify every finding against the actual files; and never let the system bless its own work — "verified" needs evidence from a real run, never just a clean read.*

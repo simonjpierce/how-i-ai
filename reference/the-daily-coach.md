@@ -10,7 +10,7 @@ All three rituals run the same two-beat loop: **plan from real inputs**, then **
 
 ## The morning plan: gather → synthesise → coach
 
-**Gather the day's real inputs first — never invent the plan.** Pull from the sources you already keep: the calendar (a week ahead), the task manager (what's flagged for today, what's overdue, what's coming), a daily log or notes file, anything you flagged the night before, and whatever's still open from yesterday. A short script that collects all of this into one structured blob keeps the gather fast and repeatable. The rule that makes it trustworthy: the plan is **built from the human's own inputs**, so they're steering, not accepting a stranger's idea of their priorities.
+**Gather the day's real inputs first — never invent the plan.** The main input is now the agents' own top-ten lists, with the task manager as a secondary source alongside the calendar, daily notes and anything still open from yesterday. A short script that collects all of this into one structured blob keeps the gather fast and repeatable. The rule that makes it trustworthy: the plan is **built from the human's own inputs**, so they're steering, not accepting a stranger's idea of their priorities.
 
 **Synthesise into a short, ordered list — not everything.** This is the step that does the work. From the full pile, the AI produces the *few* things that actually move the day, in the order to do them — a handful, not the whole backlog. Weight the ranking toward what's genuinely time-sensitive (a real deadline, someone waiting on a reply) and what the human explicitly flagged; let lower-value items fall below the line rather than padding the list. Write the result to one stable file the human can see and edit through the day.
 

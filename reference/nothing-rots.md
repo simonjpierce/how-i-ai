@@ -36,7 +36,7 @@ One carve-out worth copying: **a gap in an observer is not a deferrable loop.** 
 |---|---|---|---|
 | Human action, undated | you | the owning agent's backlog / top-10 | the daily plan or the morning walk |
 | Human action, dated | you | to-do app, via the to-do command | due date |
-| Build changing the AI's skills, hooks or scripts | the nightly improvement pass for small mechanical fixes; otherwise you + AI in a supervised session | a spec, or an INTERACTIVE item for restricted files (settings, credentials, memory) | nightly run for the small fixes; the weekly system review for the rest |
+| Build changing the AI's skills, hooks or scripts | the daytime system-upkeep session | a spec, or an INTERACTIVE item for restricted files (settings, credentials, memory) | the next daytime upkeep session; the weekly system review as a backstop |
 | Other deferred build | a session you approve (or the overnight worker, if you run the full pattern) | spec status / the owning agent's list | the next morning walk; weekly backstop |
 | Pending decision | you | ask *now*; else a pending-decisions note | this turn, else tomorrow's plan or walk |
 | Waiting on external | external + chaser | a "waiting" line in the agent backlog or a dated to-do | chase date — only with evidence they're stuck |

@@ -37,6 +37,10 @@ A useful refinement: let the same summons work *without* a special command — a
 
 The top agent isn't a domain expert; it's the coordinator. Summon it for the cross-cutting jobs no single specialist owns: "what's the state of everything?", a sweep for work that's fallen through the cracks, deciding which agent an ambiguous item belongs to, reconciling the overall plan. Its standing rule is **delegate, don't hoard** — when a task is squarely one domain's, it hands it to that domain agent rather than doing it itself. Its job is that nothing is orphaned: every live work-item has a responsible agent, and it's the catch-all owner of last resort.
 
+## Each agent works its own list
+
+Start with a coordinator and briefs for the specialists your work needs from day one; add the daily runs as the setup grows. Every agent keeps its own list and gets one session each day to work through it, like staff preparing work in their own area. The coordinator starts those sessions, checks their results independently, and brings you only the decisions or drafts that need you. See [one session that runs the others](../workflows/one-session-that-runs-the-others.md).
+
 ## The line the agents don't cross
 
 The agents **propose and sequence; you decide.** They surface what's worth doing and prepare the work — but the guardrails are non-negotiable and inherited by every agent:

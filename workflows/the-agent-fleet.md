@@ -1,14 +1,14 @@
 # The agent fleet
 
-A way to start each day with a team of specialist assistants — each one watching a different part of your work — that surface what's worth doing, then hand it to you one task at a time instead of as an overwhelming list.
+A way to work with a team of specialist assistants, like staff — each with its own list and daily run — while one coordinator hands you work one task at a time.
 
-*This is an advanced pattern — the kind of thing that emerges once your everyday setup is solid, not a day-one build. It's here to show the shape of where this can go; when you're ready, paste it into Claude Code and build the version that fits your domains.*
+*Start the small version on day one: a coordinator and a brief for each specialist your work needs. The daily runs and fuller coordination grow from there. Paste this into Claude Code and build the version that fits your domains.*
 
 ## The core idea
 
 A single general-purpose AI assistant is a generalist — it knows a bit about everything you're doing but isn't deeply on top of any one area. The move here is to run several **agents** instead: each one is the *same* AI, but pointed at a single domain and given its own accumulated knowledge of it. ("Agent" just means the AI working in a defined role with its own notes — not a separate piece of software.)
 
-So you might have a fundraising agent, a science agent ([what one looks like](./a-science-agent.md)), a communications agent, an admin agent — whatever your real domains are. Each keeps its own running picture of that domain: the active projects, what's stalled, what's coming up. Each one flags what's worth doing *in its area*, and files the questions only you can answer, ready for your morning walk.
+So you might have a fundraising agent, a science agent ([what one looks like](./a-science-agent.md)), a communications agent, an admin agent — whatever your real domains are. Each keeps its own list and running picture of that domain: the active projects, what's stalled, what's coming up. Like staff, every agent has its own daily run to move that list forward. Each one flags what's worth doing *in its area*, and files the questions only you can answer, ready for your morning walk.
 
 The problem with a team of keen assistants is that they'd bury you. So one more agent sits on top: a **chief of staff**. It collects what every specialist is proposing, weighs it against each other, and hands you work **one task at a time** — not a wall of twenty suggestions. You do a thing, you come back, it gives you the next thing.
 
@@ -24,7 +24,7 @@ The day starts with a plan already waiting: the specialists have filed their que
 
 Underneath, each agent reads and writes the same vault (see [the philosophy](./00-the-philosophy.md)) — so a specialist's "knowledge of its domain" is just notes in your files, getting richer over time, not a black box. And when a session does substantial work in one agent's area without updating that agent's notes, the closing routine notices and asks once whether to bring them up to date.
 
-Once a specialist has shown it can be trusted, it can also work through its own list during the day without you. In the maintainer's setup this began in mid-November 2026, one agent at a time, each added only after the one before had run cleanly for two days. After its morning check, once he has typed at the desktop that day, the chief of staff starts each of those agents on its own list in a session of its own; the agent prepares what it can, every piece gets an independent check before it reaches the maintainer, and nothing is sent, published or paid without him. A question the run can't settle goes to the next walk. How the chief of staff starts, checks, and closes those sessions is described in [One session that runs the others](./one-session-that-runs-the-others.md).
+Every specialist works through its own list during the day in a session of its own. After its morning check, once the maintainer has typed at the desktop that day, the chief of staff starts one such session for every agent; each prepares what it can, every piece gets an independent check before it reaches him, and nothing is sent, published or paid without him. A question the run can't settle goes to the next walk. How the chief of staff starts, checks, and closes those sessions is described in [One session that runs the others](./one-session-that-runs-the-others.md).
 
 Writing to those notes goes through a single route. The early-morning planning run only reads them: it reports which transcripts and quick-capture notes are still waiting to be filed, but leaves the filing to the intake routine (or the attended transcription session), which also owns the shared "already processed" marker. That way an unattended planner can't change an agent's knowledge outside the one writer responsible for it, and anything not yet filed simply stays eligible until that writer picks it up.
 

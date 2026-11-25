@@ -15,6 +15,10 @@ A useful guide carries both halves:
 
 **Keep one guide per format, not one global voice.** The way you write a formal report isn't the way you write a quick internal message or a field note. A handful of short, separate guides beats one vague master guide.
 
+## Learn from the sent version
+
+Keep the original AI draft, the edits you made and the text you actually sent. Compare all three to find what you kept, removed or rewrote, then fold recurring voice choices into the matching guide with examples. Learn from the sent text rather than assuming an unsent draft was accepted. This is still early in the maintainer's use: only a handful of drafts have been sent through it so far.
+
 ## Two moves, kept separate
 
 The capability splits into two jobs that share the voice-guide idea but run differently. Don't blur them.
